@@ -10,6 +10,16 @@ A multi-modal chat application enabling users to create custom agents, and integ
 > This project is part of the ["100 Commits"](https://100commitow.pl/) competition, which challenges participants to commit to their projects by making at least one meaningful commit every day for 100 consecutive days.
 >
 
+<details>
+<summary>Table of Contents</summary>
+
+- [Stellar Chat](#stellar-chat)
+  - [⭐ Enjoying the Project?](#-enjoying-the-project)
+  - [🚧 Issues](#-issues)
+  - [📝 License](#-license)
+
+</details>
+
 ## ⭐ Enjoying the Project?
 
 If you find this project helpful, learned something new, or using it to kickstart your own solution, consider showing your appreciation by giving it a star! Your support means a lot. Thank you! :rocket:
