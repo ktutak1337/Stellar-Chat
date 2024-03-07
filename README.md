@@ -4,6 +4,7 @@
 
 A multi-modal chat application enabling users to create custom agents, and integrate with local LLMs (Local Language Models), as well as OpenAI models, also the capability to generate images, visual recognition capabilities, TTS & STT Voice Conversation, etc.
 
+[![Build & Tests](https://github.com/ktutak1337/Stellar-Chat/actions/workflows/github-actions.yaml/badge.svg?branch=main)](https://github.com/ktutak1337/Stellar-Chat/actions/workflows/github-actions.yaml)
 [![NuGet Package](https://img.shields.io/badge/.NET%20-8.0-blue.svg)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 [![GitHub license](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ktutak1337/Stellar-Chat/blob/main/LICENSE.md)
 
