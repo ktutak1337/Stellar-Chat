@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{381F052F-900C-4243-B27A-A2D7788E09C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{DDE19268-BFEB-408E-A1A3-2CB70CEACFC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarChat.Server.Api", "src\Server\StellarChat.Server.Api\StellarChat.Server.Api.csproj", "{3E504298-D0C4-4258-BF5F-1AF3D17268F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{539F8333-E713-4AD1-AA62-91D7D0662D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarChat.Shared.Abstractions", "src\Shared\StellarChat.Shared.Abstractions\StellarChat.Shared.Abstractions.csproj", "{470A8621-8E42-4A16-9C38-1E5A9BDBB1AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarChat.Shared.Infrastructure", "src\Shared\StellarChat.Shared.Infrastructure\StellarChat.Shared.Infrastructure.csproj", "{EA54CE28-3736-457C-B83B-3500F3ED8D4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{637E4293-DBD7-4C92-A1F8-B78E814EB07C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StellarChat.Client.Web", "src\Client\StellarChat.Client.Web\StellarChat.Client.Web.csproj", "{5BE990B7-4BAD-47D0-B845-C7F5A2EAE11D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E504298-D0C4-4258-BF5F-1AF3D17268F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E504298-D0C4-4258-BF5F-1AF3D17268F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E504298-D0C4-4258-BF5F-1AF3D17268F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E504298-D0C4-4258-BF5F-1AF3D17268F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{470A8621-8E42-4A16-9C38-1E5A9BDBB1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{470A8621-8E42-4A16-9C38-1E5A9BDBB1AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{470A8621-8E42-4A16-9C38-1E5A9BDBB1AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{470A8621-8E42-4A16-9C38-1E5A9BDBB1AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA54CE28-3736-457C-B83B-3500F3ED8D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA54CE28-3736-457C-B83B-3500F3ED8D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA54CE28-3736-457C-B83B-3500F3ED8D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA54CE28-3736-457C-B83B-3500F3ED8D4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BE990B7-4BAD-47D0-B845-C7F5A2EAE11D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BE990B7-4BAD-47D0-B845-C7F5A2EAE11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BE990B7-4BAD-47D0-B845-C7F5A2EAE11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BE990B7-4BAD-47D0-B845-C7F5A2EAE11D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DDE19268-BFEB-408E-A1A3-2CB70CEACFC3} = {381F052F-900C-4243-B27A-A2D7788E09C9}
+		{3E504298-D0C4-4258-BF5F-1AF3D17268F9} = {DDE19268-BFEB-408E-A1A3-2CB70CEACFC3}
+		{539F8333-E713-4AD1-AA62-91D7D0662D0C} = {381F052F-900C-4243-B27A-A2D7788E09C9}
+		{470A8621-8E42-4A16-9C38-1E5A9BDBB1AD} = {539F8333-E713-4AD1-AA62-91D7D0662D0C}
+		{EA54CE28-3736-457C-B83B-3500F3ED8D4B} = {539F8333-E713-4AD1-AA62-91D7D0662D0C}
+		{637E4293-DBD7-4C92-A1F8-B78E814EB07C} = {381F052F-900C-4243-B27A-A2D7788E09C9}
+		{5BE990B7-4BAD-47D0-B845-C7F5A2EAE11D} = {637E4293-DBD7-4C92-A1F8-B78E814EB07C}
+	EndGlobalSection
+EndGlobal
