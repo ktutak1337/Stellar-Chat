@@ -5,3 +5,9 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined"></MudTextField>
+
+@code {
+    public string TextValue { get; set; } = string.Empty;
+}
