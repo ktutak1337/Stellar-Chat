@@ -1,9 +1,12 @@
+using StellarChat.Shared.Infrastructure.Exceptions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddErrorHandling();
 
 var app = builder.Build();
 
@@ -15,6 +18,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseErrorHandling();
 
 var summaries = new[]
 {
