@@ -8,6 +8,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StellarChat.Shared.Abstractions\StellarChat.Shared.Abstractions.csproj" />
-  </ItemGroup>
+  </ItemGroup>  
+	
+  <ItemGroup>
+	  <PackageReference Include="Serilog" Version="4.0.0-dev-02113" />
+	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00334" />
+	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10377" />
+	  <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00972" />
+	  <PackageReference Include="Serilog.Sinks.Seq" Version="7.0.0" />
+  </ItemGroup>  
 
 </Project>

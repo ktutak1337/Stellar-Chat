@@ -1,4 +1,5 @@
 using StellarChat.Shared.Infrastructure.Exceptions;
+using StellarChat.Shared.Infrastructure.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddErrorHandling();
+builder.Services.AddContext();
 
 var app = builder.Build();
 
@@ -19,6 +21,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseErrorHandling();
+app.UseContext();
 
 var summaries = new[]
 {
