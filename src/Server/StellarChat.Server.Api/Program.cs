@@ -1,5 +1,6 @@
 using StellarChat.Shared.Infrastructure.Exceptions;
 using StellarChat.Shared.Infrastructure.Contexts;
+using StellarChat.Shared.Infrastructure.Observability.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddErrorHandling();
 builder.Services.AddContext();
+builder.Host.UseLogging();
 
 var app = builder.Build();
 
@@ -22,14 +24,16 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseErrorHandling();
 app.UseContext();
+app.UseLogging();
 
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/weatherforecast", (ILogger<WeatherForecast> logger) =>
 {
+    logger.LogInformation("test logginig");
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
