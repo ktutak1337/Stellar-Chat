@@ -1,6 +1,7 @@
 using StellarChat.Shared.Infrastructure.Exceptions;
 using StellarChat.Shared.Infrastructure.Contexts;
 using StellarChat.Shared.Infrastructure.Observability.Logging;
+using StellarChat.Shared.Infrastructure.DAL.Mongo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddErrorHandling();
 builder.Services.AddContext();
 builder.Host.UseLogging();
+builder.Services.AddMongo(builder.Configuration);
 
 var app = builder.Build();
 
