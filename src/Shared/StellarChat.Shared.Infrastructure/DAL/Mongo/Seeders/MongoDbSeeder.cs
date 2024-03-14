@@ -5,12 +5,10 @@ namespace StellarChat.Shared.Infrastructure.DAL.Mongo.Seeders;
 
 internal class MongoDbSeeder : IMongoDbSeeder
 {
-    private readonly IAppSettingsSeeder _appSettingsSeeder;
     private readonly ILogger<MongoDbSeeder> _logger;
 
-    public MongoDbSeeder(IAppSettingsSeeder appSettingsSeeder, ILogger<MongoDbSeeder> logger)
+    public MongoDbSeeder(ILogger<MongoDbSeeder> logger)
     {
-        _appSettingsSeeder = appSettingsSeeder;
         _logger = logger;
     }
 
@@ -21,10 +19,6 @@ internal class MongoDbSeeder : IMongoDbSeeder
 
     protected virtual async Task CustomSeedAsync(IMongoDatabase database)
     {
-        _logger.LogInformation("Started seeding the database.");
 
-        await _appSettingsSeeder.SeedAsync(database);
-
-        _logger.LogInformation("Finished seeding the database.");
     }
 }
