@@ -1,6 +1,20 @@
 version: "3.7"
 
-services:      
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: unless-stopped
+    #environment:                                    # If you disable authentication then you need to remove username and password from connection string in appsettings.
+    # - MONGO_INITDB_ROOT_USERNAME=root              # set your container root username
+    # - MONGO_INITDB_ROOT_PASSWORD=secret            # set your container root password
+    ports:
+      - 27017:27017
+    networks:
+      - stellar-chat
+    volumes:
+      - mongo_data:/data/db
+  
   seq:
     image: datalust/seq 
     container_name: seq
@@ -21,3 +35,4 @@ networks:
 
 volumes:
   seq_data:
+  mongo_data:
