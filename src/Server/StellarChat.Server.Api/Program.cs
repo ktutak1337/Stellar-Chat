@@ -2,6 +2,7 @@ using StellarChat.Shared.Infrastructure.Exceptions;
 using StellarChat.Shared.Infrastructure.Contexts;
 using StellarChat.Shared.Infrastructure.Observability.Logging;
 using StellarChat.Shared.Infrastructure.DAL.Mongo;
+using StellarChat.Shared.Infrastructure.API.CORS;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddErrorHandling();
 builder.Services.AddContext();
+builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Host.UseLogging();
 builder.Services.AddMongo(builder.Configuration);
 
@@ -24,6 +26,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCorsPolicy();
 app.UseErrorHandling();
 app.UseContext();
 app.UseLogging();
