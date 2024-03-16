@@ -3,6 +3,7 @@ using StellarChat.Shared.Infrastructure.Contexts;
 using StellarChat.Shared.Infrastructure.Observability.Logging;
 using StellarChat.Shared.Infrastructure.DAL.Mongo;
 using StellarChat.Shared.Infrastructure.API.CORS;
+using StellarChat.Shared.Infrastructure.API.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddContext();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Host.UseLogging();
 builder.Services.AddMongo(builder.Configuration);
+builder.Services.RegisterEndpoints(builder.Configuration);
 
 var app = builder.Build();
 
@@ -30,6 +32,8 @@ app.UseCorsPolicy();
 app.UseErrorHandling();
 app.UseContext();
 app.UseLogging();
+app.UseEndpoints();
+app.MapEndpoints();
 
 var summaries = new[]
 {
