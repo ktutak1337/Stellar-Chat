@@ -1,6 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using StellarChat.Shared.Infrastructure.API.CORS;
+using StellarChat.Shared.Infrastructure.API.Endpoints;
+using StellarChat.Shared.Infrastructure.Contexts;
+using StellarChat.Shared.Infrastructure.DAL.Mongo;
+using StellarChat.Shared.Infrastructure.Exceptions;
+using StellarChat.Shared.Infrastructure.Observability.Logging;
 using System.Text.RegularExpressions;
 
 namespace StellarChat.Shared.Infrastructure;
@@ -8,6 +16,43 @@ namespace StellarChat.Shared.Infrastructure;
 public static class Extensions
 {
     private const string CorrelationIdKey = "correlation-id";
+
+    public static WebApplicationBuilder AddSharedInfrastructure(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseLogging();
+
+        builder
+            .Services
+                .AddEndpointsApiExplorer()
+                .AddSwaggerGen()
+                .AddErrorHandling()
+                .AddContext()
+                .AddCorsPolicy(builder.Configuration)
+                .AddMongo(builder.Configuration)
+                .RegisterEndpoints(builder.Configuration);
+
+        return builder;
+    }
+
+    public static WebApplication UseSharedInfrastructure(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection()
+           .UseCorsPolicy()
+           .UseErrorHandling()
+           .UseContext()
+           .UseLogging()
+           .UseEndpoints();
+
+        app.MapEndpoints();
+
+        return app;
+    }
 
     public static string ToSnakeCase(this string input)
         => Regex.Replace(
