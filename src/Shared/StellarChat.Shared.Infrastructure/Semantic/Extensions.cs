@@ -6,7 +6,7 @@ namespace StellarChat.Shared.Infrastructure.Semantic;
 
 public static class Extensions
 {
-    public static IServiceCollection AddSemanticKernel(this IServiceCollection services, IConfiguration configuration, Type? seederType = null)
+    public static IServiceCollection AddSemanticKernel(this IServiceCollection services, IConfiguration configuration)
     {
         var section = configuration.GetSection(OpenAiOptions.Key);
         var options = section.BindOptions<OpenAiOptions>();
@@ -14,7 +14,7 @@ public static class Extensions
 
         var kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
-                modelId: "gpt-4-turbo-preview",
+                modelId: options.ModelId,
                 apiKey: options.ApiKey)
             .Build();
 
@@ -22,5 +22,4 @@ public static class Extensions
 
         return services;
     }
-
 }
