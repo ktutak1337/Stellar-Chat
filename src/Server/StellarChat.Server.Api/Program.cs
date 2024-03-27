@@ -1,11 +1,11 @@
-using StellarChat.Shared.Infrastructure;
+using StellarChat.Server.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddSharedInfrastructure();
+builder.AddInfrastructure();
 
 var app = builder.Build();
 
-app.UseSharedInfrastructure();
+app.UseInfrastructure();
 
 app.Run();
