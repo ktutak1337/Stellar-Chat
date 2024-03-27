@@ -1,4 +1,4 @@
-﻿namespace StellarChat.Server.Api.Models.Chat;
+﻿namespace StellarChat.Server.Api.Domain.Chat.Models;
 
 public enum ChatMessageType
 {
