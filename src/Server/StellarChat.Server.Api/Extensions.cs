@@ -2,6 +2,10 @@
 using MapsterMapper;
 using System.Reflection;
 using StellarChat.Shared.Infrastructure;
+using StellarChat.Shared.Infrastructure.DAL.Mongo;
+using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
+using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
+using StellarChat.Server.Api.Domain.Chat.Repositories;
 
 namespace StellarChat.Server.Api;
 
@@ -12,6 +16,9 @@ internal static class Extensions
         builder.AddSharedInfrastructure();
 
         builder.Services.AddMappings();
+        builder.Services
+            .AddScoped<IChatMessageRepository, ChatMessageRepository>()
+            .AddMongoRepository<ChatMessageDocument, Guid>("messages");
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
