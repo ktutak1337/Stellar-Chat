@@ -18,7 +18,9 @@ internal static class Extensions
         builder.Services.AddMappings();
         builder.Services
             .AddScoped<IChatMessageRepository, ChatMessageRepository>()
-            .AddMongoRepository<ChatMessageDocument, Guid>("messages");
+            .AddScoped<IChatSessionRepository, ChatSessionRepository>()
+            .AddMongoRepository<ChatMessageDocument, Guid>("messages")
+            .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions");
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
