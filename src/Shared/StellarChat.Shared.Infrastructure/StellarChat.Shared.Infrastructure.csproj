@@ -11,11 +11,6 @@
   </ItemGroup>  
 	
   <ItemGroup>
-	  <PackageReference Include="Mediator.Abstractions" Version="3.0.0-preview.24" />
-	  <PackageReference Include="Mediator.SourceGenerator" Version="3.0.0-preview.24">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
 	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.6.3" />
 	  <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
 	  <PackageReference Include="Serilog" Version="4.0.0-dev-02113" />

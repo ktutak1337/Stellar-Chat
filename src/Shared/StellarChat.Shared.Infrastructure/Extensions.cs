@@ -31,8 +31,7 @@ public static class Extensions
                 .AddCorsPolicy(builder.Configuration)
                 .AddMongo(builder.Configuration)
                 .RegisterEndpoints(builder.Configuration)
-                .AddSemanticKernel(builder.Configuration)
-                .AddMediator();
+                .AddSemanticKernel(builder.Configuration);
 
         return builder;
     }
@@ -62,7 +61,7 @@ public static class Extensions
             Regex.Replace(
                 Regex.Replace(input, @"([\p{Lu}]+)([\p{Lu}][\p{Ll}])", "$1_$2"), @"([\p{Ll}\d])([\p{Lu}])", "$1_$2"), @"[-\s]", "_").ToLower();
 
-    public static bool IsEmpty(this string value) 
+    public static bool IsEmpty(this string value)
         => string.IsNullOrWhiteSpace(value);
 
     public static bool IsNotEmpty(this string value)
@@ -99,7 +98,7 @@ public static class Extensions
         if (context.Request.Headers.TryGetValue("x-forwarded-for", out var forwardedFor))
         {
             var ipAddresses = forwardedFor.ToString().Split(",", StringSplitOptions.RemoveEmptyEntries);
-            
+
             if (ipAddresses.Any())
             {
                 ipAddress = ipAddresses[0];

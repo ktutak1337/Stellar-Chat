@@ -21,6 +21,11 @@ internal static class Extensions
             .AddScoped<IChatSessionRepository, ChatSessionRepository>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions");
+
+        builder.Services.AddMediator(options =>
+        {
+            options.ServiceLifetime = ServiceLifetime.Scoped;
+        });
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
