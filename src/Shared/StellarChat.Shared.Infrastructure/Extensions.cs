@@ -31,7 +31,8 @@ public static class Extensions
                 .AddCorsPolicy(builder.Configuration)
                 .AddMongo(builder.Configuration)
                 .RegisterEndpoints(builder.Configuration)
-                .AddSemanticKernel(builder.Configuration);
+                .AddSemanticKernel(builder.Configuration)
+                .AddMediator();
 
         return builder;
     }
