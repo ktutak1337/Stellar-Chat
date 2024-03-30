@@ -2,7 +2,7 @@
 
 namespace StellarChat.Server.Api.Domain.Chat.Repositories;
 
-public interface IChatSessionRepository
+internal interface IChatSessionRepository
 {
     ValueTask<ChatSession?> GetAsync(Guid id);
     ValueTask<ChatSession?> GetByTitleAsync(string title);

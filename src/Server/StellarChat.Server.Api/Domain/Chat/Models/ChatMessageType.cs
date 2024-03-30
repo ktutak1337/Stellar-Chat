@@ -1,6 +1,6 @@
 ﻿namespace StellarChat.Server.Api.Domain.Chat.Models;
 
-public enum ChatMessageType
+internal enum ChatMessageType
 {
     Message,
     File,

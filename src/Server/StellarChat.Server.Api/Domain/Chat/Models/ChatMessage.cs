@@ -1,6 +1,6 @@
 ﻿namespace StellarChat.Server.Api.Domain.Chat.Models;
 
-public class ChatMessage
+internal class ChatMessage
 {
     /// <summary>
     /// Id of the message.

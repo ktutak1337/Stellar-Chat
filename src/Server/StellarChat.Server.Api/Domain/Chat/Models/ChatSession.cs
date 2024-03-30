@@ -1,6 +1,6 @@
 ﻿namespace StellarChat.Server.Api.Domain.Chat.Models;
 
-public class ChatSession
+internal class ChatSession
 {
     public Guid Id { get; set; }
     public string Title { get; set; }
