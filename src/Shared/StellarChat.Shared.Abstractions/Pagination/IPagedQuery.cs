@@ -1,4 +1,6 @@
-﻿namespace StellarChat.Shared.Abstractions.Pagination;
+﻿using Mediator;
+
+namespace StellarChat.Shared.Abstractions.Pagination;
 
 public interface IPagedQuery
 {
@@ -6,4 +8,4 @@ public interface IPagedQuery
     int PageSize { get; set; }
 }
 
-public interface IPagedQuery<T> : IPagedQuery { }
+public interface IPagedQuery<T> : IPagedQuery, IQuery<T> { }
