@@ -6,6 +6,7 @@ using StellarChat.Shared.Infrastructure.DAL.Mongo;
 using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
 using StellarChat.Server.Api.Domain.Chat.Repositories;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace StellarChat.Server.Api;
 
@@ -15,6 +16,7 @@ internal static class Extensions
     {
         builder.AddSharedInfrastructure();
 
+        builder.Services.TryAddSingleton(TimeProvider.System);
         builder.Services.AddMappings();
         builder.Services
             .AddScoped<IChatMessageRepository, ChatMessageRepository>()
