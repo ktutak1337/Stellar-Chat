@@ -1,5 +1,6 @@
 ﻿using Mediator;
 using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
+using StellarChat.Server.Api.Domain.Chat.Models;
 using StellarChat.Server.Api.Domain.Chat.Repositories;
 
 namespace StellarChat.Server.Api.Features.Chat.DeleteChatSession;
@@ -35,9 +36,16 @@ internal sealed class DeleteChatSessionHandler : ICommandHandler<DeleteChatSessi
 
     private async ValueTask DeleteMessagesForChatSessionAsync(Guid chatId, CancellationToken cancellationToken = default)
     {
-        var cleanupTasks = new List<Task>();
-
         var messages = await _chatMessageRepository.FindMessagesByChatIdAsync(chatId);
+
+        await DeleteMessagesAsync(messages, chatId);
+        
+        _logger.LogInformation($"All messages for chat session with ID: '{chatId}' has been deleted.");
+    }
+
+    private async Task DeleteMessagesAsync(IEnumerable<ChatMessage> messages, Guid chatId)
+    {
+        var cleanupTasks = new List<Task>();
 
         foreach (var message in messages)
         {
@@ -53,20 +61,23 @@ internal sealed class DeleteChatSessionHandler : ICommandHandler<DeleteChatSessi
         }
         catch (Exception exception)
         {
-            // INFO: Handle any exceptions that occurred during the tasks
-            if (aggregationTask?.Exception?.InnerExceptions is not null && aggregationTask.Exception.InnerExceptions.Count != 0)
-            {
-                foreach (var innerException in aggregationTask.Exception.InnerExceptions)
-                {
-                    _logger.LogInformation($"Failed to delete a entity of chat '{chatId}': {innerException.Message}");
-                }
+            HandleCleanupExceptions(chatId, aggregationTask, exception);
+        }
+    }
 
-                throw aggregationTask.Exception;
+    private void HandleCleanupExceptions(Guid chatId, Task? aggregationTask, Exception exception)
+    {
+        // INFO: Handle any exceptions that occurred during the tasks
+        if (aggregationTask?.Exception?.InnerExceptions is not null && aggregationTask.Exception.InnerExceptions.Count != 0)
+        {
+            foreach (var innerException in aggregationTask.Exception.InnerExceptions)
+            {
+                _logger.LogInformation($"Failed to delete a entity of chat '{chatId}': {innerException.Message}");
             }
 
-            throw new AggregateException($"Resource deletion failed for chat {chatId}.", exception);
+            throw aggregationTask.Exception;
         }
 
-        _logger.LogInformation($"All messages for chat session with ID: '{chatId}' has been deleted.");
+        throw new AggregateException($"Resource deletion failed for chat '{chatId}'.", exception);
     }
 }
