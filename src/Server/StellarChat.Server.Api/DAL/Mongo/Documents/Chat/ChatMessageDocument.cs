@@ -1,5 +1,4 @@
-﻿using StellarChat.Server.Api.Domain.Chat.Models;
-using StellarChat.Shared.Infrastructure.DAL.Mongo;
+﻿using StellarChat.Shared.Infrastructure.DAL.Mongo;
 
 namespace StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
 
@@ -14,7 +13,7 @@ internal class ChatMessageDocument : IIdentifiable<Guid>
     /// Id of the chat this message belongs to.
     /// </summary>
     public Guid ChatId { get; set; }
-    public ChatMessageType Type { get; set; }
+    public ChatMessageTypeDocument Type { get; set; }
     public string Author { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public int TokenCount { get; set; }

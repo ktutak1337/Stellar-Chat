@@ -1,4 +1,6 @@
-﻿namespace StellarChat.Server.Api.Domain.Chat.Models;
+﻿using StellarChat.Shared.Abstractions.Contracts.Chat;
+
+namespace StellarChat.Server.Api.Domain.Chat.Models;
 
 internal class ChatMessage
 {
