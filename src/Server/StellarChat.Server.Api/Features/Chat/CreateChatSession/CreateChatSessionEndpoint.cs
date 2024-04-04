@@ -23,6 +23,7 @@ internal sealed class CreateChatSessionEndpoint : IEndpoint
             return Results.CreatedAtRoute("GetChatSession", new { ChatId = chatId }, chatId);
         })
          .Produces(StatusCodes.Status201Created)
+         .Produces(StatusCodes.Status400BadRequest)
          .WithOpenApi(operation => new(operation)
          {
              Summary = "Creates a new chat session."
