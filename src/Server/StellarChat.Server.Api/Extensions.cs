@@ -7,6 +7,7 @@ using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
 using StellarChat.Server.Api.Domain.Chat.Repositories;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using StellarChat.Server.Api.Hubs;
 
 namespace StellarChat.Server.Api;
 
@@ -31,7 +32,12 @@ internal static class Extensions
     }
 
     public static WebApplication UseInfrastructure(this WebApplication app)
-        => app.UseSharedInfrastructure();
+    {
+        app.MapHub<MessageBrokerHub>("/hub");
+        app.UseSharedInfrastructure();
+
+        return app;
+    }
 
     public static IServiceCollection AddMappings(this IServiceCollection services)
     {
