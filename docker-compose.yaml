@@ -29,6 +29,17 @@ services:
     volumes:
       - seq_data:/data
   
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: unless-stopped
+    container_name: qdrant
+    networks:
+      - stellar-chat
+    ports:
+      - 6333:6333
+    volumes:
+      - qdrant_data:/data
+
 networks:
   stellar-chat:
     name: stellar-chat-network
@@ -36,3 +47,4 @@ networks:
 volumes:
   seq_data:
   mongo_data:
+  qdrant_data:
