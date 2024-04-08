@@ -14,7 +14,7 @@ public static class Extensions
 
         var kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
-                modelId: options.ModelId,
+                modelId: options.TextModel,
                 apiKey: options.ApiKey)
             .Build();
 
