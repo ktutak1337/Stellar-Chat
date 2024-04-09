@@ -17,6 +17,7 @@ internal static class Extensions
     {
         builder.AddSharedInfrastructure();
 
+        builder.Services.AddSignalR();
         builder.Services.TryAddSingleton(TimeProvider.System);
         builder.Services.AddMappings();
         builder.Services
