@@ -1,6 +1,23 @@
-@StellarChat.Server.Api_HostAddress = http://localhost:5009
+@url = https://localhost:7057
 
-GET {{StellarChat.Server.Api_HostAddress}}/weatherforecast/
+##
+# The `Page` and `PageSize` query parameters are used for pagination.
+# When the `Page` and `PageSize` are set to 0 the entire collection will be returned;
+# otherwise, results will be returned based on the specified pagination parameters.
+@page = 1
+@pageSize = 10
+
+GET {{url}}/chat-history/sessions?Page={{page}}&PageSize={{pageSize}}
 Accept: application/json
+
+###
+
+# @name createChatSession
+POST {{url}}/chat-history/sessions
+Content-Type: application/json
+
+{
+  "title": "string"
+}
 
 ###
