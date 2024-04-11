@@ -1,5 +1,7 @@
 @url = https://localhost:7057
 
+@chatId = 00000000-0000-0000-0000-000000000000
+
 ##
 # The `Page` and `PageSize` query parameters are used for pagination.
 # When the `Page` and `PageSize` are set to 0 the entire collection will be returned;
@@ -7,17 +9,47 @@
 @page = 1
 @pageSize = 10
 
+# Retrieves all chat sessions.
 GET {{url}}/chat-history/sessions?Page={{page}}&PageSize={{pageSize}}
-Accept: application/json
+Content-Type: application/json
 
 ###
 
+# Retrieves a single chat session by 'chatId'.
+GET {{url}}/chat-history/sessions/{{chatId}}
+Content-Type: application/json
+
+###
+
+# Creates a new chat session.
 # @name createChatSession
 POST {{url}}/chat-history/sessions
 Content-Type: application/json
 
 {
-  "title": "string"
+  "title": "Chat #1"
 }
+
+###
+
+# Updates the title of a specific chat session using its 'chatId'.
+PUT {{url}}/chat-history/sessions/{{chatId}}
+Content-Type: application/json
+
+{
+  "title": "New Chat"
+}
+
+###
+
+# Deletes a single chat session by 'chatId'.
+DELETE {{url}}/chat-history/sessions/{{chatId}}
+Content-Type: application/json
+
+###
+
+# Retrieves chat messages for a specific chat session by 'chatId'.
+GET {{url}}/chat-history/sessions/{{chatId}}/messages?Page={{page}}&PageSize={{pageSize}}
+Content-Type: application/json
 
 ###
