@@ -1,19 +1,10 @@
-﻿using Mediator;
-using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
-using StellarChat.Shared.Abstractions.Contracts.Chat;
-using StellarChat.Shared.Abstractions.Pagination;
-using StellarChat.Shared.Infrastructure.DAL.Mongo;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Mapster;
-
-namespace StellarChat.Server.Api.Features.Chat.GetChatMessagesByChatId;
+﻿namespace StellarChat.Server.Api.Features.Chat.GetChatMessagesByChatId;
 
 internal class GetChatMessagesByChatIdHandler : IQueryHandler<GetChatMessagesByChatId, Paged<ChatMessageResponse>>
 {
     private readonly IMongoRepository<ChatMessageDocument, Guid> _chatMessageRepository;
 
-    public GetChatMessagesByChatIdHandler(IMongoRepository<ChatMessageDocument, Guid> chatMessageRepository) 
+    public GetChatMessagesByChatIdHandler(IMongoRepository<ChatMessageDocument, Guid> chatMessageRepository)
         => _chatMessageRepository = chatMessageRepository;
 
     public async ValueTask<Paged<ChatMessageResponse>> Handle(GetChatMessagesByChatId query, CancellationToken cancellationToken)

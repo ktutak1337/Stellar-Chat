@@ -1,9 +1,4 @@
-﻿using Mediator;
-using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
-using StellarChat.Server.Api.Domain.Chat.Models;
-using StellarChat.Server.Api.Domain.Chat.Repositories;
-
-namespace StellarChat.Server.Api.Features.Chat.CreateChatSession;
+﻿namespace StellarChat.Server.Api.Features.Chat.CreateChatSession;
 
 internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
 {

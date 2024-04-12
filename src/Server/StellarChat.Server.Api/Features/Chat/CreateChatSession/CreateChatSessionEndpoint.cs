@@ -1,10 +1,4 @@
-﻿using Mapster;
-using Mediator;
-using Microsoft.AspNetCore.Mvc;
-using StellarChat.Shared.Abstractions.API.Endpoints;
-using StellarChat.Shared.Abstractions.Contracts.Chat;
-
-namespace StellarChat.Server.Api.Features.Chat.CreateChatSession;
+﻿namespace StellarChat.Server.Api.Features.Chat.CreateChatSession;
 
 internal sealed class CreateChatSessionEndpoint : IEndpoint
 {

@@ -1,6 +1,4 @@
-﻿using StellarChat.Shared.Abstractions.Exceptions;
-
-namespace StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
+﻿namespace StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
 
 public class ChatSessionAlreadyExistsException : StellarChatException
 {

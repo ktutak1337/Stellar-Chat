@@ -1,7 +1,4 @@
-﻿using Mediator;
-using StellarChat.Shared.Abstractions.API.Endpoints;
-
-namespace StellarChat.Server.Api.Features.Chat.DeleteChatSession;
+﻿namespace StellarChat.Server.Api.Features.Chat.DeleteChatSession;
 
 internal sealed class DeleteChatSessionEndpoint : IEndpoint
 {

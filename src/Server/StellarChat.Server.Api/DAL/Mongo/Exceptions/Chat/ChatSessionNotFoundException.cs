@@ -1,13 +1,11 @@
-﻿using StellarChat.Shared.Abstractions.Exceptions;
-
-namespace StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
+﻿namespace StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
 
 internal sealed class ChatSessionNotFoundException : StellarChatException
 {
     public Guid Id { get; }
     public string? Title { get; }
 
-    public ChatSessionNotFoundException(Guid id) 
+    public ChatSessionNotFoundException(Guid id)
         : base(
             message: $"Chat session with ID: {id} not found.",
             userMessage: $"The requested chat session could not be found.")

@@ -1,18 +1,10 @@
-﻿using Mapster;
-using Mediator;
-using MongoDB.Driver;
-using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
-using StellarChat.Shared.Abstractions.Contracts.Chat;
-using StellarChat.Shared.Abstractions.Pagination;
-using StellarChat.Shared.Infrastructure.DAL.Mongo;
-
-namespace StellarChat.Server.Api.Features.Chat.BrowseChatSessions;
+﻿namespace StellarChat.Server.Api.Features.Chat.BrowseChatSessions;
 
 internal sealed class BrowseChatSessionsHandler : IQueryHandler<BrowseChatSessions, Paged<ChatSessionResponse>>
 {
     private readonly IMongoRepository<ChatSessionDocument, Guid> _chatSessionRepository;
 
-    public BrowseChatSessionsHandler(IMongoRepository<ChatSessionDocument, Guid> chatSessionRepository) 
+    public BrowseChatSessionsHandler(IMongoRepository<ChatSessionDocument, Guid> chatSessionRepository)
         => _chatSessionRepository = chatSessionRepository;
 
     public async ValueTask<Paged<ChatSessionResponse>> Handle(BrowseChatSessions query, CancellationToken cancellationToken)
@@ -22,7 +14,7 @@ internal sealed class BrowseChatSessionsHandler : IQueryHandler<BrowseChatSessio
         if (ShouldReturnAllResults(query))
         {
             var count = chatSessions!.Count();
-            
+
             return new()
             {
                 CurrentPage = 1,

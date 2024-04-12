@@ -1,9 +1,4 @@
-﻿using Mediator;
-using Microsoft.AspNetCore.Mvc;
-using StellarChat.Shared.Abstractions.API.Endpoints;
-using StellarChat.Shared.Abstractions.Contracts.Chat;
-
-namespace StellarChat.Server.Api.Features.Chat.ChangeChatSessionTitle;
+﻿namespace StellarChat.Server.Api.Features.Chat.ChangeChatSessionTitle;
 
 internal sealed class ChangeChatSessionTitleEndpoint : IEndpoint
 {

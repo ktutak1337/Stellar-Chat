@@ -1,8 +1,4 @@
-﻿using Mediator;
-using StellarChat.Shared.Abstractions.API.Endpoints;
-using StellarChat.Shared.Abstractions.Contracts.Chat;
-
-namespace StellarChat.Server.Api.Features.Chat.BrowseChatSessions;
+﻿namespace StellarChat.Server.Api.Features.Chat.BrowseChatSessions;
 
 internal sealed class BrowseChatSessionsEndpoint : IEndpoint
 {

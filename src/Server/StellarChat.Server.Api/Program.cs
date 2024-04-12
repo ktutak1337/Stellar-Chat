@@ -1,5 +1,3 @@
-using StellarChat.Server.Api;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddInfrastructure();

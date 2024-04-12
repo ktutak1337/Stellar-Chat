@@ -1,9 +1,4 @@
-﻿using Mediator;
-using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
-using StellarChat.Server.Api.Domain.Chat.Models;
-using StellarChat.Server.Api.Domain.Chat.Repositories;
-
-namespace StellarChat.Server.Api.Features.Chat.DeleteChatSession;
+﻿namespace StellarChat.Server.Api.Features.Chat.DeleteChatSession;
 
 internal sealed class DeleteChatSessionHandler : ICommandHandler<DeleteChatSession>
 {
@@ -11,7 +6,7 @@ internal sealed class DeleteChatSessionHandler : ICommandHandler<DeleteChatSessi
     private readonly IChatSessionRepository _chatSessionRepository;
     private readonly ILogger<DeleteChatSessionHandler> _logger;
 
-    public DeleteChatSessionHandler(IChatMessageRepository chatMessageRepository, IChatSessionRepository chatSessionRepository, 
+    public DeleteChatSessionHandler(IChatMessageRepository chatMessageRepository, IChatSessionRepository chatSessionRepository,
         ILogger<DeleteChatSessionHandler> logger)
     {
         _chatMessageRepository = chatMessageRepository;
@@ -30,7 +25,7 @@ internal sealed class DeleteChatSessionHandler : ICommandHandler<DeleteChatSessi
         await _chatSessionRepository.DeleteAsync(command.ChatId);
 
         _logger.LogInformation($"Chat session with ID: '{command.ChatId}' has been deleted.");
-        
+
         return Unit.Value;
     }
 
@@ -39,7 +34,7 @@ internal sealed class DeleteChatSessionHandler : ICommandHandler<DeleteChatSessi
         var messages = await _chatMessageRepository.FindMessagesByChatIdAsync(chatId);
 
         await DeleteMessagesAsync(messages, chatId);
-        
+
         _logger.LogInformation($"All messages for chat session with ID: '{chatId}' has been deleted.");
     }
 

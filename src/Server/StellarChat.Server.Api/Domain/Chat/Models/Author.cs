@@ -1,6 +1,4 @@
-﻿using StellarChat.Shared.Infrastructure;
-
-namespace StellarChat.Server.Api.Domain.Chat.Models;
+﻿namespace StellarChat.Server.Api.Domain.Chat.Models;
 
 internal static class Author
 {

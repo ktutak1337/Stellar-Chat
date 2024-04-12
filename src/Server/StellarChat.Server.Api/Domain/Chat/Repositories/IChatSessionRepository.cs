@@ -1,6 +1,4 @@
-﻿using StellarChat.Server.Api.Domain.Chat.Models;
-
-namespace StellarChat.Server.Api.Domain.Chat.Repositories;
+﻿namespace StellarChat.Server.Api.Domain.Chat.Repositories;
 
 internal interface IChatSessionRepository
 {

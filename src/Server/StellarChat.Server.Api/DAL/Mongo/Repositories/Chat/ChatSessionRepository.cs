@@ -1,10 +1,4 @@
-﻿using Mapster;
-using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
-using StellarChat.Server.Api.Domain.Chat.Models;
-using StellarChat.Server.Api.Domain.Chat.Repositories;
-using StellarChat.Shared.Infrastructure.DAL.Mongo;
-
-namespace StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
+﻿namespace StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
 
 internal class ChatSessionRepository : IChatSessionRepository
 {

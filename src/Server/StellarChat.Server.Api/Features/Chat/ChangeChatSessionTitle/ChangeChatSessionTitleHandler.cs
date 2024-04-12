@@ -1,8 +1,4 @@
-﻿using Mediator;
-using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
-using StellarChat.Server.Api.Domain.Chat.Repositories;
-
-namespace StellarChat.Server.Api.Features.Chat.ChangeChatSessionTitle;
+﻿namespace StellarChat.Server.Api.Features.Chat.ChangeChatSessionTitle;
 
 internal sealed class ChangeChatSessionTitleHandler : ICommandHandler<ChangeChatSessionTitle>
 {
@@ -10,7 +6,7 @@ internal sealed class ChangeChatSessionTitleHandler : ICommandHandler<ChangeChat
     private readonly TimeProvider _clock;
     private readonly ILogger<ChangeChatSessionTitleHandler> _logger;
 
-    public ChangeChatSessionTitleHandler(IChatSessionRepository chatSessionRepository, TimeProvider clock, 
+    public ChangeChatSessionTitleHandler(IChatSessionRepository chatSessionRepository, TimeProvider clock,
         ILogger<ChangeChatSessionTitleHandler> logger)
     {
         _chatSessionRepository = chatSessionRepository;

@@ -1,15 +1,4 @@
-﻿using Mapster;
-using MapsterMapper;
-using System.Reflection;
-using StellarChat.Shared.Infrastructure;
-using StellarChat.Shared.Infrastructure.DAL.Mongo;
-using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
-using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
-using StellarChat.Server.Api.Domain.Chat.Repositories;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using StellarChat.Server.Api.Hubs;
-
-namespace StellarChat.Server.Api;
+﻿namespace StellarChat.Server.Api;
 
 internal static class Extensions
 {

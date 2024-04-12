@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-
-namespace StellarChat.Server.Api.Hubs;
+﻿namespace StellarChat.Server.Api.Hubs;
 
 internal sealed class MessageBrokerHub : Hub
 {

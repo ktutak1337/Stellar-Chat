@@ -1,6 +1,4 @@
-﻿using StellarChat.Shared.Infrastructure.DAL.Mongo;
-
-namespace StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
+﻿namespace StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
 
 internal class ChatMessageDocument : IIdentifiable<Guid>
 {
