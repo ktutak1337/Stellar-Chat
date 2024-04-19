@@ -1,7 +1,9 @@
 ﻿@inherits LayoutComponentBase
-@using MudBlazor
 
-<MudThemeProvider />
+@inject IJSRuntime JSRuntime
+
+
+<MudThemeProvider IsDarkMode="_IsDarkModeEnabled" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -9,6 +11,7 @@
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
         <MudSpacer />
+        <MudToggleIconButton Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
     </MudAppBar>
 
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Persistent" Anchor="Anchor.Left">
@@ -41,6 +44,24 @@
 
 @code {
     private bool _drawerOpen = true;
+    private bool _IsDarkModeEnabled = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var darkModeValue = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "darkMode");
+
+        if (!string.IsNullOrEmpty(darkModeValue))
+        {
+            _IsDarkModeEnabled = bool.Parse(darkModeValue);
+        }
+    }
+
+    private async Task ToggleDarkMode()
+    {
+        _IsDarkModeEnabled = !_IsDarkModeEnabled;
+
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "darkMode", _IsDarkModeEnabled);
+    }
 
     private void ToggleDrawer() => _drawerOpen = !_drawerOpen;
 }
