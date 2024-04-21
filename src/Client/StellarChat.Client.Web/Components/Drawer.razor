@@ -1,0 +1,28 @@
+﻿<MudDrawer @bind-Open="IsDrawerOpen" Elevation="1" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Persistent" Anchor="Anchor.Left">
+    <MudContainer Style="height: 100%; display: flex; padding: 0; overflow-x: hidden;">
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex flex-row" style="flex: 1;">
+                <div class="p-3 flex-grow-1 m-3" style="position: relative; border-right: 1px solid rgba(0, 0, 0, 0.12)">
+                    <div class="d-flex justify-content-center align-items-center h-100 mt-3" style="margin-bottom: 10px;">
+                        <MudAvatar Src="icons/favicon.ico" />
+                    </div>
+                    <MudIconButton Icon="@Icons.Material.Filled.ChatBubble"></MudIconButton>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0;">
+                        <MudIconButton Icon="@Icons.Material.Filled.Settings" />
+                    </div>
+                </div>
+                <div class="p-3 flex-grow-1 m-3" style="overflow-y: auto;">
+                    <div class="d-flex flex-column h-100 mt-3 justify-content-center">
+                        <MudText Typo="Typo.h6">Stellar Chat</MudText>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </MudContainer>
+</MudDrawer>
+
+@code 
+{
+    [Parameter]
+    public bool IsDrawerOpen { get; set; }
+}
