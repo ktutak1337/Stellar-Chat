@@ -12,11 +12,10 @@
         <MudSpacer />
         <MudToggleIconButton Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
     </MudAppBar>
-    
-    <Drawer IsDrawerOpen="_isDrawerOpen" />
 
+    <Drawer IsDrawerOpen="@_isDrawerOpen" />
     <MudMainContent>
-        <!-- Main content will go here -->
+        @Body
     </MudMainContent>
 </MudLayout>
 
@@ -45,6 +44,11 @@
     }
 
     private void ToggleDrawer() => _isDrawerOpen = !_isDrawerOpen;
-}
 
-@Body
+    private string message = string.Empty;
+    private void SendMessage()
+    {
+        Console.WriteLine("Message sent: " + message);
+        message = string.Empty;
+    }
+}
