@@ -1,27 +1,28 @@
-﻿<MudPaper Class="overflow-hidden mud-theme-dark text-field-custom" Style="width: 100%; padding: 20px 0; background-color: var(--mud-textfield-background);" Elevation="0">
-    <MudPaper Class="inner-paper mud-theme-lighten" Style="margin: auto; max-width: 1200px; width: 100%; margin-top: 0;" Elevation="0">
+﻿<MudPaper Class="overflow-hidden mud-theme-dark text-field-custom py-5 w-100" Elevation="0">
+    <MudPaper Class="inner-paper mud-theme-lighten w-100 mt-0 mx-auto" Style="max-width: 960px;" Elevation="0">
         <MudGrid>
             <MudItem xs="12">
-                <MudTextField T="string"
+                <MudTextField id="prompt-input"
+                              T="string"
                               Variant="Variant.Filled"
                               @bind-Value="Message"
-                              Class="text-field-custom mt-n2"
+                              Class="text-field-custom mt-n5"
                               Placeholder="Type a message"
                               Lines="5"
                               FullWidth="true" />
             </MudItem>
-            <MudItem xs="12" Class="d-flex justify-content-between align-items-center" Style="padding: 0;">
+            <MudItem xs="12" Class="d-flex justify-content-between align-items-center pa-0">
                 <div class="d-flex gap-0.25 ml-4">
-                    <MudIconButton Color="Color.Inherit" Disabled="true">
+                    <MudIconButton id="prompt-input-plugins-button" Color="Color.Inherit" Disabled="true">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
                             <path fill="currentColor" d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.7-53.3L160 80l-53.3-26.7L80 0 53.3 53.3 0 80l53.3 26.7L80 160zm352 128l-26.7 53.3L352 368l53.3 26.7L432 448l26.7-53.3L512 368l-53.3-26.7L432 288zm70.6-193.8L417.8 9.4C411.5 3.1 403.3 0 395.2 0c-8.2 0-16.4 3.1-22.6 9.4L9.4 372.5c-12.5 12.5-12.5 32.8 0 45.3l84.9 84.9c6.3 6.3 14.4 9.4 22.6 9.4 8.2 0 16.4-3.1 22.6-9.4l363.1-363.2c12.5-12.5 12.5-32.8 0-45.2zM359.5 203.5l-50.9-50.9 86.6-86.6 50.9 50.9-86.6 86.6z" />
                         </svg>
                     </MudIconButton>
-                    <MudIconButton Icon="@Icons.Material.Filled.AttachFile" Color="Color.Inherit" Disabled="true" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Mic" Color="Color.Inherit" Disabled="true" />
+                    <MudIconButton id="prompt-input-attach-file-button" Icon="@Icons.Material.Filled.AttachFile" Color="Color.Inherit" Disabled="true" />
+                    <MudIconButton id="prompt-input-mic-button" Icon="@Icons.Material.Filled.Mic" Color="Color.Inherit" Disabled="true" />
                 </div>
                 <div class="flex-grow-1"></div>
-                <MudIconButton Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" />
+                <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" />
             </MudItem>
         </MudGrid>
     </MudPaper>
@@ -40,10 +41,6 @@
     body, html {
         margin: 0;
         overflow-x: hidden;
-    }
-
-    .mt-n2 {
-        margin-top: -20px;
     }
 </style>
 
