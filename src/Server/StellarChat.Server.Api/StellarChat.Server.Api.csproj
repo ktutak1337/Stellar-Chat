@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\StellarChat.Shared.Contracts\StellarChat.Shared.Contracts.csproj" />
     <ProjectReference Include="..\..\Shared\StellarChat.Shared.Infrastructure\StellarChat.Shared.Infrastructure.csproj" />
   </ItemGroup>
 

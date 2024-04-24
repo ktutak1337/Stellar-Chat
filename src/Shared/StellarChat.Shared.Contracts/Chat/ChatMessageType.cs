@@ -1,4 +1,4 @@
-﻿namespace StellarChat.Shared.Abstractions.Contracts.Chat;
+﻿namespace StellarChat.Shared.Contracts.Chat;
 
 public enum ChatMessageType
 {
