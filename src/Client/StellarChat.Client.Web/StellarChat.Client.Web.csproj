@@ -13,4 +13,8 @@
     <PackageReference Include="MudBlazor" Version="6.17.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\StellarChat.Shared.Contracts\StellarChat.Shared.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>
