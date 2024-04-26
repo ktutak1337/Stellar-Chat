@@ -2,7 +2,21 @@
 
 <PageTitle>Home</PageTitle>
 
+<div class="h-100">
+    <div class="w-100 mt-4 mx-auto" style="max-width: 960px;">
+        <div id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
+            @foreach (var chatMessage in ChatMessages)
+            {
+                <ChatMessage Message=@chatMessage />
+            }
+        </div>
+    </div>
+    <div class="mt-2 fixed-bottom w-auto">
+        <PromptInput />
+    </div>
+</div>
+
 @code 
 {
-
+    public List<ChatMessageResponse> ChatMessages { get; set; } = new();
 }
