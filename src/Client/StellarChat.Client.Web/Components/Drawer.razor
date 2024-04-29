@@ -15,6 +15,19 @@
 
                 @*------------ right column ------------ *@
                 <div id="drawer-right-column" class="p-3 flex-grow-1 overflow-y-auto w-100 h-100">
+                    <div class="d-flex flex-column h-100">
+                        <MudText Typo="Typo.h5" Class="mx-auto mt-3">Stellar Chat</MudText>
+                        <div class="flex-grow-1 overflow-y-auto w-100 h-100 mt-2">
+                            <MudTextField Class="pa-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+                            <MudDivider />
+                            <MudList Clickable="true">
+                                @foreach (var chatSessions in ChatSessions)
+                                {
+                                    <ChatHistoryItem ChatSessionIteam="@chatSessions" />
+                                }
+                            </MudList>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,4 +39,8 @@
 {
     [Parameter]
     public bool IsDrawerOpen { get; set; }
+
+    public string SearchText { get; set; } = string.Empty;
+
+    public List<ChatSessionResponse> ChatSessions { get; set; } = new();
 }
