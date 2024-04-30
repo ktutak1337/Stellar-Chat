@@ -23,7 +23,16 @@
                     <MudIconButton id="prompt-input-mic-button" Icon="@Icons.Material.Filled.Mic" Color="Color.Inherit" Disabled="true" />
                 </div>
                 <div class="flex-grow-1"></div>
-                <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" Disabled="@IsSendButtonDisabled" />
+                    @if (IsProcessing)
+                    {
+                        <div class="mr-1 d-flex align-items-center justify-content-center relative" style="width: 48px; height: 48px; top: 14px;">
+                            <MudProgressCircular Color="Color.Default" Size="Size.Small" Indeterminate="true" />
+                        </div>
+                    }
+                    else
+                    {
+                        <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" Disabled="@IsSendButtonDisabled" />
+                    }
             </MudItem>
         </MudGrid>
     </MudPaper>
@@ -49,12 +58,17 @@
 {
     private string Message { get; set; } = string.Empty;
     private bool IsSendButtonDisabled => string.IsNullOrWhiteSpace(Message);
+    private bool IsProcessing { get; set; }
 
-    private void SendMessage()
+    private async Task SendMessage()
     {
         if (!IsSendButtonDisabled)
         {
+            IsProcessing = true;
             
+            // TODO: Delete in the future
+            await Task.Delay(2000);
+            IsProcessing = false;
         }
     }
 }
