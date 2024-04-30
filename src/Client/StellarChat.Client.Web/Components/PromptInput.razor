@@ -6,6 +6,7 @@
                               T="string"
                               Variant="Variant.Filled"
                               @bind-Value="Message"
+                              Immediate="true"
                               Class="text-field-custom mt-n5"
                               Placeholder="Type a message"
                               Lines="5"
@@ -22,7 +23,7 @@
                     <MudIconButton id="prompt-input-mic-button" Icon="@Icons.Material.Filled.Mic" Color="Color.Inherit" Disabled="true" />
                 </div>
                 <div class="flex-grow-1"></div>
-                <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" />
+                <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" Disabled="@IsSendButtonDisabled" />
             </MudItem>
         </MudGrid>
     </MudPaper>
@@ -47,9 +48,13 @@
 @code
 {
     private string Message { get; set; } = string.Empty;
+    private bool IsSendButtonDisabled => string.IsNullOrWhiteSpace(Message);
 
     private void SendMessage()
     {
-
+        if (!IsSendButtonDisabled)
+        {
+            
+        }
     }
 }
