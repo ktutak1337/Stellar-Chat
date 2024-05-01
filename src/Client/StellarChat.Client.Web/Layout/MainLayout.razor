@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @inject IJSRuntime JSRuntime
+@inject ISnackbar Snackbar
 
 <MudThemeProvider IsDarkMode="_IsDarkModeEnabled" />
 <MudDialogProvider />
@@ -15,7 +16,17 @@
 
     <Drawer IsDrawerOpen="@_isDrawerOpen" />
     <MudMainContent>
-        @Body
+        <CustomErrorBoundary>
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <ErrorContent Context="errorDetails">
+                @{
+                     ShowErrorSnackbar(@errorDetails.Message);
+                     @Body
+                }
+            </ErrorContent>
+        </CustomErrorBoundary>
     </MudMainContent>
 </MudLayout>
 
@@ -44,4 +55,14 @@
     }
 
     private void ToggleDrawer() => _isDrawerOpen = !_isDrawerOpen;
+
+    private void ShowErrorSnackbar(string message)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, Severity.Error, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
+    }
 }
