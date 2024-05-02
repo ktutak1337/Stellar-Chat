@@ -9,7 +9,11 @@
                         <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" Alt="An image of the best dog ever!"></MudImage>
                     </MudAvatar>
                     <MudIconButton Size="Size.Large" Icon="@Icons.Material.Filled.ChatBubble" Class="mt-5" />
-                    <MudIconButton Size="Size.Large" Icon="@Icons.Material.Filled.Settings" Class="absolute mb-20" style="bottom: 10px" />
+                    <div class="d-flex flex-column align-items-center absolute mb-2" style="bottom: 6px">
+                        <MudFab Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 mx-auto" />
+                        <MudDivider Class="mx-auto" Style="width:70%;" />
+                        <MudIconButton Class="" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" />
+                    </div>
                 </div>
                 <MudDivider Vertical="true" />
 
