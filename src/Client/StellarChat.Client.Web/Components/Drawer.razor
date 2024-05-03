@@ -5,12 +5,9 @@
 
                 @*------------ left column ------------ *@
                 <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1" style="width:72px;">
-                    <MudAvatar Color="Color.Secondary" Class="mt-3 mx-auto">
+                    <MudAvatar Size="Size.Large" Color="Color.Secondary" Class="mt-3 mx-auto">
                         <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" Alt="An image of the best dog ever!"></MudImage>
                     </MudAvatar>
-                    <MudTooltip Text="Chat history" Arrow="true" Placement="Placement.Right">
-                        <MudIconButton Size="Size.Large" Icon="@Icons.Material.Filled.ChatBubble" Class="mt-5" Style="margin-left: 2px;" />
-                    </MudTooltip>
                     <div class="d-flex flex-column align-items-center flex-grow-1 fixed mb-2" style="bottom: 6px">
                         <MudTooltip Text="New chat" Arrow="true" Placement="Placement.Right" >
                             <MudFab Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 ml-2" />
@@ -26,9 +23,11 @@
                 @*------------ right column ------------ *@
                 <div id="drawer-right-column" class="p-3 flex-grow-1 overflow-y-auto w-100 h-100">
                     <div class="d-flex flex-column h-100">
-                        <MudText Typo="Typo.h5" Class="mx-auto mt-3">Stellar Chat</MudText>
-                        <div class="flex-grow-1 overflow-y-auto w-100 h-100 mt-2">
-                            <MudTextField Class="pa-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+                        <MudText Typo="Typo.h5" Class="mx-auto mt-3 mb-2">Stellar Chat</MudText>
+                        <MudDivider />
+                        <MudText Typo="Typo.h6" Class="mt-2 ml-4">Chat History</MudText>
+                        <div class="flex-grow-1 overflow-y-auto w-100 h-100 mt-1">
+                            <MudTextField Class="pl-4 pr-4 pb-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
                             <MudDivider />
                             <MudList Clickable="true">
                                 @foreach (var chatSessions in ChatSessions)
