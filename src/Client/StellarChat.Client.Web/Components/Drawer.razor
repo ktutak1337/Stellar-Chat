@@ -1,18 +1,24 @@
-﻿<MudDrawer @bind-Open="IsDrawerOpen" Elevation="1" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Persistent" Anchor="Anchor.Left" Width="20%">
+﻿<MudDrawer @bind-Open="IsDrawerOpen" Elevation="1" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Persistent" Anchor="Anchor.Left" Width="480px">
     <MudContainer Class="d-flex pa-0 overflow-x-hidden" Style="height: 100%; width: 100%;">
         <div class="d-flex flex-column" style="width: 100%;">
             <div class="d-flex flex-1 w-100 overflow-hidden">
 
                 @*------------ left column ------------ *@
-                <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1">
+                <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1" style="width:72px;">
                     <MudAvatar Color="Color.Secondary" Class="mt-3 mx-auto">
                         <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" Alt="An image of the best dog ever!"></MudImage>
                     </MudAvatar>
-                    <MudIconButton Size="Size.Large" Icon="@Icons.Material.Filled.ChatBubble" Class="mt-5" />
-                    <div class="d-flex flex-column align-items-center absolute mb-2" style="bottom: 6px">
-                        <MudFab Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 mx-auto" />
+                    <MudTooltip Text="Chat history" Arrow="true" Placement="Placement.Right">
+                        <MudIconButton Size="Size.Large" Icon="@Icons.Material.Filled.ChatBubble" Class="mt-5" Style="margin-left: 2px;" />
+                    </MudTooltip>
+                    <div class="d-flex flex-column align-items-center flex-grow-1 fixed mb-2" style="bottom: 6px">
+                        <MudTooltip Text="New chat" Arrow="true" Placement="Placement.Right" >
+                            <MudFab Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 ml-2" />
+                        </MudTooltip>
                         <MudDivider Class="mx-auto" Style="width:70%;" />
-                        <MudIconButton Class="" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" />
+                        <MudTooltip Text="Settings" Arrow="true" Placement="Placement.Right">
+                            <MudIconButton Style="margin-left: 2px;" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" />
+                        </MudTooltip >
                     </div>
                 </div>
                 <MudDivider Vertical="true" />
