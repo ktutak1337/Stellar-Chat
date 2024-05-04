@@ -1,0 +1,22 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField @bind-Value="TextValue" Label="Name" Variant="Variant.Outlined"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Save</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code 
+{
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+    [Parameter] public ChatSessionResponse? ChatSessionItem { get; set; }
+
+    public string TextValue { get; set; } = string.Empty;
+
+    protected override void OnInitialized() => TextValue = ChatSessionItem!.Title;
+
+    void Submit() => MudDialog!.Close(DialogResult.Ok(TextValue));
+    void Cancel() => MudDialog!.Cancel();
+}
