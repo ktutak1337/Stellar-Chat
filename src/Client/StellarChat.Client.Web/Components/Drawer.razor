@@ -32,9 +32,9 @@
                             <MudTextField Class="pl-4 pr-4 pb-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
                             <MudDivider />
                             <MudList Clickable="true">
-                                @foreach (var chatSessions in ChatSessions)
+                                @foreach (var chatSession in ChatSessions)
                                 {
-                                    <ChatHistoryItem ChatSessionIteam="@chatSessions" />
+                                    <ChatHistoryItem ChatSessionItem="@chatSession" />
                                 }
                             </MudList>
                         </div>
@@ -55,7 +55,10 @@
 
     public List<ChatSessionResponse> ChatSessions { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync() 
+        => await LoadChatSessions();
+
+    private async Task LoadChatSessions()
     {
         var response = await _chatService.BrowseChatSessions();
         ChatSessions = response.Items.ToList();
