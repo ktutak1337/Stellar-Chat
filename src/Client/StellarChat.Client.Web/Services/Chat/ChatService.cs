@@ -19,4 +19,11 @@ public class ChatService : IChatService
 
         return result!;
     }
+
+    public async ValueTask DeleteChatSession(Guid id)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        await httpClient.DeleteAsync($"/chat-history/sessions/{id}");
+    }
 }

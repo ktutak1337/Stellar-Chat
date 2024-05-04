@@ -34,7 +34,7 @@
                             <MudList Clickable="true">
                                 @foreach (var chatSession in ChatSessions)
                                 {
-                                    <ChatHistoryItem ChatSessionItem="@chatSession" />
+                                    <ChatHistoryItem ChatSessionItem="@chatSession" OnDeleteChat="DeleteChatSession" />
                                 }
                             </MudList>
                         </div>
@@ -44,7 +44,6 @@
         </div>
     </MudContainer>
 </MudDrawer>
-
 
 @code
 {
@@ -57,6 +56,12 @@
 
     protected override async Task OnInitializedAsync() 
         => await LoadChatSessions();
+
+    private async Task DeleteChatSession(ChatSessionResponse chatSession)
+    {
+        await _chatService.DeleteChatSession(chatSession.Id);
+        ChatSessions.Remove(chatSession);
+    }
 
     private async Task LoadChatSessions()
     {

@@ -1,25 +1,31 @@
 ﻿@inject NavigationManager NavigationManager
+@inject IChatService _chatService
+@inject IDialogService _dialogService
 
 <div Class="d-flex flex-row flex-grow-1 gap-1 pa-2" Elevation="0">
     <MudAvatar Class="my-auto">
         <MudImage Size="Size.Medium" Src="https://avatars.githubusercontent.com/u/49451143?v=4"></MudImage>
     </MudAvatar>
     <MudListItem OnClick="@NavigateToChat">
-        @ChatSessionIteam?.Title
+        @ChatSessionItem?.Title
     </MudListItem>
     <MudMenu Class="" Icon="@Icons.Material.Filled.MoreVert">
         <MudMenuItem>Rename</MudMenuItem>
-        <MudMenuItem>Delete</MudMenuItem>
+        <MudMenuItem OnClick="DeleteChat">Delete</MudMenuItem>
     </MudMenu>
 </div>
 <MudDivider />
 
 @code 
 {
-    [Parameter] public ChatSessionResponse? ChatSessionIteam { get; set; }
+    [Parameter] public ChatSessionResponse? ChatSessionItem { get; set; }
+    [Parameter] public EventCallback<ChatSessionResponse> OnDeleteChat { get; set; }
 
     private void NavigateToChat()
     {
-        
+
     }
+
+    private async Task DeleteChat() 
+        => await OnDeleteChat.InvokeAsync(ChatSessionItem);
 }
