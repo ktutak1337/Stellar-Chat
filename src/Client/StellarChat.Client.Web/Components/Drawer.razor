@@ -34,7 +34,9 @@
                             <MudList Clickable="true">
                                 @foreach (var chatSession in ChatSessions)
                                 {
-                                    <ChatHistoryItem ChatSessionItem="@chatSession" OnDeleteChat="DeleteChatSession" />
+                                    <ChatHistoryItem ChatSessionItem="@chatSession" 
+                                                     OnChangeTitle="ChangeChatSessionTitle" 
+                                                     OnDeleteChat="DeleteChatSession" />
                                 }
                             </MudList>
                         </div>
@@ -57,8 +59,23 @@
     protected override async Task OnInitializedAsync() 
         => await LoadChatSessions();
 
+    private async Task ChangeChatSessionTitle(ChangeTitleInfo changeTitleInfo)
+    {
+        var (chatId, newTitle) = changeTitleInfo;
+
+        await _chatService.ChangeChatSessionTitle(chatId, newTitle!);
+
+        var chatSession = ChatSessions.SingleOrDefault(x => x.Id == chatId);
+
+        if (chatSession is not null)
+        {
+            ChatSessions[ChatSessions.IndexOf(chatSession)] = chatSession with { Title = newTitle! };
+        }
+    }
+
     private async Task DeleteChatSession(ChatSessionResponse chatSession)
     {
+        Console.WriteLine($"chatSession.Id: {chatSession.Id}");
         await _chatService.DeleteChatSession(chatSession.Id);
         ChatSessions.Remove(chatSession);
     }

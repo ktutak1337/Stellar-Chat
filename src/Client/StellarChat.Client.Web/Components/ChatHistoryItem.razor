@@ -10,16 +10,17 @@
         @ChatSessionItem?.Title
     </MudListItem>
     <MudMenu Class="" Icon="@Icons.Material.Filled.MoreVert">
-        <MudMenuItem>Rename</MudMenuItem>
+        <MudMenuItem OnClick="OpenChangeTitleDialog">Rename</MudMenuItem>
         <MudMenuItem OnClick="DeleteChat">Delete</MudMenuItem>
     </MudMenu>
 </div>
 <MudDivider />
 
-@code 
+@code
 {
     [Parameter] public ChatSessionResponse? ChatSessionItem { get; set; }
     [Parameter] public EventCallback<ChatSessionResponse> OnDeleteChat { get; set; }
+    [Parameter] public EventCallback<ChangeTitleInfo> OnChangeTitle { get; set; }
 
     private void NavigateToChat()
     {
@@ -28,4 +29,26 @@
 
     private async Task DeleteChat() 
         => await OnDeleteChat.InvokeAsync(ChatSessionItem);
+
+    private async Task OpenChangeTitleDialog()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add(nameof(ChatSessionItem), ChatSessionItem);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var dialog = _dialogService.Show<ChangeChatSessionTitleDialog>("Change title", parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            var updatedTitle = result.Data as string;
+
+            if (!string.IsNullOrEmpty(updatedTitle))
+            {
+                var changeTitleInfo = new ChangeTitleInfo(ChatSessionItem!.Id, updatedTitle);
+                await OnChangeTitle.InvokeAsync(changeTitleInfo);
+            }
+        }
+    }
 }

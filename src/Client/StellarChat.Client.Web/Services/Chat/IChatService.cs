@@ -7,5 +7,6 @@ namespace StellarChat.Client.Web.Services.Chat;
 public interface IChatService
 {
     ValueTask<Paged<ChatSessionResponse>> BrowseChatSessions(int page = 0, int pageSize = 0);
+    ValueTask ChangeChatSessionTitle(Guid id, string title);
     ValueTask DeleteChatSession(Guid id);
 }

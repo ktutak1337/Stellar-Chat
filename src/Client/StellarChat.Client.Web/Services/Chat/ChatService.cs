@@ -20,6 +20,15 @@ public class ChatService : IChatService
         return result!;
     }
 
+    public async ValueTask ChangeChatSessionTitle(Guid id, string title)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var payload = new ChangeChatSessionTitleRequest(id, title);
+
+        await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}", payload);
+    }
+
     public async ValueTask DeleteChatSession(Guid id)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
