@@ -24,6 +24,7 @@ global using StellarChat.Server.Api.Hubs;
 global using StellarChat.Shared.Abstractions.API.Endpoints;
 global using StellarChat.Shared.Abstractions.Exceptions;
 global using StellarChat.Shared.Abstractions.Pagination;
+global using StellarChat.Shared.Contracts.Assistants;
 global using StellarChat.Shared.Contracts.Chat;
 global using StellarChat.Shared.Infrastructure;
 global using StellarChat.Shared.Infrastructure.DAL.Mongo;
