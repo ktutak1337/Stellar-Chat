@@ -14,6 +14,7 @@ global using StellarChat.Server.Api;
 global using StellarChat.Server.Api.DAL.Mongo.Documents.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
 global using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
+global using StellarChat.Server.Api.DAL.Mongo.Repositories.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
 global using StellarChat.Server.Api.Domain.Assistants.Models;
 global using StellarChat.Server.Api.Domain.Assistants.Repositories;

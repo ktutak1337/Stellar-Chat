@@ -12,8 +12,10 @@ internal static class Extensions
         builder.Services
             .AddScoped<IChatMessageRepository, ChatMessageRepository>()
             .AddScoped<IChatSessionRepository, ChatSessionRepository>()
+            .AddScoped<IAssistantRepository, AssistantRepository>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
-            .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions");
+            .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
+            .AddMongoRepository<AssistantDocument, Guid>("assistants");
 
         builder.Services.AddMediator(options =>
         {
