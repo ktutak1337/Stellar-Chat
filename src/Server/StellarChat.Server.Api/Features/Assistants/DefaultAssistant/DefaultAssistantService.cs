@@ -34,7 +34,11 @@ internal sealed class DefaultAssistantService : IDefaultAssistantService
 
         if (currentDefaultAssistant is not null)
         {
+            var now = _clock.GetUtcNow();
+
             currentDefaultAssistant.IsDefault = false;
+            currentDefaultAssistant.UpdatedAt= now;
+
             await _assistantRepository.UpdateAsync(currentDefaultAssistant);
             _logger.LogInformation($"Previous default assistant with ID: {currentDefaultAssistant.Id} has been unset.");
         }
