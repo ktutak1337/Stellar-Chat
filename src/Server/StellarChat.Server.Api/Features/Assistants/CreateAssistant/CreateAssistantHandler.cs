@@ -27,7 +27,7 @@ internal sealed class CreateAssistantHandler : ICommandHandler<CreateAssistant>
 
         if (command.IsDefault)
         {
-            await _defaultAssistantService.UnsetDefaultAsync();
+            await _defaultAssistantService.RevokeCurrentAsync();
         }
         
         var assistant = Assistant.Create(
