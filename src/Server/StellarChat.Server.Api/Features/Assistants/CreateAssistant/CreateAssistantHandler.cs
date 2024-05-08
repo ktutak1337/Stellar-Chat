@@ -3,12 +3,15 @@
 internal sealed class CreateAssistantHandler : ICommandHandler<CreateAssistant>
 {
     private readonly IAssistantRepository _assistantRepository;
+    private readonly IDefaultAssistantService _defaultAssistantService;
     private readonly TimeProvider _clock;
     private readonly ILogger<CreateAssistantHandler> _logger;
 
-    public CreateAssistantHandler(IAssistantRepository assistantRepository, TimeProvider clock, ILogger<CreateAssistantHandler> logger)
+    public CreateAssistantHandler(
+        IAssistantRepository assistantRepository, IDefaultAssistantService defaultAssistantService, TimeProvider clock, ILogger<CreateAssistantHandler> logger)
     {
         _assistantRepository = assistantRepository;
+        _defaultAssistantService = defaultAssistantService;
         _clock = clock;
         _logger = logger;
     }
@@ -24,7 +27,7 @@ internal sealed class CreateAssistantHandler : ICommandHandler<CreateAssistant>
 
         if (command.IsDefault)
         {
-            await UnsetPreviousDefaultAssistant();
+            await _defaultAssistantService.UnsetDefaultAsync();
         }
         
         var assistant = Assistant.Create(
@@ -44,17 +47,4 @@ internal sealed class CreateAssistantHandler : ICommandHandler<CreateAssistant>
 
         return Unit.Value;
     }
-
-    private async Task UnsetPreviousDefaultAssistant()
-    {
-        var assistants = await _assistantRepository.BrowseAsync();
-        var currentDefaultAssistant = assistants.SingleOrDefault(assistant => assistant.IsDefault);
-        
-        if (currentDefaultAssistant is not null)
-        {
-            currentDefaultAssistant.IsDefault = false;
-            await _assistantRepository.UpdateAsync(currentDefaultAssistant);
-        }
-    }
 }
-
