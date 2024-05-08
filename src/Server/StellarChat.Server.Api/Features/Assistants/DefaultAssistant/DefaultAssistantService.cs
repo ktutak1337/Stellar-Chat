@@ -13,7 +13,10 @@ internal sealed class DefaultAssistantService : IDefaultAssistantService
         _logger = logger;
     }
 
-    public async ValueTask SetDefaultAsync(Assistant assistant)
+    public bool IsCurrentlyDefault(Assistant assistant)
+        => assistant.IsDefault;
+
+    public async ValueTask SetAsDefaultAsync(Assistant assistant, bool saveChanges = true)
     {
         if (assistant is not null)
         {
@@ -21,13 +24,19 @@ internal sealed class DefaultAssistantService : IDefaultAssistantService
 
             assistant.IsDefault = true;
             assistant.UpdatedAt = now;
-            await _assistantRepository.UpdateAsync(assistant);
 
+            if (!saveChanges)
+            {
+                _logger.LogInformation($"Default assistant prepared to be set to new assistant with ID: {assistant.Id}, pending save.");
+                return;
+            }
+
+            await _assistantRepository.UpdateAsync(assistant);
             _logger.LogInformation($"Default assistant has been updated to new assistant with ID: {assistant.Id}");
         }
     }
 
-    public async ValueTask UnsetDefaultAsync()
+    public async ValueTask RevokeCurrentAsync()
     {
         var assistants = await _assistantRepository.BrowseAsync();
         var currentDefaultAssistant = assistants.SingleOrDefault(assistant => assistant.IsDefault);

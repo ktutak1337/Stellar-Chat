@@ -2,6 +2,7 @@
 
 internal interface IDefaultAssistantService
 {
-    ValueTask UnsetDefaultAsync();
-    ValueTask SetDefaultAsync(Assistant assistant);
+    ValueTask RevokeCurrentAsync();
+    ValueTask SetAsDefaultAsync(Assistant assistant, bool saveChanges = true);
+    bool IsCurrentlyDefault(Assistant assistant);
 }
