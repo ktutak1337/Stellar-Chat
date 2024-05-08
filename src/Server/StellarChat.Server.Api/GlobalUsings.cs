@@ -13,6 +13,7 @@ global using System.Reflection;
 global using StellarChat.Server.Api;
 global using StellarChat.Server.Api.DAL.Mongo.Documents.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
+global using StellarChat.Server.Api.DAL.Mongo.Exceptions.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
 global using StellarChat.Server.Api.DAL.Mongo.Repositories.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
