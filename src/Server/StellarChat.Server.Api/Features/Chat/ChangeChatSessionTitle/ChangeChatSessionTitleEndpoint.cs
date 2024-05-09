@@ -6,7 +6,7 @@ internal sealed class ChangeChatSessionTitleEndpoint : IEndpoint
     {
         var chatHistory = endpoints.MapGroup("/chat-history").WithTags("Chat history");
 
-        chatHistory.MapPut("/sessions/{chatId:guid}", async (Guid chatId, [FromBody] ChangeChatSessionTitleRequest request, IMediator mediator) =>
+        chatHistory.MapPut("/sessions/{chatId:guid}/title", async (Guid chatId, [FromBody] ChangeChatSessionTitleRequest request, IMediator mediator) =>
         {
             await mediator.Send(new ChangeChatSessionTitle(chatId, request.Title));
             return Results.NoContent();

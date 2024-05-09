@@ -26,7 +26,7 @@ internal sealed class UpdateAssistantEndpoint : IEndpoint
         .Produces(StatusCodes.Status404NotFound)
         .WithOpenApi(operation => new(operation)
         {
-            Summary = "Updates the details of a specific assistant by its 'ID'."
+            Summary = "Updates the details of a specific assistant by its 'id'."
         });
     }
 

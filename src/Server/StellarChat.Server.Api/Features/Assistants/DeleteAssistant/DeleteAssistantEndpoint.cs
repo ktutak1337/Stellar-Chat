@@ -15,7 +15,7 @@ internal sealed class DeleteAssistantEndpoint : IEndpoint
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi(operation => new(operation)
             {
-                Summary = "Deletes a single Assistant by 'ID'.",
+                Summary = "Deletes a single Assistant by 'id'.",
                 Description = "If the deleted Assistant is the default, a new default will be assigned automatically. Cannot delete if only one Assistant exists."
             });
     }

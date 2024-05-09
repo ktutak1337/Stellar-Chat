@@ -12,7 +12,7 @@ public class GetAssistantEndpoint : IEndpoint
             .WithName("GetAssistant")
             .WithOpenApi(operation => new(operation)
             {
-                Summary = "Retrieves a single assistant by 'chatId'."
+                Summary = "Retrieves a single assistant by 'id'."
             });
     }
 
