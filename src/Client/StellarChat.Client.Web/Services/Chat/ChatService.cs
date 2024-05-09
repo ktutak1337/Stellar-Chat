@@ -26,7 +26,7 @@ public class ChatService : IChatService
 
         var payload = new ChangeChatSessionTitleRequest(id, title);
 
-        await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}", payload);
+        await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}/title", payload);
     }
 
     public async ValueTask DeleteChatSession(Guid id)
