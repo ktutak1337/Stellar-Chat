@@ -1,4 +1,4 @@
-﻿namespace StellarChat.Server.Api.Features.Assistants.DefaultAssistant;
+﻿namespace StellarChat.Server.Api.Features.Assistants.DefaultAssistant.Services;
 
 internal sealed class DefaultAssistantService : IDefaultAssistantService
 {
@@ -46,7 +46,7 @@ internal sealed class DefaultAssistantService : IDefaultAssistantService
             var now = _clock.GetUtcNow();
 
             currentDefaultAssistant.IsDefault = false;
-            currentDefaultAssistant.UpdatedAt= now;
+            currentDefaultAssistant.UpdatedAt = now;
 
             await _assistantRepository.UpdateAsync(currentDefaultAssistant);
             _logger.LogInformation($"Previous default assistant with ID: {currentDefaultAssistant.Id} has been unset.");

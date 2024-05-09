@@ -1,6 +1,4 @@
-﻿using StellarChat.Server.Api.Features.Assistants.DefaultAssistant;
-
-namespace StellarChat.Server.Api;
+﻿namespace StellarChat.Server.Api;
 
 internal static class Extensions
 {

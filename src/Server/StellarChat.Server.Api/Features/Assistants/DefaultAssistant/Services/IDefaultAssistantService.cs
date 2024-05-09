@@ -1,4 +1,4 @@
-﻿namespace StellarChat.Server.Api.Features.Assistants.DefaultAssistant;
+﻿namespace StellarChat.Server.Api.Features.Assistants.DefaultAssistant.Services;
 
 internal interface IDefaultAssistantService
 {
