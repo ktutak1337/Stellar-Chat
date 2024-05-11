@@ -1,4 +1,6 @@
-﻿namespace StellarChat.Server.Api;
+﻿using StellarChat.Server.Api.Features.Chat.CarryConversation.Services;
+
+namespace StellarChat.Server.Api;
 
 internal static class Extensions
 {
@@ -14,6 +16,7 @@ internal static class Extensions
             .AddScoped<IChatSessionRepository, ChatSessionRepository>()
             .AddScoped<IAssistantRepository, AssistantRepository>()
             .AddScoped<IDefaultAssistantService, DefaultAssistantService>()
+            .AddScoped<IChatContext, ChatContext>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
             .AddMongoRepository<AssistantDocument, Guid>("assistants");
