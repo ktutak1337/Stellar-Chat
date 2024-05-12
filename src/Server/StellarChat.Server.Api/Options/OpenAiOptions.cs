@@ -1,4 +1,4 @@
-﻿namespace StellarChat.Shared.Infrastructure.Semantic;
+﻿namespace StellarChat.Server.Api.Options;
 
 internal class OpenAiOptions
 {
