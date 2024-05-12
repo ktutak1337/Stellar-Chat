@@ -9,7 +9,6 @@ using StellarChat.Shared.Infrastructure.Contexts;
 using StellarChat.Shared.Infrastructure.DAL.Mongo;
 using StellarChat.Shared.Infrastructure.Exceptions;
 using StellarChat.Shared.Infrastructure.Observability.Logging;
-using StellarChat.Shared.Infrastructure.Semantic;
 using System.Text.RegularExpressions;
 
 namespace StellarChat.Shared.Infrastructure;
@@ -30,9 +29,7 @@ public static class Extensions
                 .AddContext()
                 .AddCorsPolicy(builder.Configuration)
                 .AddMongo(builder.Configuration)
-                .RegisterEndpoints(builder.Configuration)
-                .AddSemanticKernel(builder.Configuration)
-                .AddKernelMemory(builder.Configuration);
+                .RegisterEndpoints(builder.Configuration);
 
         return builder;
     }
