@@ -1,7 +1,6 @@
 ﻿using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
-using StellarChat.Server.Api.Features.Chat.CarryConversation.Services;
 using StellarChat.Server.Api.Options;
 
 namespace StellarChat.Server.Api;
@@ -69,9 +68,11 @@ internal static class Extensions
         services.AddSingleton(kernel);
 
         using var serviceProvider = services.BuildServiceProvider();
+        
         var chatContext = serviceProvider.GetRequiredService<IChatContext>();
+        var clock = serviceProvider.GetRequiredService<TimeProvider>();
 
-        kernel.ImportPluginFromObject(new ChatPlugin(chatContext), nameof(ChatPlugin));
+        kernel.ImportPluginFromObject(new ChatPlugin(chatContext, clock), nameof(ChatPlugin));
 
         return services;
     }

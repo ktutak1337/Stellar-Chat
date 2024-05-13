@@ -5,4 +5,3 @@ public enum ChatMessageType
     Message,
     File,
 }
-

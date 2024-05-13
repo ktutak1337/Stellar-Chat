@@ -19,9 +19,11 @@ internal sealed class CarryConversationHandler : ICommandHandler<Ask, string>
         var contextVariables = GetContextArguments(command);
 
         KernelFunction? chatFunction = _kernel.Plugins.GetFunction(ChatPluginName, ChatFunctionName);
-        var result = await _kernel.InvokeAsync(chatFunction!, contextVariables, cancellationToken);
+        await _kernel.InvokeAsync(chatFunction!, contextVariables, cancellationToken);
 
-        return result.ToString();
+        contextVariables.TryGetValue("input", out var result);
+        
+        return result!.ToString() ?? string.Empty;
     }
 
     private KernelArguments GetContextArguments(Ask command)
