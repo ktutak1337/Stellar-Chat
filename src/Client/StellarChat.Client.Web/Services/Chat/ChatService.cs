@@ -20,6 +20,15 @@ public class ChatService : IChatService
         return result!;
     }
 
+    public async ValueTask<Paged<ChatMessageResponse>> GetChatMessagesByChatId(Guid chatId, int page = 0, int pageSize = 10000)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+        
+        var result = await httpClient.GetFromJsonAsync<Paged<ChatMessageResponse>>($"/chat-history/sessions/{chatId}/messages?Page={page}&PageSize={pageSize}");
+
+        return result!;
+    }
+
     public async ValueTask ChangeChatSessionTitle(Guid id, string title)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");

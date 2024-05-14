@@ -1,15 +1,23 @@
 ﻿@page "/"
+@page "/c/{ChatId}"
+
+@inject ChatState _chatState
+@inject IChatService _chatService
+@inject NavigationManager _navigationManager
+@inject IJSRuntime JS
+@implements IDisposable
 
 <PageTitle>Home</PageTitle>
 
 <div class="h-100">
     <div class="w-100 mt-4 mx-auto" style="max-width: 960px;">
-        <div id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
+        <div @ref="chatMessagesDiv" id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
             @foreach (var chatMessage in ChatMessages)
             {
                 <ChatMessage Message=@chatMessage />
             }
         </div>
+        <p>@_chatState.ChatId</p>
     </div>
     <div class="mt-2 fixed-bottom w-auto">
         <PromptInput />
@@ -18,5 +26,34 @@
 
 @code 
 {
+    [Parameter] public string ChatId { get; set; } = string.Empty;
+
     public List<ChatMessageResponse> ChatMessages { get; set; } = new();
+    private ElementReference chatMessagesDiv;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _chatState.ChatIdChanged += async () => await LoadChatHistory();
+
+        await LoadChatHistory();
+    }
+
+    private async Task LoadChatHistory()
+    {
+        var chatId = _chatState.ChatId;
+
+        if (chatId != Guid.Empty)
+        {
+            var response = await _chatService.GetChatMessagesByChatId(_chatState.ChatId);
+            ChatMessages = response.Items.ToList();
+            StateHasChanged();
+
+            await JS.InvokeVoidAsync("scrollToBottom", chatMessagesDiv);
+        }
+    }
+
+    public void Dispose()
+    {
+        _chatState.ChatIdChanged -= async () => await LoadChatHistory();
+    }
 }

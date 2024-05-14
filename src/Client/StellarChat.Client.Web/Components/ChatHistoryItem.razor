@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager NavigationManager
 @inject IChatService _chatService
 @inject IDialogService _dialogService
+@inject ChatState _chatState
 
 <div Class="d-flex flex-row flex-grow-1 gap-1 pa-2" Elevation="0">
     <MudAvatar Class="my-auto">
@@ -24,7 +25,8 @@
 
     private void NavigateToChat()
     {
-
+        _chatState.SetChatId(ChatSessionItem!.Id);
+        NavigationManager.NavigateTo($"/c/{ChatSessionItem.Id}");
     }
 
     private async Task DeleteChat() 
