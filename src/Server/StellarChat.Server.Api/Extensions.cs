@@ -36,7 +36,7 @@ internal static class Extensions
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
-        app.MapHub<MessageBrokerHub>("/hub");
+        app.MapHub<ChatHub>("/hub");
         app.UseSharedInfrastructure();
 
         return app;

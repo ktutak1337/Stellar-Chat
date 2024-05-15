@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System.Text;
 
@@ -9,7 +10,7 @@ internal class ChatContext : IChatContext
     private readonly IChatSessionRepository _chatSessionRepository;
     private readonly IChatMessageRepository _chatMessageRepository;
     private readonly IAssistantRepository _assistantRepository;
-    private readonly IHubContext<MessageBrokerHub> _messageBrokerHubContext;
+    private readonly IHubContext<ChatHub, IChatHub> _hubContext;
     private readonly Kernel _kernel;
     private readonly ChatHistory _chatHistory = new();
 
@@ -17,13 +18,13 @@ internal class ChatContext : IChatContext
         IChatSessionRepository chatSessionRepository,
         IChatMessageRepository chatMessageRepository,
         IAssistantRepository assistantRepository,
-        IHubContext<MessageBrokerHub> messageBrokerHubContext,
+        IHubContext<ChatHub, IChatHub> hubContext,
         Kernel kernel)
     {
         _chatSessionRepository = chatSessionRepository;
         _chatMessageRepository = chatMessageRepository;
         _assistantRepository = assistantRepository;
-        _messageBrokerHubContext = messageBrokerHubContext;
+        _hubContext = hubContext;
         _kernel = kernel;
     }
 
@@ -75,14 +76,12 @@ internal class ChatContext : IChatContext
             ModelId = model
         };
 
-        await _messageBrokerHubContext.Clients.Group(chatId.ToString()).SendAsync("ReceiveMessage", chatId, botMessage, cancellationToken);
-
         await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(_chatHistory, executionSettings))
         {
             if (contentPiece.Content is { Length: > 0 })
             {
                 reply.Append(contentPiece.Content);
-                await UpdateMessageOnClient(botMessage, reply.ToString(), cancellationToken);
+                await UpdateMessageOnClient(reply.ToString());
             }
         }
 
@@ -115,6 +114,6 @@ internal class ChatContext : IChatContext
         }
     }
 
-    private async Task UpdateMessageOnClient(ChatMessage chatMessage, string message, CancellationToken cancellationToken = default)
-        => await _messageBrokerHubContext.Clients.Group(chatMessage.ChatId.ToString()).SendAsync("ReceiveMessageUpdate", message, cancellationToken);
+    private async Task UpdateMessageOnClient(string message)
+        => await _hubContext.Clients.All.ReceiveChatMessageChunk(message);
 }
