@@ -7,28 +7,30 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
-        <MudSpacer />
-        <MudToggleIconButton Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
-    </MudAppBar>
+<CascadingValue Value="_IsDarkModeEnabled">
+    <MudLayout>
+        <MudAppBar Elevation="1" Style="@BackgroundColorStyle">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="(_IsDarkModeEnabled ? Color.Default : Color.Dark)" Edge="Edge.Start" OnClick="ToggleDrawer" />
+            <MudSpacer />
+            <MudToggleIconButton Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Dark" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
+        </MudAppBar>
 
-    <Drawer IsDrawerOpen="@_isDrawerOpen" />
-    <MudMainContent>
-        <CustomErrorBoundary>
-            <ChildContent>
-                @Body
-            </ChildContent>
-            <ErrorContent Context="errorDetails">
-                @{
-                     ShowErrorSnackbar(@errorDetails.Message);
-                     @Body
-                }
-            </ErrorContent>
-        </CustomErrorBoundary>
-    </MudMainContent>
-</MudLayout>
+        <Drawer IsDrawerOpen="@_isDrawerOpen" />
+        <MudMainContent>
+            <CustomErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent Context="errorDetails">
+                    @{
+                        ShowErrorSnackbar(@errorDetails.Message);
+                        @Body
+                    }
+                </ErrorContent>
+            </CustomErrorBoundary>
+        </MudMainContent>
+    </MudLayout>
+</CascadingValue>
 
 @code 
 {
@@ -36,6 +38,7 @@
 
     private bool _IsDarkModeEnabled = false;
     private bool _isDrawerOpen = true;
+    private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#27272f" : "#e7e5e4")};";
 
     protected override async Task OnInitializedAsync()
     {

@@ -6,9 +6,9 @@
             <div class="d-flex flex-1 w-100 overflow-hidden">
 
                 @*------------ left column ------------ *@
-                <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1" style="width:72px;">
+                <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1" style="width:72px; background-color:@(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1");">
                     <MudAvatar Size="Size.Large" Color="Color.Secondary" Class="mt-3 mx-auto">
-                        <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" Alt="An image of the best dog ever!"></MudImage>
+                        <MudImage Src="https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn" Alt="An image of the best dog ever!"></MudImage>
                     </MudAvatar>
                     <div class="d-flex flex-column align-items-center flex-grow-1 fixed mb-2" style="bottom: 6px">
                         <MudTooltip Text="New chat" Arrow="true" Placement="Placement.Right" >
@@ -23,7 +23,7 @@
                 <MudDivider Vertical="true" />
 
                 @*------------ right column ------------ *@
-                <div id="drawer-right-column" class="p-3 flex-grow-1 overflow-y-auto w-100 h-100">
+                <div id="drawer-right-column" class="p-3 flex-grow-1 overflow-y-auto w-100 h-100" style="background-color:@(_IsDarkModeEnabled ? "#27272f" : "#e7e5e4");">
                     <div class="d-flex flex-column h-100">
                         <MudText Typo="Typo.h5" Class="mx-auto mt-3 mb-2">Stellar Chat</MudText>
                         <MudDivider />
@@ -49,6 +49,9 @@
 
 @code
 {
+    [CascadingParameter]
+    private bool _IsDarkModeEnabled { get; set; }
+
     [Parameter]
     public bool IsDrawerOpen { get; set; }
 
