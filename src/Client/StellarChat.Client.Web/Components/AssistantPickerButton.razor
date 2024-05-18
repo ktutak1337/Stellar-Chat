@@ -1,0 +1,41 @@
+﻿<div @onclick="HandleAvatarClick" @onmouseover="HandleMouseOverAvatar" @onmouseout="HandleMouseOutAvatar" Class="relative" style="cursor: pointer;">
+    <div class="relative d-flex justify-center">
+        <MudAvatar Size="Size.Large" Color="Color.Secondary" Class="mt-3 mx-auto">
+            <MudImage Src="https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn" />
+            @if (isHovering)
+            {
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1; pointer-events: none;">
+                    <div class="absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                        <MudIcon Icon="@Icons.Material.Filled.ArrowDropDownCircle" Size="Size.Medium" Style="color: #94a3b8" />
+                    </div>
+                </div>
+            }
+        </MudAvatar>
+    </div>
+</div>
+
+@code 
+{
+    [Parameter]
+    public EventCallback OnAvatarClick { get; set; }
+
+    private bool isHovering = false;
+
+    private async Task HandleAvatarClick()
+    {
+        if (OnAvatarClick.HasDelegate)
+        {
+            await OnAvatarClick.InvokeAsync();
+        }
+    }
+
+    private void HandleMouseOverAvatar()
+    {
+        isHovering = true;
+    }
+
+    private void HandleMouseOutAvatar()
+    {
+        isHovering = false;
+    }
+}

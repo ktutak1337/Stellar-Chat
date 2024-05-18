@@ -7,9 +7,7 @@
 
                 @*------------ left column ------------ *@
                 <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1" style="width:72px; background-color:@(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1");">
-                    <MudAvatar Size="Size.Large" Color="Color.Secondary" Class="mt-3 mx-auto">
-                        <MudImage Src="https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn" Alt="An image of the best dog ever!"></MudImage>
-                    </MudAvatar>
+                    <AssistantPickerButton OnAvatarClick="OnAvatarClick"/>
                     <div class="d-flex flex-column align-items-center flex-grow-1 fixed mb-2" style="bottom: 6px">
                         <MudTooltip Text="New chat" Arrow="true" Placement="Placement.Right" >
                             <MudFab Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 ml-2" />
@@ -55,6 +53,9 @@
     [Parameter]
     public bool IsDrawerOpen { get; set; }
 
+    [Parameter]
+    public EventCallback OnAvatarClick { get; set; }
+
     public string SearchText { get; set; } = string.Empty;
 
     public List<ChatSessionResponse> ChatSessions { get; set; } = new();
@@ -78,7 +79,6 @@
 
     private async Task DeleteChatSession(ChatSessionResponse chatSession)
     {
-        Console.WriteLine($"chatSession.Id: {chatSession.Id}");
         await _chatService.DeleteChatSession(chatSession.Id);
         ChatSessions.Remove(chatSession);
     }
@@ -87,5 +87,13 @@
     {
         var response = await _chatService.BrowseChatSessions();
         ChatSessions = response.Items.ToList();
+    }
+
+    private async Task HandleAvatarClick()
+    {
+        if (OnAvatarClick.HasDelegate)
+        {
+            await OnAvatarClick.InvokeAsync();
+        }
     }
 }
