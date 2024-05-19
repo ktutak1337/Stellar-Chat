@@ -15,7 +15,8 @@
             <MudToggleIconButton Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Dark" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
         </MudAppBar>
 
-        <Drawer IsDrawerOpen="@_isDrawerOpen" />
+        <Drawer IsDrawerOpen="@_isDrawerOpen" OnAvatarClick="ToggleAssistantsDrawer" />
+        <AssistantsDrawer IsOpen="_isAssistantsDrawerOpen" IsOpenChanged="HandleAssistantsDrawerStateChanged" />
         <MudMainContent>
             <CustomErrorBoundary>
                 <ChildContent>
@@ -38,6 +39,8 @@
 
     private bool _IsDarkModeEnabled = false;
     private bool _isDrawerOpen = true;
+    private bool _isAssistantsDrawerOpen = false;
+
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#27272f" : "#e7e5e4")};";
 
     protected override async Task OnInitializedAsync()
@@ -58,6 +61,10 @@
     }
 
     private void ToggleDrawer() => _isDrawerOpen = !_isDrawerOpen;
+
+    private void ToggleAssistantsDrawer() => _isAssistantsDrawerOpen = !_isAssistantsDrawerOpen;
+
+    private void HandleAssistantsDrawerStateChanged(bool isOpen) => _isAssistantsDrawerOpen = isOpen;
 
     private void ShowErrorSnackbar(string message)
     {

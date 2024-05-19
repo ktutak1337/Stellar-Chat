@@ -1,0 +1,24 @@
+﻿<MudDrawerContainer Class="mud-height-full">
+    <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
+        <MudDrawerHeader Class="pr-2 pt-1">
+            <MudText Typo="Typo.h6" Class="mt-2">Select or Manage Assistants</MudText>
+            <MudSpacer />
+            <MudIconButton OnClick="CloseDrawer" Icon="@Icons.Material.Filled.Close" Color="Color.Primary" />
+        </MudDrawerHeader>
+    </MudDrawer>
+</MudDrawerContainer>
+
+@code 
+{
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    private void CloseDrawer()
+    {
+        IsOpen = false;
+        IsOpenChanged.InvokeAsync(IsOpen);
+    }
+}
