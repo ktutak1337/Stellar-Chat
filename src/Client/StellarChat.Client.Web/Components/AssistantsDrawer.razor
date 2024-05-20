@@ -1,10 +1,19 @@
-﻿<MudDrawerContainer Class="mud-height-full">
+﻿@inject IAssistantService _assistantService
+
+<MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
         <MudDrawerHeader Class="pr-2 pt-1">
             <MudText Typo="Typo.h6" Class="mt-2">Select or Manage Assistants</MudText>
             <MudSpacer />
             <MudIconButton OnClick="CloseDrawer" Icon="@Icons.Material.Filled.Close" Color="Color.Primary" />
         </MudDrawerHeader>
+        <MudList Clickable="true">
+            <MudDivider />
+            @foreach (var assistant in Assistants)
+            {
+                <AssistantItem Assistant="@assistant" />
+            }
+        </MudList>
     </MudDrawer>
 </MudDrawerContainer>
 
@@ -15,6 +24,19 @@
 
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
+
+    public List<AssistantResponse> Assistants { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAssistants();
+    }
+
+    private async Task LoadAssistants()
+    {
+        var response = await _assistantService.BrowseAssistants();
+        Assistants = response.Items.ToList();
+    }
 
     private void CloseDrawer()
     {
