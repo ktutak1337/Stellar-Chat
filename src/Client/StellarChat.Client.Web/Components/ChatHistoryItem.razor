@@ -3,18 +3,21 @@
 @inject IDialogService _dialogService
 @inject ChatState _chatState
 
-<div Class="d-flex flex-row flex-grow-1 gap-1 pa-2" Elevation="0">
-    <MudAvatar Class="my-auto">
-        <MudImage Size="Size.Medium" Src="https://avatars.githubusercontent.com/u/49451143?v=4"></MudImage>
-    </MudAvatar>
-    <MudListItem OnClick="@NavigateToChat">
-        @ChatSessionItem?.Title
-    </MudListItem>
-    <MudMenu Class="" Icon="@Icons.Material.Filled.MoreVert">
-        <MudMenuItem OnClick="OpenChangeTitleDialog">Rename</MudMenuItem>
-        <MudMenuItem OnClick="DeleteChat">Delete</MudMenuItem>
-    </MudMenu>
-</div>
+<MudListItem OnClick="@NavigateToChat">
+    <ChildContent>
+        <div class="d-flex flex-row flex-grow-1 gap-4">
+            <MudAvatar Size="@Size.Medium" Class="my-auto">
+                <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4"></MudImage>
+            </MudAvatar>
+            <MudText Typo="Typo.body1" Class="my-auto">@ChatSessionItem?.Title</MudText>
+            <MudSpacer />
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+                <MudMenuItem OnClick="OpenChangeTitleDialog">Rename</MudMenuItem>
+                <MudMenuItem OnClick="DeleteChat">Delete</MudMenuItem>
+            </MudMenu>
+        </div>
+    </ChildContent>
+</MudListItem>
 <MudDivider />
 
 @code
