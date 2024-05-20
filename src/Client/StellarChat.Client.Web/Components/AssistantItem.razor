@@ -1,0 +1,22 @@
+﻿<MudListItem>
+    <ChildContent>
+        <div class="d-flex flex-row flex-grow-1 gap-4">
+            <MudAvatar Size="@Size.Large" Class="my-auto">
+                <MudImage Src="@Assistant.AvatarUrl"></MudImage>
+            </MudAvatar>
+            <div>
+                <MudText Typo="Typo.h6">@Assistant.Name</MudText>
+                <MudText Typo="Typo.subtitle2">@Assistant.Description</MudText>
+            </div>
+            <MudSpacer />
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" />
+        </div>
+    </ChildContent>
+</MudListItem>
+<MudDivider />
+
+@code 
+{
+    [Parameter] public AssistantResponse Assistant { get; set; }
+    [Parameter] public EventCallback OnEdit { get; set; }
+}
