@@ -40,4 +40,15 @@ public class AssistantService : IAssistantService
 
         await httpClient.PostAsJsonAsync($"/assistants", payload);
     }
+
+    public async ValueTask UpdateAssistant(AssistantResponse assistant)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var (id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, _, _) = assistant;
+
+        var payload = new UpdateAssistantRequest(id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault);
+
+        await httpClient.PutAsJsonAsync($"/assistants/{id}", payload);
+    }
 }
