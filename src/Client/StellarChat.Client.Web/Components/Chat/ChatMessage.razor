@@ -1,0 +1,28 @@
+﻿<div class="d-flex mb-6">
+    <div id="chat-message-avatar" class="avatar mr-2">
+
+@*  TODO: Implement logic to display the correct avatar based on whether the author is a user or a bot.
+    Use the avatar image URL from the application state. *@
+
+        <MudAvatar Rounded="true" Color="Color.Secondary">
+            <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" />
+        </MudAvatar>
+    </div>
+    <div id="chat-message-text" class="flex-grow-1">
+        @Message?.Content
+        <div id="chat-message-icons" class="d-flex flex-row mt-4">
+            <MudIconButton id="chat-read-aloud-button" Class="mt-1" Size="Size.Small" Color="Color.Inherit" Disabled="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 19" width="20" height="20">
+                    <path fill="currentColor" d="M13 2.25c0-1.079-1.274-1.65-2.08-.934L6.427 5.309a.75.75 0 0 1-.498.19H2.25A2.25 2.25 0 0 0 0 7.749v4.497a2.25 2.25 0 0 0 2.25 2.25h3.68a.75.75 0 0 1 .498.19l4.491 3.994c.806.716 2.081.144 2.081-.934V2.25ZM7.425 6.43 11.5 2.807v14.382l-4.075-3.624a2.25 2.25 0 0 0-1.495-.569H2.25a.75.75 0 0 1-.75-.75V7.75a.75.75 0 0 1 .75-.75h3.68a2.25 2.25 0 0 0 1.495-.569Zm9.567-2.533a.75.75 0 0 1 1.049.157A9.959 9.959 0 0 1 20 10a9.96 9.96 0 0 1-1.96 5.946.75.75 0 0 1-1.205-.892A8.459 8.459 0 0 0 18.5 10a8.459 8.459 0 0 0-1.665-5.054.75.75 0 0 1 .157-1.049ZM15.143 6.37a.75.75 0 0 1 1.017.303c.536.99.84 2.125.84 3.328a6.973 6.973 0 0 1-.84 3.328.75.75 0 0 1-1.32-.714c.42-.777.66-1.666.66-2.614s-.24-1.837-.66-2.614a.75.75 0 0 1 .303-1.017Z"></path>
+                </svg>
+            </MudIconButton>
+            <MudIconButton id="chat-copy-message-button" Size="Size.Small" Class="ml-2" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Disabled="true" />
+        </div>
+    </div>
+</div>
+
+@code 
+{
+    [Parameter]
+    public ChatMessageResponse? Message { get; set; }
+}
