@@ -29,4 +29,15 @@ public class AssistantService : IAssistantService
 
         return result!;
     }
+
+    public async ValueTask CreateAssistant(AssistantResponse assistant)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var(id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, _, _) = assistant;
+
+        var payload = new CreateAssistantRequest(id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault);
+
+        await httpClient.PostAsJsonAsync($"/assistants", payload);
+    }
 }
