@@ -9,7 +9,11 @@
                 <MudText Typo="Typo.subtitle2">@Assistant?.Description</MudText>
             </div>
             <MudSpacer />
-            <MudIconButton Icon="@Icons.Material.Filled.Edit" />
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+                <MudMenuItem OnClick="SetDefaultAssitant">Set as default</MudMenuItem>
+                <MudMenuItem OnClick="EditAssistant">Edit</MudMenuItem>
+                <MudMenuItem OnClick="DeleteAssistant">Delete</MudMenuItem>
+            </MudMenu>
         </div>
     </ChildContent>
 </MudListItem>
@@ -18,5 +22,19 @@
 @code 
 {
     [Parameter] public AssistantResponse? Assistant { get; set; }
-    [Parameter] public EventCallback OnEdit { get; set; }
+
+    private async Task SetDefaultAssitant()
+    {
+        await Task.CompletedTask;
+    }
+
+    private async Task EditAssistant()
+    {
+        await Task.CompletedTask;
+    }
+
+    private async Task DeleteAssistant()
+    {
+        await Task.CompletedTask;
+    }
 }
