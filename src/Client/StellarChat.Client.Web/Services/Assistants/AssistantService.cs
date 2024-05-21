@@ -51,4 +51,13 @@ public class AssistantService : IAssistantService
 
         await httpClient.PutAsJsonAsync($"/assistants/{id}", payload);
     }
+
+    public async ValueTask SetDefaultAssistant(Guid id, bool isDefault)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var payload = new SetDefaultAssistantRequest(id, isDefault);
+
+        await httpClient.PutAsJsonAsync($"/assistants/{id}/default", payload);
+    }
 }
