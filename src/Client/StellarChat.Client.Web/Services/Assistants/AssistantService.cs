@@ -11,6 +11,16 @@ public class AssistantService : IAssistantService
     public AssistantService(IHttpClientFactory httpClientFactory) 
         => _httpClientFactory = httpClientFactory;
 
+
+    public async ValueTask<AssistantResponse> GetAssistant(Guid id)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var result = await httpClient.GetFromJsonAsync<AssistantResponse>($"/assistants/{id}");
+
+        return result!;
+    }
+
     public async ValueTask<Paged<AssistantResponse>> BrowseAssistants(int page = 0, int pageSize = 10000)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");

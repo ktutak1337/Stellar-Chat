@@ -5,5 +5,6 @@ namespace StellarChat.Client.Web.Services.Assistants;
 
 public interface IAssistantService
 {
+    ValueTask<AssistantResponse> GetAssistant(Guid id);
     ValueTask<Paged<AssistantResponse>> BrowseAssistants(int page = 0, int pageSize = 10000);
 }
