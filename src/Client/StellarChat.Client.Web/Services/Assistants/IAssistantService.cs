@@ -10,4 +10,5 @@ public interface IAssistantService
     ValueTask CreateAssistant(AssistantResponse assistant);
     ValueTask UpdateAssistant(AssistantResponse assistant);
     ValueTask SetDefaultAssistant(Guid id, bool isDefault);
+    ValueTask DeleteAssistant(Guid id);
 }

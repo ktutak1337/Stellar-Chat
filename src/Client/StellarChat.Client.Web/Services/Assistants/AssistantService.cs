@@ -60,4 +60,11 @@ public class AssistantService : IAssistantService
 
         await httpClient.PutAsJsonAsync($"/assistants/{id}/default", payload);
     }
+
+    public async ValueTask DeleteAssistant(Guid id)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        await httpClient.DeleteAsync($"/assistants/{id}");
+    }
 }
