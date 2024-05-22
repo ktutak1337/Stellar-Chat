@@ -1,0 +1,101 @@
+﻿@inject NavigationManager _navigationManager
+@inject IAssistantService _assistantService
+
+<EditForm Model="@Assistant" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="d-flex flex-column flex-grow-1 gap-3 pa-4">
+        <MudText>Name</MudText>
+        <MudTextField @bind-Value="Assistant!.Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+        <MudText>Description</MudText>
+        <MudTextField @bind-Value="Assistant!.Description" Variant="Variant.Outlined" Margin="Margin.Dense" />
+
+        <MudText>Avatar</MudText>
+        <div class="d-flex flex-row flex-grow-1 gap-4 align-center">
+            <MudAvatar Size="Size.Medium" Color="Color.Secondary">
+                <MudImage Src="@Assistant.AvatarUrl" />
+            </MudAvatar>
+            <MudFileUpload T="IBrowserFile">
+                <ButtonTemplate Context="fileContext">
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               for="@fileContext.Id">
+                        Change
+                    </MudButton>
+                </ButtonTemplate>
+                <SelectedTemplate Context="fileContext"/>
+            </MudFileUpload>
+        </div>
+        <MudText Typo="Typo.caption">Max file size: 5MB. Accepted formats: JPG, PNG, GIF</MudText>
+        
+        <MudText>Model</MudText>
+        <MudSelect @bind-Value="Assistant.DefaultModel" Margin="Margin.Dense" T="string" Variant="Variant.Outlined">
+            @foreach (var model in AvailableModels)
+            {
+                <MudSelectItem Value="@model" />
+            }
+        </MudSelect>
+
+        <MudText>Metaprompt</MudText>
+        <MudTextField @bind-Value="Assistant!.Metaprompt" T="string" Variant="Variant.Outlined" AutoGrow Lines="7" MaxLines="10" Margin="Margin.Dense" HelperText="@assistantBehaviorGuidelines" />
+    </div>
+    <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+    </div>
+</EditForm>
+
+@code 
+{
+    [Parameter] public Guid AssistantId { get; set; }
+    private Assistant? Assistant { get; set; } = new();
+    private List<string> AvailableModels { get; set; } = new() { "gpt-4", "gpt-3.5-turbo" };
+    
+    private const string assistantBehaviorGuidelines = @"
+Enter the Metaprompt here. This set of instructions will define your assistant's behavior
+in every conversation, guiding how it interacts and responds. Keep it concise, clear, and
+reflective of the assistant's intended personality and capabilities.";
+
+
+    private bool success;
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await PopulateForm();
+    }
+
+    private void OnValidSubmit(EditContext context)
+    {
+        success = true;
+        StateHasChanged();
+    }
+
+    private async Task PopulateForm()
+    {
+        if (Guid.Empty != AssistantId)
+        {
+            var assistant = await _assistantService.GetAssistant(AssistantId);
+
+            if (assistant is not null)
+            {
+                var (id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, createdAt, updatedAt) = assistant;
+
+                Assistant = new Assistant
+                {
+                    Id = id,
+                    Name = name,
+                    Metaprompt = metaprompt,
+                    Description = description,
+                    // TODO: temp solution
+                    AvatarUrl = "https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
+                    DefaultModel = defaultModel,
+                    DefaultVoice = defaultVoice,
+                    IsDefault = isDefault,
+                    CreatedAt = createdAt,
+                    UpdatedAt = updatedAt
+                };
+            }
+        }
+    }
+}
