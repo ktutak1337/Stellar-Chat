@@ -5,10 +5,10 @@
     <DataAnnotationsValidator />
     <div class="d-flex flex-column flex-grow-1 gap-3 pa-4">
         <MudText>Name</MudText>
-        <MudTextField @bind-Value="Assistant!.Name" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField @bind-Value="Assistant!.Name" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Assistant!.Name)" />
 
         <MudText>Description</MudText>
-        <MudTextField @bind-Value="Assistant!.Description" Variant="Variant.Outlined" Margin="Margin.Dense" />
+        <MudTextField @bind-Value="Assistant!.Description" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Assistant!.Description)" />
 
         <MudText>Avatar</MudText>
         <div class="d-flex flex-row flex-grow-1 gap-4 align-center">
@@ -31,7 +31,7 @@
         <MudText Typo="Typo.caption">Max file size: 5MB. Accepted formats: JPG, PNG, GIF</MudText>
         
         <MudText>Model</MudText>
-        <MudSelect @bind-Value="Assistant.DefaultModel" Margin="Margin.Dense" T="string" Variant="Variant.Outlined">
+        <MudSelect @bind-Value="Assistant.DefaultModel" Margin="Margin.Dense" T="string" Variant="Variant.Outlined" For="@(() => Assistant!.DefaultModel)">
             @foreach (var model in AvailableModels)
             {
                 <MudSelectItem Value="@model" />
@@ -39,7 +39,14 @@
         </MudSelect>
 
         <MudText>Metaprompt</MudText>
-        <MudTextField @bind-Value="Assistant!.Metaprompt" T="string" Variant="Variant.Outlined" AutoGrow Lines="7" MaxLines="10" Margin="Margin.Dense" HelperText="@assistantBehaviorGuidelines" />
+        <MudTextField @bind-Value="Assistant!.Metaprompt" 
+                      T="string" Variant="Variant.Outlined" 
+                      AutoGrow 
+                      Lines="7" 
+                      MaxLines="10" 
+                      Margin="Margin.Dense" 
+                      HelperText="@assistantBehaviorGuidelines" 
+                      For="@(() => Assistant!.Metaprompt)" />
     </div>
     <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
