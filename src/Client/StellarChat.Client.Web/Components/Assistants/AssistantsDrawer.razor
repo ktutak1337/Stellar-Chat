@@ -11,7 +11,7 @@
             </MudDrawerHeader>
             <div>
                 <MudDivider />
-                <AssistantForm AssistantId="selectedAssistantId" />
+                <AssistantForm AssistantId="selectedAssistantId" OnAssistantUpdate="HandleAssistantUpdated" />
             </div>
         }
         else
@@ -71,5 +71,11 @@
     {
         selectedAssistantId = id;
         isEditing = true;
+    }
+
+    private async Task HandleAssistantUpdated()
+    {
+        isEditing = false;
+        await LoadAssistants();
     }
 }

@@ -56,9 +56,10 @@
 @code 
 {
     [Parameter] public Guid AssistantId { get; set; }
+    [Parameter] public EventCallback OnAssistantUpdate { get; set; }
     private Assistant? Assistant { get; set; } = new();
     private List<string> AvailableModels { get; set; } = new() { "gpt-4", "gpt-3.5-turbo" };
-    
+
     private const string assistantBehaviorGuidelines = @"
 Enter the Metaprompt here. This set of instructions will define your assistant's behavior
 in every conversation, guiding how it interacts and responds. Keep it concise, clear, and
@@ -72,9 +73,11 @@ reflective of the assistant's intended personality and capabilities.";
         await PopulateForm();
     }
 
-    private void OnValidSubmit(EditContext context)
+    private async void OnValidSubmit(EditContext context)
     {
+        await UpdateAssistantAsync(Assistant!);
         success = true;
+        await OnAssistantUpdate.InvokeAsync();
         StateHasChanged();
     }
 
@@ -105,4 +108,26 @@ reflective of the assistant's intended personality and capabilities.";
             }
         }
     }
+
+    private async Task UpdateAssistantAsync(Assistant assistant)
+    {
+        if (assistant is not null)
+        {
+            await _assistantService.UpdateAssistant(Map(assistant));
+        }
+    }
+
+    private AssistantResponse Map(Assistant assistant) 
+        => new AssistantResponse(
+            assistant.Id,
+            assistant.Name,
+            assistant.Metaprompt,
+            assistant.Description,
+            assistant.AvatarUrl,
+            assistant.DefaultModel,
+            assistant.DefaultVoice,
+            assistant.IsDefault,
+            assistant.CreatedAt,
+            assistant.UpdatedAt);
+
 }
