@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System.Text;
 
@@ -10,7 +9,6 @@ internal class ChatContext : IChatContext
     private readonly IChatSessionRepository _chatSessionRepository;
     private readonly IChatMessageRepository _chatMessageRepository;
     private readonly IAssistantRepository _assistantRepository;
-    private readonly IHubContext<ChatHub, IChatHub> _hubContext;
     private readonly Kernel _kernel;
     private readonly ChatHistory _chatHistory = new();
 
@@ -18,13 +16,11 @@ internal class ChatContext : IChatContext
         IChatSessionRepository chatSessionRepository,
         IChatMessageRepository chatMessageRepository,
         IAssistantRepository assistantRepository,
-        IHubContext<ChatHub, IChatHub> hubContext,
         Kernel kernel)
     {
         _chatSessionRepository = chatSessionRepository;
         _chatMessageRepository = chatMessageRepository;
         _assistantRepository = assistantRepository;
-        _hubContext = hubContext;
         _kernel = kernel;
     }
 
@@ -66,7 +62,8 @@ internal class ChatContext : IChatContext
         _chatHistory.Reverse();
     }
 
-    public async Task<ChatMessage> StreamResponseToClientAsync(Guid chatId, string model, ChatMessage botMessage, CancellationToken cancellationToken = default)
+    public async Task<ChatMessage> StreamResponseToClientAsync(
+        Guid chatId, string model, ChatMessage botMessage, IHubContext<ChatHub, IChatHub> hubContext, CancellationToken cancellationToken = default)
     {
         var reply = new StringBuilder();
         var chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
@@ -81,7 +78,7 @@ internal class ChatContext : IChatContext
             if (contentPiece.Content is { Length: > 0 })
             {
                 reply.Append(contentPiece.Content);
-                await UpdateMessageOnClient(reply.ToString());
+                await hubContext.Clients.All.ReceiveChatMessageChunk(contentPiece.Content);
             }
         }
 
@@ -113,7 +110,4 @@ internal class ChatContext : IChatContext
             throw new ChatSessionNotFoundException(chatId);
         }
     }
-
-    private async Task UpdateMessageOnClient(string message)
-        => await _hubContext.Clients.All.ReceiveChatMessageChunk(message);
 }

@@ -19,8 +19,10 @@ internal class ChatPlugin
         [Description("The new message used as input")] string message,
         [Description("Unique identifier for the chat")] Guid chatId,
         [Description("Model used for text generation (e.g., gpt-4, gpt-3.5-turbo)")] string model,
+        IHubContext<ChatHub, IChatHub> hubContext,
         KernelArguments context)
     {
+        await hubContext.Clients.All.ReceiveChatMessageChunk("Test from chatPlugin");
         await _chatContext.SetChatInstructions(chatId);
         await _chatContext.ExtractChatHistoryAsync(chatId);
         
@@ -28,7 +30,7 @@ internal class ChatPlugin
         await _chatContext.SaveChatMessageAsync(chatId, userMessage);
 
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, model, botMessage);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, model, botMessage, hubContext);
         await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);
 
         context["input"] = botResponseMessage.Content;

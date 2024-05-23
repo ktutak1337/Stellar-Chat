@@ -8,10 +8,12 @@ internal sealed class CarryConversationHandler : ICommandHandler<Ask, string>
     private const string ChatFunctionName = "Chat";
 
     private readonly Kernel _kernel;
+    private readonly IHubContext<ChatHub, IChatHub> _hubContext;
 
-    public CarryConversationHandler(Kernel kernel)
+    public CarryConversationHandler(Kernel kernel, IHubContext<ChatHub, IChatHub> hubContext)
     {
         _kernel = kernel;
+        _hubContext = hubContext;
     }
 
     public async ValueTask<string> Handle(Ask command, CancellationToken cancellationToken)
@@ -34,6 +36,7 @@ internal sealed class CarryConversationHandler : ICommandHandler<Ask, string>
         contextArguments.TryAdd("messageType", command.MessageType);
         contextArguments.TryAdd("model", command.Model);
         contextArguments.TryAdd("chatId", command.ChatId);
+        contextArguments.TryAdd("hubContext", _hubContext);
 
         return contextArguments;
     }
