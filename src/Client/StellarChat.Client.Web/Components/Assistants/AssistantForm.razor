@@ -56,7 +56,7 @@
 @code 
 {
     [Parameter] public Guid AssistantId { get; set; }
-    [Parameter] public EventCallback OnAssistantUpdate { get; set; }
+    [Parameter] public EventCallback OnAssistantSubmit { get; set; }
     private Assistant? Assistant { get; set; } = new();
     private List<string> AvailableModels { get; set; } = new() { "gpt-4", "gpt-3.5-turbo" };
 
@@ -65,6 +65,7 @@ Enter the Metaprompt here. This set of instructions will define your assistant's
 in every conversation, guiding how it interacts and responds. Keep it concise, clear, and
 reflective of the assistant's intended personality and capabilities.";
 
+    private const string DefaultAvatarUrl = "https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn";
 
     private bool success;
 
@@ -75,9 +76,17 @@ reflective of the assistant's intended personality and capabilities.";
 
     private async void OnValidSubmit(EditContext context)
     {
-        await UpdateAssistantAsync(Assistant!);
+        if (AssistantId != Guid.Empty)
+        {
+            await UpdateAssistantAsync(Assistant!);
+        }
+        else
+        {
+            await CreateAssistantAsync();
+        }
+
         success = true;
-        await OnAssistantUpdate.InvokeAsync();
+        await OnAssistantSubmit.InvokeAsync();
         StateHasChanged();
     }
 
@@ -85,27 +94,51 @@ reflective of the assistant's intended personality and capabilities.";
     {
         if (Guid.Empty != AssistantId)
         {
-            var assistant = await _assistantService.GetAssistant(AssistantId);
+            await FetchAssistantToUpdate();
+        }
+        else
+        {
+            SetupNewAssistantParameters();
+        }
+    }
 
-            if (assistant is not null)
-            {
-                var (id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, createdAt, updatedAt) = assistant;
+    private async Task FetchAssistantToUpdate()
+    {
+        var assistant = await _assistantService.GetAssistant(AssistantId);
 
-                Assistant = new Assistant
+        if (assistant is not null)
+        {
+            var (id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, createdAt, updatedAt) = assistant;
+
+            Assistant = new Assistant
                 {
                     Id = id,
                     Name = name,
                     Metaprompt = metaprompt,
                     Description = description,
                     // TODO: temp solution
-                    AvatarUrl = "https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn",
+                    AvatarUrl = avatarUrl ?? DefaultAvatarUrl,
                     DefaultModel = defaultModel,
                     DefaultVoice = defaultVoice,
                     IsDefault = isDefault,
                     CreatedAt = createdAt,
                     UpdatedAt = updatedAt
                 };
-            }
+        }
+    }
+
+    private void SetupNewAssistantParameters()
+    {
+        // TODO: temp solution
+        Assistant!.AvatarUrl = DefaultAvatarUrl;
+        Assistant.IsDefault = false;
+    }
+
+    private async Task CreateAssistantAsync()
+    {
+        if (Assistant is not null)
+        {
+            await _assistantService.CreateAssistant(Map(Assistant));
         }
     }
 

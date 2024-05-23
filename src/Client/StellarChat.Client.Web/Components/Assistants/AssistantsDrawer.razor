@@ -11,7 +11,7 @@
             </MudDrawerHeader>
             <div>
                 <MudDivider />
-                <AssistantForm AssistantId="selectedAssistantId" OnAssistantUpdate="HandleAssistantUpdated" />
+                <AssistantForm AssistantId="SelectedAssistantId" OnAssistantSubmit="HandleAssistantSubmitted" />
             </div>
         }
         else
@@ -29,6 +29,10 @@
                                    OnEdit="() => EditAssistant(assistant.Id)" />
                 }
             </MudList>
+            <MudSpacer/>
+            <MudPaper class="d-flex flex-row justify-end gap-4 pa-4" Style="@BackgroundColorStyle">
+                <MudButton OnClick="CreateNewAssistant" Variant="Variant.Filled" Color="Color.Primary">New Assistant</MudButton>
+            </MudPaper>
         }
     </MudDrawer>
 </MudDrawerContainer>
@@ -43,9 +47,10 @@
 
     [CascadingParameter]
     private bool _IsDarkModeEnabled { get; set; }
+    private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
 
     private bool isEditing = false;
-    private Guid selectedAssistantId;
+    private Guid SelectedAssistantId { get; set; }
 
     public List<AssistantResponse> Assistants { get; set; } = new();
 
@@ -67,13 +72,19 @@
         IsOpenChanged.InvokeAsync(IsOpen);
     }
 
-    private void EditAssistant(Guid id)
+    private void CreateNewAssistant()
     {
-        selectedAssistantId = id;
+        SelectedAssistantId = Guid.Empty;
         isEditing = true;
     }
 
-    private async Task HandleAssistantUpdated()
+    private void EditAssistant(Guid id)
+    {
+        SelectedAssistantId = id;
+        isEditing = true;
+    }
+
+    private async Task HandleAssistantSubmitted()
     {
         isEditing = false;
         await LoadAssistants();
