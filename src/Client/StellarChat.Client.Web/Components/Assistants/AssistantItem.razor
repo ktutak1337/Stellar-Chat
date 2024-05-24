@@ -1,4 +1,7 @@
-﻿<MudListItem>
+﻿@inject IAssistantService _assistantService
+@inject IDialogService _dialogService
+
+<MudListItem>
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1 gap-4">
             <MudAvatar Size="@Size.Large" Class="my-auto">
@@ -12,7 +15,7 @@
             <MudMenu Icon="@Icons.Material.Filled.MoreVert">
                 <MudMenuItem OnClick="SetDefaultAssitant">Set as default</MudMenuItem>
                 <MudMenuItem OnClick="() => EditAssistant(Assistant!.Id)">Edit</MudMenuItem>
-                <MudMenuItem OnClick="DeleteAssistant">Delete</MudMenuItem>
+                <MudMenuItem OnClick="ConfirmDeleteAssistantDialog">Delete</MudMenuItem>
             </MudMenu>
         </div>
     </ChildContent>
@@ -23,6 +26,7 @@
 {
     [Parameter] public AssistantResponse? Assistant { get; set; }
     [Parameter] public EventCallback<Guid> OnEdit { get; set; }
+    [Parameter] public EventCallback OnDelete { get; set; }
 
     private async Task SetDefaultAssitant()
     {
@@ -34,8 +38,20 @@
         await OnEdit.InvokeAsync(id);
     }
 
-    private async Task DeleteAssistant()
+    private async Task ConfirmDeleteAssistantDialog()
     {
-        await Task.CompletedTask;
+        var parameters = new DialogParameters();
+        parameters.Add(nameof(Assistant), Assistant);
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var dialog = _dialogService.Show<ConfirmDeleteAssistantDialog>("Delete Assitant", parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await _assistantService.DeleteAssistant(Assistant!.Id);
+            await OnDelete.InvokeAsync();
+        }
     }
 }

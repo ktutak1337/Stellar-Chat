@@ -26,7 +26,8 @@
                 @foreach (var assistant in Assistants)
                 {
                     <AssistantItem Assistant="@assistant"
-                                   OnEdit="() => EditAssistant(assistant.Id)" />
+                                   OnEdit="() => EditAssistant(assistant.Id)"
+                                   OnDelete="HandleAssistantSubmitted" />
                 }
             </MudList>
             <MudSpacer/>
