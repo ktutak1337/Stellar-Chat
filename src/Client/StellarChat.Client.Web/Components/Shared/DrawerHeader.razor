@@ -3,9 +3,12 @@
     <MudSpacer />
     <MudIconButton OnClick="CloseDrawer" Icon="@Icons.Material.Filled.Close" Color="(_IsDarkModeEnabled ? Color.Default : Color.Dark)" />
 </MudDrawerHeader>
-<div>
-    <MudDivider />
-</div>
+@if (DisplayDivider)
+{
+    <div>
+        <MudDivider />
+    </div>
+}
 
 @code 
 {
@@ -14,6 +17,9 @@
 
     [Parameter]
     public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool DisplayDivider { get; set; } = true;
 
     [Parameter]
     public EventCallback OnClose { get; set; }

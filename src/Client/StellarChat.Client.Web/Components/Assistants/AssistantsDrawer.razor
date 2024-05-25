@@ -1,26 +1,16 @@
-﻿@inject IAssistantService _assistantService
+﻿@using StellarChat.Client.Web.Components.Shared
+@inject IAssistantService _assistantService
 
 <MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
         @if (isEditing)
         {
-            <MudDrawerHeader Class="pr-2 pt-1">
-                <MudText Typo="Typo.h6" Class="mt-2">Edit Assistant</MudText>
-                <MudSpacer />
-                <MudIconButton OnClick="CloseDrawer" Icon="@Icons.Material.Filled.Close" Color="(_IsDarkModeEnabled ? Color.Default : Color.Dark)" />
-            </MudDrawerHeader>
-            <div>
-                <MudDivider />
-                <AssistantForm AssistantId="SelectedAssistantId" OnAssistantSubmit="HandleAssistantSubmitted" />
-            </div>
+            <DrawerHeader Title="Edit Assistant" OnClose="CloseDrawer" />
+            <AssistantForm AssistantId="SelectedAssistantId" OnAssistantSubmit="HandleAssistantSubmitted" />
         }
         else
         {
-            <MudDrawerHeader Class="pr-2 pt-1">
-                <MudText Typo="Typo.h6" Class="mt-2">Select or Manage Assistants</MudText>
-                <MudSpacer />
-                <MudIconButton OnClick="CloseDrawer" Icon="@Icons.Material.Filled.Close" Color="(_IsDarkModeEnabled ? Color.Default : Color.Dark)" />
-            </MudDrawerHeader>
+            <DrawerHeader Title="Select or Manage Assistants" OnClose="CloseDrawer" DisplayDivider="false" />
             <MudList Clickable="true">
                 <MudDivider />
                 @foreach (var assistant in Assistants)
