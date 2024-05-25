@@ -1,5 +1,4 @@
-﻿@using StellarChat.Client.Web.Components.Shared
-@inject IAssistantService _assistantService
+﻿@inject IAssistantService _assistantService
 
 <MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
@@ -10,8 +9,8 @@
         }
         else
         {
-            <DrawerHeader Title="Select or Manage Assistants" OnClose="CloseDrawer" DisplayDivider="false" />
-            <MudList Clickable="true">
+            <DrawerHeader Title="Select or Manage Assistants" OnClose="CloseDrawer" DisplayDivider="false"/>
+            <MudList Clickable="true" Class="pt-0" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
                 <MudDivider />
                 @foreach (var assistant in Assistants)
                 {
@@ -38,10 +37,13 @@
 
     [CascadingParameter]
     private bool _IsDarkModeEnabled { get; set; }
-    private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
 
-    private bool isEditing = false;
+    private MudListItem? SelectedItem { get; set; }
+    private object? SelectedValue { get; set; }
     private Guid SelectedAssistantId { get; set; }
+
+    private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
+    private bool isEditing = false;
 
     public List<AssistantResponse> Assistants { get; set; } = new();
 

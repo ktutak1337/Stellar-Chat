@@ -29,7 +29,7 @@
                         <div class="flex-grow-1 overflow-y-auto w-100 h-100 mt-1">
                             <MudTextField Class="pl-4 pr-4 pb-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
                             <MudDivider />
-                            <MudList Clickable="true">
+                            <MudList Clickable="true" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
                                 @foreach (var chatSession in ChatSessions)
                                 {
                                     <ChatHistoryItem ChatSessionItem="@chatSession" 
@@ -55,6 +55,9 @@
 
     [Parameter]
     public EventCallback OnAvatarClick { get; set; }
+
+    private MudListItem? SelectedItem { get; set; }
+    private object? SelectedValue { get; set; }
 
     public string SearchText { get; set; } = string.Empty;
 

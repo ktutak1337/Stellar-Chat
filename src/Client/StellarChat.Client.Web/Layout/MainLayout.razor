@@ -3,7 +3,7 @@
 @inject IJSRuntime JSRuntime
 @inject ISnackbar Snackbar
 
-<MudThemeProvider IsDarkMode="_IsDarkModeEnabled" />
+<MudThemeProvider IsDarkMode="_IsDarkModeEnabled" Theme="CustomTheme" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -75,4 +75,16 @@
             options.HideTransitionDuration = 100;
         });
     }
+
+    MudTheme CustomTheme = new MudTheme()
+    {
+        Palette = new PaletteLight()
+        {
+            Tertiary = "#fff",
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Tertiary = "#fff",
+        },
+    };
 }

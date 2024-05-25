@@ -1,7 +1,7 @@
 ﻿@inject IAssistantService _assistantService
 @inject IDialogService _dialogService
 
-<MudListItem>
+<MudListItem Value="@Assistant!.Id">
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1 gap-4">
             <MudAvatar Size="@Size.Large" Class="my-auto">

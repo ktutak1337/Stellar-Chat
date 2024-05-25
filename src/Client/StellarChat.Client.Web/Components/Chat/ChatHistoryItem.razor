@@ -3,7 +3,7 @@
 @inject IDialogService _dialogService
 @inject ChatState _chatState
 
-<MudListItem OnClick="@NavigateToChat">
+<MudListItem OnClick="@NavigateToChat" Value="@ChatSessionItem!.Id">
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1 gap-4">
             <MudAvatar Size="@Size.Medium" Class="my-auto">
