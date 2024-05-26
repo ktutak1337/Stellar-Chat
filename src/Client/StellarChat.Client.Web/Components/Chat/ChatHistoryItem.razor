@@ -5,11 +5,24 @@
 
 <MudListItem OnClick="@NavigateToChat" Value="@ChatSessionItem!.Id">
     <ChildContent>
-        <div class="d-flex flex-row flex-grow-1 gap-4">
-            <MudAvatar Size="@Size.Medium" Class="my-auto">
+        <div class="d-flex flex-row flex-grow-1">
+            <MudAvatar Size="@Size.Medium" Class="my-auto mr-4">
                 <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4"/>
             </MudAvatar>
-            <MudText Typo="Typo.body1" Class="my-auto">@ChatSessionItem?.Title</MudText>
+            
+            @if(shouldShowTooltip)
+            {
+                <div class="my-auto" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%">
+                    <MudTooltip Placement="Placement.Bottom" Arrow="true" Text="@ChatSessionItem?.Title" Style="max-width: 450px; overflow-wrap: break-word;">
+                        <MudText Typo="Typo.body1" Class="my-auto" Style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; flex-grow: 1;">@(TruncateText(@ChatSessionItem!.Title, 38)) </MudText>
+                    </MudTooltip>
+                </div>
+            }
+            else
+            {
+                <MudText Typo="Typo.body1" Class="my-auto" Style="overflow: hidden; white-space: nowrap; flex-grow: 1;">@ChatSessionItem?.Title</MudText>
+            }
+
             <MudSpacer />
             <MudMenu Icon="@Icons.Material.Filled.MoreVert">
                 <MudMenuItem OnClick="OpenChangeTitleDialog">Rename</MudMenuItem>
@@ -25,6 +38,13 @@
     [Parameter] public ChatSessionResponse? ChatSessionItem { get; set; }
     [Parameter] public EventCallback<ChatSessionResponse> OnDeleteChat { get; set; }
     [Parameter] public EventCallback<ChangeTitleInfo> OnChangeTitle { get; set; }
+
+    private bool shouldShowTooltip;
+
+    protected override void OnParametersSet()
+    {
+        shouldShowTooltip = ChatSessionItem?.Title?.Length > 37;
+    }
 
     private void NavigateToChat()
     {
@@ -56,4 +76,7 @@
             }
         }
     }
+
+    private string TruncateText(string text, int maxLength) 
+        => text.Length > maxLength ? $"{text.Substring(0, maxLength - 3)}..." : text;
 }
