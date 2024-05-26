@@ -22,7 +22,6 @@ internal class ChatPlugin
         IHubContext<ChatHub, IChatHub> hubContext,
         KernelArguments context)
     {
-        await hubContext.Clients.All.ReceiveChatMessageChunk("Test from chatPlugin");
         await _chatContext.SetChatInstructions(chatId);
         await _chatContext.ExtractChatHistoryAsync(chatId);
         

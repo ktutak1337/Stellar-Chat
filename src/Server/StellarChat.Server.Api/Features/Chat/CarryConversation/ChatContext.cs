@@ -78,11 +78,12 @@ internal class ChatContext : IChatContext
             if (contentPiece.Content is { Length: > 0 })
             {
                 reply.Append(contentPiece.Content);
+                botMessage.Content = reply.ToString();
                 await hubContext.Clients.All.ReceiveChatMessageChunk(contentPiece.Content);
             }
         }
 
-        botMessage.Content = reply.ToString();
+        reply.Clear();
         return botMessage;
     }
 
