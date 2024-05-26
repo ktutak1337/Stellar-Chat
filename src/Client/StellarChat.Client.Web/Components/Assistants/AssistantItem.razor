@@ -4,9 +4,18 @@
 <MudListItem Value="@Assistant!.Id">
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1 gap-4">
-            <MudAvatar Size="@Size.Large" Class="my-auto">
-                <MudImage Src="@Assistant?.AvatarUrl"/>
-            </MudAvatar>
+
+            @if (@Assistant!.IsDefault)
+            {
+                <AvatarWithBadge AvatarImage="@Assistant?.AvatarUrl" BadgeIcon="@Icons.Material.Filled.Star" BadgeIconColor="gold" BadgeBackgroundColor="var(--mud-palette-dark)" />
+            }
+            else
+            {
+                <MudAvatar Size="@Size.Large" Class="my-auto">
+                    <MudImage Src="@Assistant?.AvatarUrl" />
+                </MudAvatar>
+            }
+
             <div>
                 <MudText Typo="Typo.h6">@Assistant?.Name</MudText>
                 <MudText Typo="Typo.subtitle2">@Assistant?.Description</MudText>
