@@ -31,7 +31,7 @@
                     }
                     else
                     {
-                        <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="SendMessage" Color="Color.Info" Class="mr-4" Disabled="@IsSendButtonDisabled" />
+                    <MudIconButton id="prompt-input-send-button" Icon="@Icons.Material.Filled.Send" OnClick="@( () =>SendMessage(Message))" Color="Color.Info" Class="mr-4" Disabled="@IsSendButtonDisabled" />
                     }
             </MudItem>
         </MudGrid>
@@ -56,6 +56,7 @@
 
 @code
 {
+    [Parameter] public EventCallback<string> OnSend { get; set; }
     [CascadingParameter] private bool _IsDarkModeEnabled { get; set; }
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#2B2B34" : "#f5f5f5")};";
 
@@ -63,14 +64,15 @@
     private bool IsSendButtonDisabled => string.IsNullOrWhiteSpace(Message);
     private bool IsProcessing { get; set; }
 
-    private async Task SendMessage()
+    private async Task SendMessage(string message)
     {
         if (!IsSendButtonDisabled)
         {
             IsProcessing = true;
-
-            // TODO: Delete in the future
-            await Task.Delay(2000);
+            
+            Message = string.Empty;
+            await OnSend.InvokeAsync(message);
+            
             IsProcessing = false;
         }
     }

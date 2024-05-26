@@ -5,13 +5,14 @@
 @inject IChatService _chatService
 @inject NavigationManager _navigationManager
 @inject IJSRuntime JS
-@implements IDisposable
+@inject TimeProvider _clock
+@implements IAsyncDisposable
 
 <PageTitle>Home</PageTitle>
 
 <div class="h-100">
     <div class="w-100 mt-4 mx-auto" style="max-width: 960px;">
-        <div @ref="chatMessagesDiv" id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
+        <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
             @foreach (var chatMessage in ChatMessages)
             {
                 <ChatMessage Message=@chatMessage />
@@ -19,7 +20,7 @@
         </div>
     </div>
     <div class="mt-2 fixed-bottom w-auto">
-        <PromptInput />
+        <PromptInput OnSend="@SendMessage" />
     </div>
 </div>
 
@@ -27,14 +28,41 @@
 {
     [Parameter] public string ChatId { get; set; } = string.Empty;
 
-    public List<ChatMessageResponse> ChatMessages { get; set; } = new();
-    private ElementReference chatMessagesDiv;
+    private List<ChatMessageResponse> ChatMessages { get; set; } = new();
+    private ElementReference ChatMessagesDiv { get; set; } = new();
+    private ChatMessageResponse LatestBotMessage { get; set; } = new();
+    private StringBuilder _textStreaming = new();
+    private HubConnection? _hubConnection;
+
+    private const string ReceiveMessageUpdateServerCall = "ReceiveChatMessageChunk";
+    private const string AddClientToGroupServerCall = "AddClientToGroupAsync";
+    private const string HubUrl = "https://localhost:7057/hub";
 
     protected override async Task OnInitializedAsync()
     {
         _chatState.ChatIdChanged += async () => await LoadChatHistory();
 
-        await LoadChatHistory();
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(HubUrl)
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On<string>(ReceiveMessageUpdateServerCall, async (message) =>
+        {
+            _textStreaming.Append(message);
+            LatestBotMessage.Content = _textStreaming.ToString();
+
+            await InvokeAsync(StateHasChanged);
+            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
+
+            Console.WriteLine($"ReceiveChatMessageChunk: {message}");
+        });
+
+        Console.WriteLine("Starting connection...");
+
+        await _hubConnection.StartAsync();
+
+        Console.WriteLine($"Connection state: {_hubConnection.State}");
     }
 
     private async Task LoadChatHistory()
@@ -45,14 +73,72 @@
         {
             var response = await _chatService.GetChatMessagesByChatId(_chatState.ChatId);
             ChatMessages = response.Items.ToList();
-            StateHasChanged();
 
-            await JS.InvokeVoidAsync("scrollToBottom", chatMessagesDiv);
+            await InvokeAsync(StateHasChanged);
+            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
         }
     }
 
-    public void Dispose()
+    private async Task SendMessage(string message)
+    {
+        var chatId = _chatState.ChatId;
+        if (!string.IsNullOrWhiteSpace(message) && chatId != Guid.Empty)
+        {
+            var userMessage = CreateUserMessage(chatId, message);
+            LatestBotMessage = CreateBotMessage(chatId, string.Empty);
+
+            ChatMessages.Add(userMessage);
+            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
+
+            ChatMessages.Add(LatestBotMessage);
+            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
+
+            await _chatService.SendMessage(chatId, message, "", "gpt-3.5-turbo");
+            _textStreaming.Clear();
+        }
+    }
+
+    private ChatMessageResponse CreateUserMessage(Guid chatId, string message, ChatMessageType messageType = ChatMessageType.Message)
+    {
+        var now = _clock.GetLocalNow();
+
+        var userMessage = new ChatMessageResponse
+        {
+                Id = Guid.NewGuid(),
+                ChatId = chatId,
+                Type = messageType,
+                Author = "user",
+                Content = message,
+                Timestamp = now
+        };
+
+        return userMessage;
+    }
+
+    private ChatMessageResponse CreateBotMessage(Guid chatId, string message, ChatMessageType messageType = ChatMessageType.Message)
+    {
+        var now = _clock.GetLocalNow();
+
+        var chatMessage = new ChatMessageResponse
+        {
+            Id = Guid.NewGuid(),
+            ChatId = chatId,
+            Type = messageType,
+            Author = "bot",
+            Content = message,
+            Timestamp = now
+        };
+
+        return chatMessage;
+    }
+
+    public async ValueTask DisposeAsync()
     {
         _chatState.ChatIdChanged -= async () => await LoadChatHistory();
+
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
     }
 }
