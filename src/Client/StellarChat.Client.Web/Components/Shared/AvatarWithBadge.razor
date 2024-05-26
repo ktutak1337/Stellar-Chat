@@ -1,0 +1,29 @@
+﻿<div class="relative">
+    <div class="d-flex justify-center align-center absolute rounded-circle z-10 w-6 h-6" style="@BadgeIconStyle">
+        <MudIcon Icon="@BadgeIcon" Size="Size.Small" Style="@BadgeIconColorStyle" />
+    </div>
+    <MudAvatar Size="@AvatarSize" Class="my-auto">
+        <MudImage Src="@AvatarImage" />
+    </MudAvatar>
+</div>
+
+@code 
+{
+    [Parameter]
+    public string BadgeIcon { get; set; } = Icons.Material.Filled.Check;
+    
+    [Parameter]
+    public string BadgeIconColor { get; set; } = "white";
+    
+    [Parameter]
+    public string BadgeBackgroundColor { get; set; } = "var(--mud-palette-primary)";
+    
+    [Parameter]
+    public Size AvatarSize { get; set; } = Size.Large;
+    
+    [Parameter]
+    public string AvatarImage { get; set; } = string.Empty;
+
+    private string BadgeIconStyle => $"background-color: {BadgeBackgroundColor}; top: 40px; right: -6px;;";
+    private string BadgeIconColorStyle => $"color: {BadgeIconColor};";
+}
