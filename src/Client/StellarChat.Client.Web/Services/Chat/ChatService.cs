@@ -38,13 +38,22 @@ public class ChatService : IChatService
         await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}/title", payload);
     }
 
-    public async ValueTask CreateChatSession(string title)
+    public async ValueTask<Guid> CreateChatSession(string title)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
         var payload = new CreateChatSessionRequest(null, title);
 
-        await httpClient.PutAsJsonAsync($"/chat-history/sessions", payload);
+        var response = await httpClient.PostAsJsonAsync($"/chat-history/sessions", payload);
+
+        var result = Guid.Empty;
+
+        if (response.IsSuccessStatusCode)
+        {
+            result = await response.Content.ReadFromJsonAsync<Guid>();
+        }
+
+        return result;
     }
 
     public async ValueTask DeleteChatSession(Guid id)

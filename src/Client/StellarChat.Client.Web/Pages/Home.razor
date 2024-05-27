@@ -13,9 +13,18 @@
 <div class="h-100">
     <div class="w-100 mt-4 mx-auto" style="max-width: 960px;">
         <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
-            @foreach (var chatMessage in ChatMessages)
+            @if (_chatState.ChatId == Guid.Empty)
             {
-                <ChatMessage Message=@chatMessage />
+                <div class="d-flex justify-content-center align-items-center h-100 w-100">
+                    <NewChatPreview />
+                </div>
+            }
+            else
+            {
+                @foreach (var chatMessage in ChatMessages)
+                {
+                    <ChatMessage Message=@chatMessage />
+                }
             }
         </div>
     </div>
@@ -82,8 +91,20 @@
     private async Task SendMessage(string message)
     {
         var chatId = _chatState.ChatId;
-        if (!string.IsNullOrWhiteSpace(message) && chatId != Guid.Empty)
+
+        if (!string.IsNullOrWhiteSpace(message))
         {
+            if (chatId == Guid.Empty)
+            {
+                var newChatId = await _chatService.CreateChatSession("New Chat");
+
+                chatId = newChatId;
+                _chatState.SetChatId(newChatId);
+
+                await LoadChatHistory();
+                _navigationManager.NavigateTo($"/c/{chatId}");
+            }
+
             var userMessage = CreateUserMessage(chatId, message);
             LatestBotMessage = CreateBotMessage(chatId, string.Empty);
 

@@ -10,4 +10,10 @@ public class ChatState
         ChatId = chatId;
         ChatIdChanged?.Invoke();
     }
+
+    public void CreateNewChat()
+    {
+        ChatId = Guid.Empty;
+        ChatIdChanged?.Invoke();
+    }
 }
