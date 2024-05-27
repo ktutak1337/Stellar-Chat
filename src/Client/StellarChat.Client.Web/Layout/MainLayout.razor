@@ -9,12 +9,19 @@
 
 <CascadingValue Value="_IsDarkModeEnabled">
     <MudLayout>
-        <MudAppBar Elevation="1" Style="@BackgroundColorStyle">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="(_IsDarkModeEnabled ? Color.Default : Color.Dark)" Edge="Edge.Start" OnClick="ToggleDrawer" />
-            <MudSpacer />
-            <MudToggleIconButton Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Dark" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
+        <MudAppBar Elevation="1" Style="@BackgroundColorStyle" Class="d-flex justify-center flex-grow-1 gap-4">
+            <MudGrid>
+                <MudItem xs="4" class="d-flex justify-start">
+                    <MudIconButton Class="d-flex justify-start" Icon="@Icons.Material.Filled.Menu" Color="(_IsDarkModeEnabled ? Color.Default : Color.Dark)" Edge="Edge.Start" OnClick="ToggleDrawer" />
+                </MudItem>
+                <MudItem xs="4" class="d-flex justify-center">
+                    <ModelSelectorDropdown />
+                </MudItem>
+                <MudItem xs="4" class="d-flex justify-end">
+                    <MudToggleIconButton Class="d-flex justify-end" Toggled="@_IsDarkModeEnabled" ToggledChanged="ToggleDarkMode" Icon="@Icons.Material.Filled.LightMode" Color="Color.Dark" ToggledIcon="@Icons.Material.Outlined.DarkMode" />
+                </MudItem>
+            </MudGrid>
         </MudAppBar>
-
         <Drawer IsDrawerOpen="@_isDrawerOpen" OnAvatarClick="ToggleAssistantsDrawer" />
         <AssistantsDrawer IsOpen="_isAssistantsDrawerOpen" IsOpenChanged="HandleAssistantsDrawerStateChanged" />
         <MudMainContent>

@@ -1,0 +1,43 @@
+﻿<MudAutocomplete @bind-Value="value1"
+                 T="string" 
+                 Immediate="true" 
+                 CoerceValue="@coerceValue"
+                 CoerceText="@coerceText"
+                 SearchFunc="@SearchAsync"
+                 Clearable="true"
+                 ResetValueOnEmptyText="false"
+                 ShowProgressIndicator="true" 
+                 ProgressIndicatorColor="Color.Primary"
+                 CloseIcon="@Icons.Material.Filled.Search" 
+                 AdornmentColor="Color.Primary" 
+                 MaxItems="null"
+                 Margin="Margin.Dense"
+                 Style="width: 400px" />
+
+@code
+{
+    private bool resetValueOnEmptyText;
+    private bool coerceText;
+    private bool coerceValue;
+    private string value1 = string.Empty;
+    private string previousValue = string.Empty;
+    // TODO: temp solution
+    private string[] models =
+    {
+        "gpt-3.5-turbo", "gpt-4", "gpt-4o"
+    };
+
+
+    private async Task<IEnumerable<string>> SearchAsync(string value)
+    {
+        await Task.Delay(1000);
+        previousValue = value1;
+
+        if (string.IsNullOrEmpty(value))
+        {
+            return models;
+        }
+
+        return models.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+}
