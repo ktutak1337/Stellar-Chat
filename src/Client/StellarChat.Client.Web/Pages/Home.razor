@@ -15,8 +15,8 @@
         <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
             @if (_chatState.ChatId == Guid.Empty)
             {
-                <div class="d-flex justify-content-center align-items-center h-100 w-100">
-                    <NewChatPreview />
+                <div style="height: 100%; width: 100%; display: flex; justify-content: center;">
+                    <NewChatPreview AssistantName="Sophia" UserName="Kris" AssistantAvatar="https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn" />
                 </div>
             }
             else

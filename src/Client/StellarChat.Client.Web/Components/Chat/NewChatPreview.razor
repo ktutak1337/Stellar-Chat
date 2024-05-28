@@ -1,23 +1,17 @@
-﻿<div class="d-flex flex-column justify-content-center align-items-center" style="height: 100%;">
-    <MudAvatar Size="@Size.Large" Class="my-auto mr-4">
-        <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" />
-    </MudAvatar>
+﻿<div class="mt-16" style="@ContainerStyle">
+    <MudImage Src="@AssistantAvatar" Height="88" Width="88" Elevation="25" Class="rounded-lg mb-4 mt-8" Style="@AvatarStyle" />
 
-    <MudText Typo="Typo.h4">Sophia</MudText>
-    <MudText Typo="Typo.body1">Hey Kris! 👋 How can I help you today? Need info, advice, or just a chat? I'm here to help you</MudText>
+    <MudText Typo="Typo.h3" Class="mb-9">@AssistantName</MudText>
+    <MudText Typo="Typo.body1" Class="mb-2">Hey @UserName! 👋 How can I help you today? Need info, advice, or just a chat?</MudText>
+    <MudText Typo="Typo.body1">I'm here to help you</MudText>
 </div>
-
-@* <MudGrid Style="height: 100%">
-    <MudItem xs="12" class="d-flex flex-column justify-content-center align-items-center text-center h-100">
-        <MudAvatar Size="Size.Large" Class="mb-2">
-            <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4" />
-        </MudAvatar>
-        <MudText Typo="Typo.h4" Class="mb-1">Sophia</MudText>
-        <MudText Typo="Typo.body1" Class="mx-3">Hey Kris! 👋 How can I help you today? Need info, advice, or just a chat? I'm here to help you</MudText>
-    </MudItem>
-</MudGrid> *@
 
 @code 
 {
+    [Parameter] public string AssistantName { get; set; } = string.Empty;
+    [Parameter] public string UserName { get; set; } = string.Empty;
+    [Parameter] public string AssistantAvatar { get; set; } = string.Empty;
 
+    private string ContainerStyle => $"display: flex; flex-direction: column; align-items: center;";
+    private string AvatarStyle => $"border: 2px solid var(--mud-palette-primary);";
 }
