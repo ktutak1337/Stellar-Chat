@@ -1,6 +1,4 @@
-﻿using StellarChat.Server.Api.Features.Assistants.BrowseAssistants;
-
-namespace StellarChat.Server.Api.Features.Actions.BrowseNativeAction;
+﻿namespace StellarChat.Server.Api.Features.Actions.BrowseNativeAction;
 
 public class BrowseNativeActionEndpoint : IEndpoint
 {
