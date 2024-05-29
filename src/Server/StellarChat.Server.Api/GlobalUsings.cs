@@ -11,12 +11,15 @@ global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using System.Reflection;
 
 global using StellarChat.Server.Api;
+global using StellarChat.Server.Api.DAL.Mongo.Documents.Actions;
 global using StellarChat.Server.Api.DAL.Mongo.Documents.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Documents.Chat;
 global using StellarChat.Server.Api.DAL.Mongo.Exceptions.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Exceptions.Chat;
 global using StellarChat.Server.Api.DAL.Mongo.Repositories.Assistants;
 global using StellarChat.Server.Api.DAL.Mongo.Repositories.Chat;
+global using StellarChat.Server.Api.Domain.Actions.Models;
+global using StellarChat.Server.Api.Domain.Actions.Repositories;
 global using StellarChat.Server.Api.Domain.Assistants.Models;
 global using StellarChat.Server.Api.Domain.Assistants.Repositories;
 global using StellarChat.Server.Api.Domain.Chat.Models;

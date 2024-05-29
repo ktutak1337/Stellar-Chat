@@ -23,7 +23,7 @@ internal sealed class UpdateAssistantHandler : ICommandHandler<UpdateAssistant>
 
         var assistantToUpdate = await _assistantRepository.GetAsync(id) ?? throw new AssistantNotFoundException(id);
 
-        var now = _clock.GetUtcNow();
+        var now = _clock.GetLocalNow();
 
         var isCurrentlyNotDefault = !_defaultAssistantService.IsCurrentlyDefault(assistantToUpdate);
         var shouldBeSetAsDefault = shouldBeDefault && isCurrentlyNotDefault;

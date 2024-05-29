@@ -1,5 +1,6 @@
 ﻿using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
+using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
 using StellarChat.Server.Api.Options;
 
@@ -19,11 +20,13 @@ internal static class Extensions
             .AddScoped<IChatMessageRepository, ChatMessageRepository>()
             .AddScoped<IChatSessionRepository, ChatSessionRepository>()
             .AddScoped<IAssistantRepository, AssistantRepository>()
+            .AddScoped<INativeActionRepository, NativeActionRepository>()
             .AddScoped<IDefaultAssistantService, DefaultAssistantService>()
             .AddScoped<IChatContext, ChatContext>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
-            .AddMongoRepository<AssistantDocument, Guid>("assistants");
+            .AddMongoRepository<AssistantDocument, Guid>("assistants")
+            .AddMongoRepository<NativeActionDocument, Guid>("actions");
 
         builder.Services.AddMediator(options =>
         {
