@@ -39,7 +39,7 @@ internal class ChatPlugin
 
     private ChatMessage CreateUserMessage(Guid chatId, string message, ChatMessageType messageType = ChatMessageType.Message)
     {
-        var now = _clock.GetUtcNow();
+        var now = _clock.GetLocalNow();
 
         var userMessage = ChatMessage.Create(Guid.NewGuid(), chatId, messageType, Author.User, message, tokenCount: 0, now);
         return userMessage;
@@ -47,7 +47,7 @@ internal class ChatPlugin
 
     private ChatMessage CreateBotMessage(Guid chatId, string content, ChatMessageType messageType = ChatMessageType.Message)
     {
-        var now = _clock.GetUtcNow();
+        var now = _clock.GetLocalNow();
 
         var chatMessage = ChatMessage.Create(Guid.NewGuid(), chatId, messageType, Author.Bot, content, tokenCount: 0, now);
         return chatMessage;

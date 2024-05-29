@@ -20,7 +20,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
             throw new ChatSessionAlreadyExistsException(command.ChatId);
         }
 
-        var now = _clock.GetUtcNow();
+        var now = _clock.GetLocalNow();
 
         // TODO: Retrieve activePlugins and metaprompt from settings
         var activePlugins = new HashSet<string>();

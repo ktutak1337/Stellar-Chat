@@ -20,7 +20,7 @@ internal sealed class ChangeChatSessionTitleHandler : ICommandHandler<ChangeChat
 
         var chatSession = await _chatSessionRepository.GetAsync(chatId) ?? throw new ChatSessionNotFoundException(chatId);
 
-        var now = _clock.GetUtcNow();
+        var now = _clock.GetLocalNow();
 
         chatSession.Title = title;
         chatSession.UpdatedAt = now;

@@ -23,7 +23,7 @@ internal sealed class CreateAssistantHandler : ICommandHandler<CreateAssistant>
             throw new AssistantAlreadyExistsException(command.Id);
         }
         
-        var now = _clock.GetUtcNow();
+        var now = _clock.GetLocalNow();
 
         if (command.IsDefault)
         {

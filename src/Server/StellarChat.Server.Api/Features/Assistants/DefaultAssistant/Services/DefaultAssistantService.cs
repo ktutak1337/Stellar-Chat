@@ -20,7 +20,7 @@ internal sealed class DefaultAssistantService : IDefaultAssistantService
     {
         if (assistant is not null)
         {
-            var now = _clock.GetUtcNow();
+            var now = _clock.GetLocalNow();
 
             assistant.IsDefault = true;
             assistant.UpdatedAt = now;
@@ -43,7 +43,7 @@ internal sealed class DefaultAssistantService : IDefaultAssistantService
 
         if (currentDefaultAssistant is not null)
         {
-            var now = _clock.GetUtcNow();
+            var now = _clock.GetLocalNow();
 
             currentDefaultAssistant.IsDefault = false;
             currentDefaultAssistant.UpdatedAt = now;
