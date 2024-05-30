@@ -4,9 +4,9 @@ internal sealed class CreateNativeActionHandler : ICommandHandler<CreateNativeAc
 {
     private readonly INativeActionRepository _nativeActionRepository;
     private readonly TimeProvider _clock;
-    private readonly ILogger<CreateNativeAction> _logger;
+    private readonly ILogger<CreateNativeActionHandler> _logger;
 
-    public CreateNativeActionHandler(INativeActionRepository nativeActionRepository, TimeProvider clock, ILogger<CreateNativeAction> logger)
+    public CreateNativeActionHandler(INativeActionRepository nativeActionRepository, TimeProvider clock, ILogger<CreateNativeActionHandler> logger)
     {
         _nativeActionRepository = nativeActionRepository;
         _clock = clock;
