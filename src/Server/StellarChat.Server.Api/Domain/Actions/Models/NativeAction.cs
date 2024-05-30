@@ -21,7 +21,8 @@ internal class NativeAction
         string icon, 
         string model, 
         string metaprompt, 
-        bool isRemoteAction, 
+        bool isRemoteAction,
+        bool shouldRephraseResponse,
         Webhook? webhook, 
         DateTimeOffset createdAt, 
         DateTimeOffset updatedAt)
@@ -33,6 +34,7 @@ internal class NativeAction
         Model = model;
         Metaprompt = metaprompt;
         IsRemoteAction = isRemoteAction;
+        ShouldRephraseResponse = shouldRephraseResponse;
         Webhook = webhook;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
@@ -46,8 +48,9 @@ internal class NativeAction
         string model,
         string metaprompt,
         bool isRemoteAction,
+        bool shouldRephraseResponse,
         Webhook? webhook,
         DateTimeOffset createdAt,
         DateTimeOffset updatedAt)
-            => new(id, name, category, icon, model, metaprompt, isRemoteAction, webhook, createdAt, updatedAt);
+            => new(id, name, category, icon, model, metaprompt, isRemoteAction, shouldRephraseResponse, webhook, createdAt, updatedAt);
 }
