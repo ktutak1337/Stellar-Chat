@@ -1,26 +1,26 @@
-﻿namespace StellarChat.Server.Api.Features.Assistants.CreateAssistant;
+﻿namespace StellarChat.Server.Api.Features.Actions.CreateNativeAction;
 
-internal sealed class CreateAssistantEndpoint : IEndpoint 
+internal sealed class CreateNativeActionEndpoint : IEndpoint
 {
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        var assistants = endpoints.MapGroup("/assistants").WithTags("Assistants");
+        var actions = endpoints.MapGroup("/actions").WithTags("Actions");
 
-        assistants.MapPost("", async ([FromBody] CreateAssistantRequest request, IMediator mediator) =>
+        actions.MapPost("", async ([FromBody] CreateNativeActionRequest request, IMediator mediator) =>
         {
             var id = Guid.NewGuid();
-            var command = request.Adapt<CreateAssistant>();
+            var command = request.Adapt<CreateNativeAction>();
 
             command = command with { Id = id };
             await mediator.Send(command);
 
-            return Results.CreatedAtRoute("GetAssistant", new { Id = id }, id);
+            return Results.CreatedAtRoute("GetNativeAction", new { Id = id }, id);
         })
          .Produces(StatusCodes.Status201Created)
          .Produces(StatusCodes.Status400BadRequest)
          .WithOpenApi(operation => new(operation)
          {
-             Summary = "Creates a new assistant."
+             Summary = "Creates a new action."
          });
     }
 
