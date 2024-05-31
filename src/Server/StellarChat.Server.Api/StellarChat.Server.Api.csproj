@@ -24,4 +24,15 @@
     <ProjectReference Include="..\..\Shared\StellarChat.Shared.Infrastructure\StellarChat.Shared.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="_data\images\" />
+    <Folder Include="_data\documents\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="_data\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

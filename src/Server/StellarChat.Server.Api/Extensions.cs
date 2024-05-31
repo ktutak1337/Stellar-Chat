@@ -1,4 +1,5 @@
-﻿using Microsoft.KernelMemory;
+﻿using Microsoft.Extensions.FileProviders;
+using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
@@ -11,6 +12,8 @@ internal static class Extensions
 {
     public static void AddInfrastructure(this WebApplicationBuilder builder)
     {
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         builder.AddSharedInfrastructure();
 
         builder.Services.AddHttpClient("Webhooks");
@@ -42,6 +45,13 @@ internal static class Extensions
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
+        var basePath = Path.Combine(app.Environment.ContentRootPath, "_data");
+
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(basePath),
+            RequestPath = "/files"
+        });
         app.MapHub<ChatHub>("/hub");
         app.UseSharedInfrastructure();
 

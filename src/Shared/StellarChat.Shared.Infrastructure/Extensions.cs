@@ -65,6 +65,22 @@ public static class Extensions
     public static bool IsNotEmpty(this string value)
         => !value.IsEmpty();
 
+    public static string ToFormatSize(this long bytes)
+    {
+        string[] suffixes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
+
+        var counter = 0;
+        var number = (decimal)bytes;
+
+        while (Math.Round(number / 1024, 2) >= 1)
+        {
+            number = number / 1024;
+            counter++;
+        }
+
+        return $"{number:n2} {suffixes[counter]}";
+    }
+
     public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app)
     => app.Use((ctx, next) =>
     {
