@@ -3,6 +3,7 @@ using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Settings;
+using StellarChat.Server.Api.DAL.Mongo.Seeders;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
 using StellarChat.Server.Api.Features.Models.Providers;
@@ -14,6 +15,8 @@ internal static class Extensions
 {
     public static void AddInfrastructure(this WebApplicationBuilder builder)
     {
+        builder.Services.TryAddSingleton(TimeProvider.System);
+        builder.Services.AddScoped<IAppSettingsSeeder, AppSettingsSeeder>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         builder.AddSharedInfrastructure();
@@ -21,7 +24,6 @@ internal static class Extensions
         builder.Services.AddMemoryCache();
         builder.Services.AddHttpClient("Webhooks");
         builder.Services.AddSignalR();
-        builder.Services.TryAddSingleton(TimeProvider.System);
         builder.Services.AddMappings();
 
         builder.Services
