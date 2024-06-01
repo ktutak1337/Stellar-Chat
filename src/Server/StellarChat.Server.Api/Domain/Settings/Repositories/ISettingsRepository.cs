@@ -2,6 +2,6 @@
 
 public interface ISettingsRepository
 {
-    ValueTask<AppSettings> GetSettingsByKeyAsync(string title);
+    ValueTask<AppSettings> GetSettingsByKeyAsync(string key);
     ValueTask UpdateAsync(AppSettings settings);
 }
