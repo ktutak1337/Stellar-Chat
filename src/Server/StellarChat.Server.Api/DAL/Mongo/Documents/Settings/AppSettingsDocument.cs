@@ -1,10 +1,10 @@
 ﻿namespace StellarChat.Server.Api.DAL.Mongo.Documents.Settings;
 
-internal sealed class AppSettingsDocument(Guid id, ProfileDocument profile, DateTimeOffset createdAt, DateTimeOffset updatedAt) : IIdentifiable<Guid>
+internal sealed class AppSettingsDocument : IIdentifiable<Guid>
 {
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; }
     public string Key { get; set; } = "app-settings";
-    public ProfileDocument Profile { get; set; } = profile;
-    public DateTimeOffset CreatedAt { get; set; } = createdAt;
-    public DateTimeOffset UpdatedAt { get; set; } = updatedAt;
+    public ProfileDocument? Profile { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 }
