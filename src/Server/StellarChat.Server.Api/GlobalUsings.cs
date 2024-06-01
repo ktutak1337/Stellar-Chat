@@ -33,5 +33,6 @@ global using StellarChat.Shared.Abstractions.Pagination;
 global using StellarChat.Shared.Contracts.Actions;
 global using StellarChat.Shared.Contracts.Assistants;
 global using StellarChat.Shared.Contracts.Chat;
+global using StellarChat.Shared.Contracts.Models;
 global using StellarChat.Shared.Infrastructure;
 global using StellarChat.Shared.Infrastructure.DAL.Mongo;

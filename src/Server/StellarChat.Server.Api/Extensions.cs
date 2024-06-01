@@ -4,6 +4,7 @@ using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
+using StellarChat.Server.Api.Features.Models.Providers;
 using StellarChat.Server.Api.Options;
 
 namespace StellarChat.Server.Api;
@@ -16,6 +17,7 @@ internal static class Extensions
 
         builder.AddSharedInfrastructure();
 
+        builder.Services.AddMemoryCache();
         builder.Services.AddHttpClient("Webhooks");
         builder.Services.AddSignalR();
         builder.Services.TryAddSingleton(TimeProvider.System);
@@ -29,6 +31,7 @@ internal static class Extensions
             .AddScoped<INativeActionRepository, NativeActionRepository>()
             .AddScoped<IDefaultAssistantService, DefaultAssistantService>()
             .AddScoped<IChatContext, ChatContext>()
+            .AddScoped<IModelsProvider, OpenAiModelsProvider>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
             .AddMongoRepository<AssistantDocument, Guid>("assistants")
@@ -74,6 +77,7 @@ internal static class Extensions
         var section = configuration.GetSection(OpenAiOptions.Key);
         var options = section.BindOptions<OpenAiOptions>();
         services.Configure<OpenAiOptions>(section);
+        services.AddSingleton(options);
 
         var kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
