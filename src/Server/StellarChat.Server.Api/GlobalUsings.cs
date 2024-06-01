@@ -25,6 +25,7 @@ global using StellarChat.Server.Api.Domain.Assistants.Models;
 global using StellarChat.Server.Api.Domain.Assistants.Repositories;
 global using StellarChat.Server.Api.Domain.Chat.Models;
 global using StellarChat.Server.Api.Domain.Chat.Repositories;
+global using StellarChat.Server.Api.Domain.Settings.Models;
 global using StellarChat.Server.Api.Features.Assistants.DefaultAssistant.Services;
 global using StellarChat.Server.Api.Hubs;
 global using StellarChat.Shared.Abstractions.API.Endpoints;
