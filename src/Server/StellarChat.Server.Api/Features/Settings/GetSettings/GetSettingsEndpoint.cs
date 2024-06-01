@@ -13,7 +13,7 @@ public class GetSettingsEndpoint : IEndpoint
             .WithOpenApi(operation => new(operation)
             {
                 Summary = "Retrieves a single application settings by 'key'.",
-                Description = "Fetches the application settings. The key for the settings is always `app-settings`."
+                Description = "Fetches the application settings. The `key` for the settings is always `app-settings`."
             });
     }
 

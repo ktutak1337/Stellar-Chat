@@ -9,6 +9,8 @@ public class UpdateProfileEndpoint : IEndpoint
         routes.MapPut("/{key}/profile", async (string key, [FromBody] UpdateProfileRequest request, IMediator mediator) =>
         {
             var command = request.Adapt<UpdateProfile>();
+            command = command with { SettingsKey = key };
+
             await mediator.Send(command);
             return Results.NoContent();
         })
