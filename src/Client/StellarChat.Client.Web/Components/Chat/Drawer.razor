@@ -17,7 +17,7 @@
                         </MudTooltip>
                         <MudDivider Class="mx-auto" Style="width:70%;" />
                         <MudTooltip Text="Settings" Arrow="true" Placement="Placement.Right">
-                            <MudIconButton Style="margin-left: 2px;" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" />
+                            <MudIconButton OnClick="OnSettingsClick" Style="margin-left: 2px;" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" />
                         </MudTooltip >
                     </div>
                 </div>
@@ -59,6 +59,9 @@
     [Parameter]
     public EventCallback OnAvatarClick { get; set; }
 
+    [Parameter]
+    public EventCallback OnSettingsClick { get; set; }
+
     private MudListItem? SelectedItem { get; set; }
     private object? SelectedValue { get; set; }
 
@@ -98,14 +101,6 @@
     {
         var response = await _chatService.BrowseChatSessions();
         ChatSessions = response.Items.ToList();
-    }
-
-    private async Task HandleAvatarClick()
-    {
-        if (OnAvatarClick.HasDelegate)
-        {
-            await OnAvatarClick.InvokeAsync();
-        }
     }
 
     private async Task CreateNewChat()

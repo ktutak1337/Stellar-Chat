@@ -1,0 +1,27 @@
+﻿<MudDrawerContainer Class="mud-height-full">
+    <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
+        <DrawerHeader Title="Settings" OnClose="CloseDrawer" DisplayDivider="true" />
+
+    </MudDrawer>
+</MudDrawerContainer>
+
+@code 
+{
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // await LoadAssistants();
+        await Task.CompletedTask;
+    }
+
+    private void CloseDrawer()
+    {
+        IsOpen = false;
+        IsOpenChanged.InvokeAsync(IsOpen);
+    }
+}

@@ -22,8 +22,9 @@
                 </MudItem>
             </MudGrid>
         </MudAppBar>
-        <Drawer IsDrawerOpen="@_isDrawerOpen" OnAvatarClick="ToggleAssistantsDrawer" />
+        <Drawer IsDrawerOpen="@_isDrawerOpen" OnAvatarClick="ToggleAssistantsDrawer" OnSettingsClick="ToggleSettingsDrawer" />
         <AssistantsDrawer IsOpen="_isAssistantsDrawerOpen" IsOpenChanged="HandleAssistantsDrawerStateChanged" />
+        <SettingsDrawer IsOpen="_isSettingsDrawerOpen" IsOpenChanged="HandleSettingsDrawerStateChanged" />
         <MudMainContent>
             <CustomErrorBoundary>
                 <ChildContent>
@@ -47,6 +48,7 @@
     private bool _IsDarkModeEnabled = false;
     private bool _isDrawerOpen = true;
     private bool _isAssistantsDrawerOpen = false;
+    private bool _isSettingsDrawerOpen = false;
 
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#27272f" : "#e7e5e4")};";
 
@@ -70,8 +72,10 @@
     private void ToggleDrawer() => _isDrawerOpen = !_isDrawerOpen;
 
     private void ToggleAssistantsDrawer() => _isAssistantsDrawerOpen = !_isAssistantsDrawerOpen;
+    private void ToggleSettingsDrawer() => _isSettingsDrawerOpen = !_isSettingsDrawerOpen;
 
     private void HandleAssistantsDrawerStateChanged(bool isOpen) => _isAssistantsDrawerOpen = isOpen;
+    private void HandleSettingsDrawerStateChanged(bool isOpen) => _isSettingsDrawerOpen = isOpen;
 
     private void ShowErrorSnackbar(string message)
     {
