@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using StellarChat.Client.Web;
 using StellarChat.Client.Web.Services.Assistants;
 using StellarChat.Client.Web.Services.Chat;
+using StellarChat.Client.Web.Services.Settings;
 using StellarChat.Client.Web.State;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -21,5 +22,6 @@ builder.Services.AddScoped<ChatState>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddScoped<IAssistantService, AssistantService>();
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 await builder.Build().RunAsync();
