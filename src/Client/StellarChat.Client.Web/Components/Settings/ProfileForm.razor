@@ -1,5 +1,8 @@
 ﻿@inject ISettingsService _settingsService
+@inject ChatState _chatState
 @inject ISnackbar Snackbar
+
+@implements IDisposable
 
 <EditForm Model="@AppSettings" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -61,11 +64,14 @@
         - Occupation: Mention your job or field of work.<br />
         - Preferences: Specify any particular interests or preferences.<br />
         - Goals: Outline your short-term or long-term goals.<br /><br />
-        Feel free to include anything else that will help the Assistant better understand and assist you.<br />
+        Feel free to include anything else that will help the Assistant better understand and assist you.<br /><br />
         <strong>⚠️ Please avoid sharing sensitive information.</strong>";
 
-    protected async override Task OnParametersSetAsync()
+    protected async override Task OnInitializedAsync()
     {
+        _chatState.UserNameChanged += StateHasChanged;
+        _chatState.UserAvatarChanged += StateHasChanged;
+
         await PopulateForm();
     }
 
@@ -76,6 +82,9 @@
         if(settings is not null)
         {
             AppSettings = settings;
+
+            _chatState.SetUserName(settings.Profile.Name);
+            _chatState.SetUserAvatar(settings.Profile.AvatarUrl);
         }
     }
 
@@ -96,6 +105,9 @@
 
             if (response.IsSuccessStatusCode)
             {
+                _chatState.SetUserName(appSettings.Profile.Name);
+                _chatState.SetUserAvatar(appSettings.Profile.AvatarUrl);
+
                 ShowErrorSnackbar("Profile updated successfully!", Severity.Success);
                 success = true;
             }
@@ -114,5 +126,11 @@
         {
             options.HideTransitionDuration = 100;
         });
+    }
+
+    public void Dispose()
+    {
+        _chatState.UserNameChanged -= StateHasChanged;
+        _chatState.UserAvatarChanged -= StateHasChanged;
     }
 }
