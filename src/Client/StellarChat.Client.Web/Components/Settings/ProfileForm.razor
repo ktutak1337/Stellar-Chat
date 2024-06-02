@@ -1,0 +1,118 @@
+﻿@inject ISettingsService _settingsService
+@inject ISnackbar Snackbar
+
+<EditForm Model="@AppSettings" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="d-flex flex-column flex-grow-1 gap-3">
+        <MudText>Name</MudText>
+        <MudTextField @bind-Value="AppSettings.Profile!.Name" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="How should the Assistant address you?" />
+
+        <MudText>Avatar</MudText>
+        <div class="d-flex flex-row flex-grow-1 gap-4 align-center">
+            <MudAvatar Size="Size.Medium" Color="Color.Secondary">
+                <MudImage Src="@AppSettings.Profile.AvatarUrl" />
+            </MudAvatar>
+            <MudFileUpload T="IBrowserFile">
+                <ButtonTemplate Context="fileContext">
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               for="@fileContext.Id">
+                        Change
+                    </MudButton>
+                </ButtonTemplate>
+                <SelectedTemplate Context="fileContext" />
+            </MudFileUpload>
+        </div>
+        <MudText Typo="Typo.caption">Max file size: 5MB. Accepted formats: JPG, PNG, GIF</MudText>
+        
+        <MudText>Custom instructions</MudText>
+        <div>
+            <MudTextField @bind-Value="AppSettings.Profile.Description"
+                          T="string" Variant="Variant.Outlined"
+                          AutoGrow
+                          Lines="7"
+                          MaxLines="10"
+                          Margin="Margin.Dense" />
+             <div class="px-2">
+                <MudText Typo="Typo.caption" Class="mt-0" Style="color: var(--mud-palette-text-secondary); font-size: .75rem; text-align: start; font-weight: 400; line-height: 1.66; letter-spacing: .03333em;">
+                    @((MarkupString)descriptionGuidelines)
+                </MudText>
+             </div>
+
+        </div>
+
+    </div>
+    <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+    </div>
+</EditForm>
+
+@code 
+{
+    private AppSettingsResponse AppSettings { get; set; } = new();
+    private bool success;
+
+    private const string descriptionGuidelines = @"
+        Provide any details you’d like the Assistant to consider in responses.<br />These custom instructions will be included in all new conversations.<br /><br />Here are some suggestions:<br />
+        - Projects: Describe current or upcoming projects.<br />
+        - Personal Info: Share relevant details about yourself.<br />
+        - Occupation: Mention your job or field of work.<br />
+        - Preferences: Specify any particular interests or preferences.<br />
+        - Goals: Outline your short-term or long-term goals.<br /><br />
+        Feel free to include anything else that will help the Assistant better understand and assist you.<br />
+        <strong>⚠️ Please avoid sharing sensitive information.</strong>";
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await PopulateForm();
+    }
+
+    private async Task PopulateForm()
+    {
+        var settings = await _settingsService.GetSettingsAsync();
+
+        if(settings is not null)
+        {
+            AppSettings = settings;
+        }
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        await UpdateProfileAsync(AppSettings);
+        StateHasChanged();
+    }
+
+    private async Task UpdateProfileAsync(AppSettingsResponse appSettings)
+    {
+        if (appSettings is not null)
+        {
+            var response = await _settingsService.UpdateProfileAsync(
+                appSettings.Profile.Name, 
+                appSettings.Profile.AvatarUrl, 
+                appSettings.Profile.Description);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ShowErrorSnackbar("Profile updated successfully!", Severity.Success);
+                success = true;
+            }
+            else
+            {
+                ShowErrorSnackbar("Failed to update profile. Please try again.", Severity.Error);
+            }
+        }
+    }
+
+    private void ShowErrorSnackbar(string message, Severity severity)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, severity, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
+    }
+}

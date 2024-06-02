@@ -19,12 +19,12 @@ public class SettingsService(IHttpClientFactory httpClientFactory) : ISettingsSe
         return result!;
     }
 
-    public async ValueTask UpdateProfileAsync(string name, string avatarUrl, string description, string key = SettingsKey)
+    public async ValueTask<HttpResponseMessage> UpdateProfileAsync(string name, string avatarUrl, string description, string key = SettingsKey)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
         var payload = new UpdateProfileRequest(key, name, avatarUrl, description);
 
-        await httpClient.PutAsJsonAsync($"/settings/{key}/profile", payload);
+        return await httpClient.PutAsJsonAsync($"/settings/{key}/profile", payload);
     }
 }
