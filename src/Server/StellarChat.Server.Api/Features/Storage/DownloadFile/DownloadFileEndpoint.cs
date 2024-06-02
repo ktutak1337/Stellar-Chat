@@ -6,7 +6,7 @@ public class DownloadFileEndpoint : IEndpoint
 {
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        var storage = endpoints.MapGroup("/storage").WithTags("Storage");
+        var storage = endpoints.MapGroup("/files").WithTags("Storage");
         storage.MapGet("{fileId}", async (string fileId, IMediator mediator) =>
         {
             var response = await mediator.Send(new DownloadFile(fileId));

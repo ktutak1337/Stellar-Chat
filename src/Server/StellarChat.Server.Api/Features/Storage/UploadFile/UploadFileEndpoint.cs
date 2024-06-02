@@ -6,9 +6,9 @@ public class UploadFileEndpoint : IEndpoint
 {
     public void Expose(IEndpointRouteBuilder endpoints)
     {
-        var storage = endpoints.MapGroup("/storage").WithTags("Storage");
+        var storage = endpoints.MapGroup("/files").WithTags("Storage");
 
-        storage.MapPost("/upload", async ([FromForm] UploadFileRequest request, IMediator mediator) =>
+        storage.MapPost("", async ([FromForm] UploadFileRequest request, IMediator mediator) =>
         {
             var command = new UploadFile(request.File, request.Directory, request.Prefix);
 
