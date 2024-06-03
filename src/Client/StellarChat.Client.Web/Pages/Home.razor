@@ -1,5 +1,5 @@
 ﻿@page "/"
-@page "/c/{ChatId}"
+@page "/c/{ChatId:guid}"
 
 @inject ChatState _chatState
 @inject IChatService _chatService
@@ -35,7 +35,7 @@
 
 @code 
 {
-    [Parameter] public string ChatId { get; set; } = string.Empty;
+    [Parameter] public Guid? ChatId { get; set; }
 
     private List<ChatMessageResponse> ChatMessages { get; set; } = new();
     private ElementReference ChatMessagesDiv { get; set; } = new();
@@ -72,6 +72,12 @@
         await _hubConnection.StartAsync();
 
         Console.WriteLine($"Connection state: {_hubConnection.State}");
+        
+        if (ChatId.HasValue && ChatId != Guid.Empty)
+        {
+            _chatState.SetChatId(ChatId.Value);
+            await LoadChatHistory();
+        }
     }
 
     private async Task LoadChatHistory()
@@ -97,7 +103,7 @@
             if (chatId == Guid.Empty)
             {
                 var newChatId = await _chatService.CreateChatSession("New Chat");
-
+                
                 chatId = newChatId;
                 _chatState.SetChatId(newChatId);
 

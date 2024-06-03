@@ -74,7 +74,7 @@
         _chatState.ChatIdChanged += SelectNewCreatedChat;
 
         await LoadChatSessions();
-        StateHasChanged();
+        SelectChatHistoryItem(_chatState.ChatId);
     }
 
     private async Task ChangeChatSessionTitle(ChangeTitleInfo changeTitleInfo)
@@ -131,8 +131,12 @@
     private async void SelectNewCreatedChat()
     {
         await LoadChatSessions();
+        SelectChatHistoryItem(_chatState.ChatId);
+    }
 
-        var chatSessionToSelect = ChatSessions.SingleOrDefault(chat => chat.Id == _chatState.ChatId);
+    private void SelectChatHistoryItem(Guid chatId)
+    {
+        var chatSessionToSelect = ChatSessions.SingleOrDefault(chat => chat.Id == chatId);
 
         if (chatSessionToSelect is not null)
         {
@@ -142,6 +146,7 @@
             };
 
             SelectedValue = chatSessionToSelect.Id;
+            StateHasChanged();
         }
     }
 
