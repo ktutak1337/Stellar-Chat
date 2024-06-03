@@ -34,9 +34,15 @@ public class AssistantService : IAssistantService
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        var(id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, _, _) = assistant;
-
-        var payload = new CreateAssistantRequest(id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault);
+        var payload = new CreateAssistantRequest(
+            assistant.Id, 
+            assistant.Name, 
+            assistant.Metaprompt, 
+            assistant.Description, 
+            assistant.AvatarUrl, 
+            assistant.DefaultModel, 
+            assistant.DefaultVoice, 
+            assistant.IsDefault);
 
         await httpClient.PostAsJsonAsync($"/assistants", payload);
     }
@@ -44,12 +50,20 @@ public class AssistantService : IAssistantService
     public async ValueTask UpdateAssistant(AssistantResponse assistant)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
+        
+        var assistantId = assistant.Id;
 
-        var (id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, _, _) = assistant;
+        var payload = new UpdateAssistantRequest(
+            assistantId,
+            assistant.Name,
+            assistant.Metaprompt,
+            assistant.Description,
+            assistant.AvatarUrl,
+            assistant.DefaultModel,
+            assistant.DefaultVoice,
+            assistant.IsDefault);
 
-        var payload = new UpdateAssistantRequest(id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault);
-
-        await httpClient.PutAsJsonAsync($"/assistants/{id}", payload);
+        await httpClient.PutAsJsonAsync($"/assistants/{assistantId}", payload);
     }
 
     public async ValueTask SetDefaultAssistant(Guid id, bool isDefault)
