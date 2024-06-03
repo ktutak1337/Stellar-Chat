@@ -2,4 +2,4 @@
 
 namespace StellarChat.Server.Api.Features.Storage.UploadFile;
 
-internal sealed record UploadFile(IFormFile File, string? Directory = null, string? Prefix = null) : ICommand<FileResponse>;
+internal sealed record UploadFile(IFormFile File, string? Prefix = null, string? Directory = null) : ICommand<FileResponse>;

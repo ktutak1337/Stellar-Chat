@@ -2,4 +2,4 @@
 
 namespace StellarChat.Shared.Contracts.Storage;
 
-public sealed record UploadFileRequest(IFormFile File, string? Directory = null, string? Prefix = null);
+public sealed record UploadFileRequest(IFormFile File, string? Prefix = null, string? Directory = null);
