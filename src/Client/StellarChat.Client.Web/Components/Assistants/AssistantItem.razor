@@ -49,11 +49,15 @@
 
     private async Task ConfirmDeleteAssistantDialog()
     {
-        var parameters = new DialogParameters();
-        parameters.Add(nameof(Assistant), Assistant);
+
+        var parameters = new DialogParameters
+        {
+            { "Message", $"Confirm deletion of assistant '{Assistant?.Name}'?" },
+            { "DetailMessage", "This action cannot be undone." }
+        };
 
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        var dialog = _dialogService.Show<ConfirmDeleteAssistantDialog>("Delete Assitant", parameters, options);
+        var dialog = _dialogService.Show<ConfirmDialog>("Delete Assitant", parameters, options);
 
         var result = await dialog.Result;
 
