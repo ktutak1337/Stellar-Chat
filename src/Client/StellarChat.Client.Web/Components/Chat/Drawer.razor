@@ -95,6 +95,7 @@
     {
         await _chatService.DeleteChatSession(chatSession.Id);
         ChatSessions.Remove(chatSession);
+        StateHasChanged();
     }
 
     private async Task LoadChatSessions()
