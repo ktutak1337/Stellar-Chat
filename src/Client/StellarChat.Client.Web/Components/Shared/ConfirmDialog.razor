@@ -1,0 +1,28 @@
+﻿<MudDialog Class="pa-2">
+    <DialogContent>
+        <MudText>@Message</MudText>
+        <MudText Class="mt-2" Typo="Typo.body2">@DetailMessage</MudText>
+    </DialogContent>
+    <DialogActions>
+        <div class="d-flex flex-row flex-grow-1 gap-4">
+            <MudCheckBox @bind-Value="@IsConfirmed" Label="Confirm" UnCheckedColor="Color.Error" />
+            <MudSpacer />
+            <MudButton OnClick="Cancel" Variant="Variant.Filled">Cancel</MudButton>
+            <MudButton OnClick="Submit" Variant="Variant.Filled" Color="Color.Error" Disabled="@(IsConfirmed ? false : true)">Submit</MudButton>
+        </div>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public string DetailMessage { get; set; } = string.Empty;
+    [Parameter] public EventCallback<bool> OnConfirm { get; set; }
+
+    public bool IsConfirmed { get; set; } = false;
+
+    void Submit() => MudDialog!.Close(DialogResult.Ok(IsConfirmed));
+    void Cancel() => MudDialog!.Cancel();
+}
