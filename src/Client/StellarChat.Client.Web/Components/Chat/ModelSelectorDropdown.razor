@@ -1,11 +1,13 @@
-﻿<MudAutocomplete @bind-Value="value1"
+﻿@inject IAvailableModelsService _availableModelsService
+
+<MudAutocomplete @bind-Value="CurrentValue"
                  T="string" 
                  Immediate="true" 
                  CoerceValue="@coerceValue"
                  CoerceText="@coerceText"
                  SearchFunc="@SearchAsync"
                  Clearable="true"
-                 ResetValueOnEmptyText="false"
+                 ResetValueOnEmptyText="true"
                  ShowProgressIndicator="true" 
                  ProgressIndicatorColor="Color.Primary"
                  CloseIcon="@Icons.Material.Filled.Search" 
@@ -16,28 +18,46 @@
 
 @code
 {
-    private bool resetValueOnEmptyText;
+    public List<AvailableModelsResponse> Models { get; set; } = new();
+    private string CurrentValue { get; set; } = string.Empty;
+
     private bool coerceText;
     private bool coerceValue;
-    private string value1 = string.Empty;
-    private string previousValue = string.Empty;
-    // TODO: temp solution
-    private string[] models =
+
+    protected override async Task OnInitializedAsync()
     {
-        "gpt-3.5-turbo", "gpt-4", "gpt-4o"
-    };
+        await LoadModels();
 
+        // TODO: Temporary solution - Should be retrieved from global state indicating the currently selected assistant.
+        var selectedModel = "gpt-4o";
 
-    private async Task<IEnumerable<string>> SearchAsync(string value)
+        if (!string.IsNullOrEmpty(selectedModel) && Models.Any(model => model.Name == selectedModel))
+        {
+            CurrentValue = selectedModel;
+        }
+    }
+
+    private async Task LoadModels()
     {
-        await Task.Delay(1000);
-        previousValue = value1;
+        var models = await _availableModelsService.BrowseAvailableModels();
 
+        if(models is not null)
+        {
+            Models = models.ToList();
+        }
+    }
+
+    private async Task<IEnumerable<string>?> SearchAsync(string value)
+    {
         if (string.IsNullOrEmpty(value))
         {
-            return models;
+            return Models.Select(model => model.Name);
         }
 
-        return models.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        var result = Models
+            .Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+            .Select(model => model.Name);
+
+        return await Task.FromResult(result);
     }
 }
