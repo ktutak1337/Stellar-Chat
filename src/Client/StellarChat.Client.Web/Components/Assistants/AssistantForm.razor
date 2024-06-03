@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager _navigationManager
 @inject IAssistantService _assistantService
+@inject IStorageService _storageService
 
 <EditForm Model="@Assistant" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -11,24 +12,7 @@
         <MudTextField @bind-Value="Assistant!.Description" Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => Assistant!.Description)" />
 
         <MudText>Avatar</MudText>
-        <div class="d-flex flex-row flex-grow-1 gap-4 align-center">
-            <MudAvatar Size="Size.Medium" Color="Color.Secondary">
-                <MudImage Src="@Assistant.AvatarUrl" />
-            </MudAvatar>
-            <MudFileUpload T="IBrowserFile">
-                <ButtonTemplate Context="fileContext">
-                    <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               Size="Size.Small"
-                               for="@fileContext.Id">
-                        Change
-                    </MudButton>
-                </ButtonTemplate>
-                <SelectedTemplate Context="fileContext"/>
-            </MudFileUpload>
-        </div>
-        <MudText Typo="Typo.caption">Max file size: 5MB. Accepted formats: JPG, PNG, GIF</MudText>
+        <AvatarUpload ImageUrl="@Assistant.AvatarUrl" OnInputFileChanged="OnInputFileChanged" />
         
         <MudText>Model</MudText>
         <MudSelect @bind-Value="Assistant.DefaultModel" Margin="Margin.Dense" T="string" Variant="Variant.Outlined" For="@(() => Assistant!.DefaultModel)">
@@ -145,6 +129,17 @@ reflective of the assistant's intended personality and capabilities.";
         if (assistant is not null)
         {
             await _assistantService.UpdateAssistant(assistant);
+        }
+    }
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if (file is not null)
+        {
+            var response = await _storageService.UploadFileAsync(file, "avatar");
+            Assistant.AvatarUrl = response.Url;
         }
     }
 }
