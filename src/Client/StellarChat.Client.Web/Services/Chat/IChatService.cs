@@ -10,5 +10,5 @@ public interface IChatService
     ValueTask SendMessage(Guid chatId, string message, string messageType, string model);
     ValueTask ChangeChatSessionTitle(Guid id, string title);
     ValueTask<Guid> CreateChatSession(string title);
-    ValueTask DeleteChatSession(Guid id);
+    ValueTask<HttpResponseMessage> DeleteChatSession(Guid id);
 }

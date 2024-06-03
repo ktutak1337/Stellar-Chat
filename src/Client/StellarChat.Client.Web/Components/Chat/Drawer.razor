@@ -93,9 +93,20 @@
 
     private async Task DeleteChatSession(ChatSessionResponse chatSession)
     {
-        await _chatService.DeleteChatSession(chatSession.Id);
+        var response = await _chatService.DeleteChatSession(chatSession.Id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            if (IsCurrentlySelectedChat(chatSession.Id))
+            {
+                DeselectChatHistoryItem();
+                _chatState.SetChatId(Guid.Empty);
+                _navigationManager.NavigateTo("/");
+            }
+        }
+
         ChatSessions.Remove(chatSession);
-        StateHasChanged();
+        await LoadChatSessions();
     }
 
     private async Task LoadChatSessions()
@@ -104,13 +115,11 @@
         ChatSessions = response.Items.ToList();
     }
 
-    private async Task CreateNewChat()
+    private void CreateNewChat()
     {
-        SelectedItem = null;
-        SelectedValue = null;
-        _chatState.CreateNewChat();
+        DeselectChatHistoryItem();
+        _chatState.SetChatId(Guid.Empty);
         _navigationManager.NavigateTo("/");
-        await Task.CompletedTask;
     }
 
     public async ValueTask DisposeAsync()
@@ -134,5 +143,17 @@
 
             SelectedValue = chatSessionToSelect.Id;
         }
+    }
+
+    private bool IsCurrentlySelectedChat(Guid chatId)
+        => IsAnyChatSelected() && SelectedValue!.Equals(chatId);
+
+    private bool IsAnyChatSelected()
+        => (SelectedItem, SelectedValue) is (not null, not null);
+
+    private void DeselectChatHistoryItem()
+    {
+        SelectedItem = null;
+        SelectedValue = null;
     }
 }

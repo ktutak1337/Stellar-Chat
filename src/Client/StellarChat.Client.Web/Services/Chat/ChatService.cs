@@ -56,11 +56,11 @@ public class ChatService : IChatService
         return result;
     }
 
-    public async ValueTask DeleteChatSession(Guid id)
+    public async ValueTask<HttpResponseMessage> DeleteChatSession(Guid id)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        await httpClient.DeleteAsync($"/chat-history/sessions/{id}");
+        return await httpClient.DeleteAsync($"/chat-history/sessions/{id}");
     }
 
     public async ValueTask SendMessage(Guid chatId, string message, string messageType, string model)
