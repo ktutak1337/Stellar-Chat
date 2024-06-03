@@ -1,4 +1,5 @@
 ﻿@inject ISettingsService _settingsService
+@inject IStorageService _storageService
 @inject ChatState _chatState
 @inject ISnackbar Snackbar
 
@@ -8,32 +9,16 @@
     <DataAnnotationsValidator />
     <div class="d-flex flex-column flex-grow-1 gap-3">
         <MudText>Name</MudText>
-        <MudTextField @bind-Value="AppSettings.Profile!.Name" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="How should the Assistant address you?" />
+        <MudTextField @bind-Value="AppSettings.Profile!.Name" Variant="Variant.Outlined" Margin="Margin.Dense" HelperText="How should the Assistant address you?"/>
 
         <MudText>Avatar</MudText>
-        <div class="d-flex flex-row flex-grow-1 gap-4 align-center">
-            <MudAvatar Size="Size.Medium" Color="Color.Secondary">
-                <MudImage Src="@AppSettings.Profile.AvatarUrl" />
-            </MudAvatar>
-            <MudFileUpload T="IBrowserFile">
-                <ButtonTemplate Context="fileContext">
-                    <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               Size="Size.Small"
-                               for="@fileContext.Id">
-                        Change
-                    </MudButton>
-                </ButtonTemplate>
-                <SelectedTemplate Context="fileContext" />
-            </MudFileUpload>
-        </div>
-        <MudText Typo="Typo.caption">Max file size: 5MB. Accepted formats: JPG, PNG, GIF</MudText>
-        
+        <AvatarUpload ImageUrl="@AppSettings.Profile.AvatarUrl" OnInputFileChanged="OnInputFileChanged" />
+
         <MudText>Custom instructions</MudText>
         <div>
             <MudTextField @bind-Value="AppSettings.Profile.Description"
-                          T="string" Variant="Variant.Outlined"
+                          T="string" 
+                          Variant="Variant.Outlined"
                           AutoGrow
                           Lines="7"
                           MaxLines="10"
@@ -115,6 +100,17 @@
             {
                 ShowErrorSnackbar("Failed to update profile. Please try again.", Severity.Error);
             }
+        }
+    }
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        if(file is not null)
+        {
+            var response = await _storageService.UploadFileAsync(file, "avatar");
+            AppSettings.Profile.AvatarUrl = response.Url;
         }
     }
 
