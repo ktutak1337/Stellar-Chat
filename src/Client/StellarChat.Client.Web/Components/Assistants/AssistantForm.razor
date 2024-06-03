@@ -57,7 +57,7 @@
 {
     [Parameter] public Guid AssistantId { get; set; }
     [Parameter] public EventCallback OnAssistantSubmit { get; set; }
-    private Assistant? Assistant { get; set; } = new();
+    private AssistantResponse Assistant { get; set; } = new();
     private List<string> AvailableModels { get; set; } = new() { "gpt-4", "gpt-3.5-turbo" };
 
     private const string assistantBehaviorGuidelines = @"
@@ -108,22 +108,20 @@ reflective of the assistant's intended personality and capabilities.";
 
         if (assistant is not null)
         {
-            var (id, name, metaprompt, description, avatarUrl, defaultModel, defaultVoice, isDefault, createdAt, updatedAt) = assistant;
-
-            Assistant = new Assistant
-                {
-                    Id = id,
-                    Name = name,
-                    Metaprompt = metaprompt,
-                    Description = description,
-                    // TODO: temp solution
-                    AvatarUrl = avatarUrl ?? DefaultAvatarUrl,
-                    DefaultModel = defaultModel,
-                    DefaultVoice = defaultVoice,
-                    IsDefault = isDefault,
-                    CreatedAt = createdAt,
-                    UpdatedAt = updatedAt
-                };
+            Assistant = new AssistantResponse
+            {
+                Id = assistant.Id,
+                Name = assistant.Name,
+                Metaprompt = assistant.Metaprompt,
+                Description = assistant.Description,
+                // TODO: temp solution
+                AvatarUrl = assistant.AvatarUrl ?? DefaultAvatarUrl,
+                DefaultModel = assistant.DefaultModel,
+                DefaultVoice = assistant.DefaultVoice,
+                IsDefault = assistant.IsDefault,
+                CreatedAt = assistant.CreatedAt,
+                UpdatedAt = assistant.UpdatedAt
+            };
         }
     }
 
@@ -138,29 +136,15 @@ reflective of the assistant's intended personality and capabilities.";
     {
         if (Assistant is not null)
         {
-            await _assistantService.CreateAssistant(Map(Assistant));
+            await _assistantService.CreateAssistant(Assistant);
         }
     }
 
-    private async Task UpdateAssistantAsync(Assistant assistant)
+    private async Task UpdateAssistantAsync(AssistantResponse assistant)
     {
         if (assistant is not null)
         {
-            await _assistantService.UpdateAssistant(Map(assistant));
+            await _assistantService.UpdateAssistant(assistant);
         }
     }
-
-    private AssistantResponse Map(Assistant assistant) 
-        => new AssistantResponse(
-            assistant.Id,
-            assistant.Name,
-            assistant.Metaprompt,
-            assistant.Description,
-            assistant.AvatarUrl,
-            assistant.DefaultModel,
-            assistant.DefaultVoice,
-            assistant.IsDefault,
-            assistant.CreatedAt,
-            assistant.UpdatedAt);
-
 }
