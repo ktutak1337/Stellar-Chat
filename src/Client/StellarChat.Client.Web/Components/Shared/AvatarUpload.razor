@@ -1,0 +1,31 @@
+﻿@inject IStorageService _storageService
+
+<div class="d-flex flex-row flex-grow-1 gap-4 align-center">
+    <MudAvatar Size="Size.Medium" Color="Color.Secondary">
+        <MudImage Src="@ImageUrl" />
+    </MudAvatar>
+    <MudFileUpload T="IBrowserFile" Accept=".png, .jpg, .gif" OnFilesChanged="HandleFilesChanged">
+        <ButtonTemplate Context="fileContext">
+            <MudButton HtmlTag="label"
+                       Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       Size="Size.Small"
+                       for="@fileContext.Id">
+                Change
+            </MudButton>
+        </ButtonTemplate>
+        <SelectedTemplate Context="fileContext" />
+    </MudFileUpload>
+</div>
+<MudText Typo="Typo.caption">Max file size: 5MB. Accepted formats: JPG, PNG, GIF</MudText>
+
+@code 
+{
+    [Parameter] public string ImageUrl { get; set; } = string.Empty;
+    [Parameter] public EventCallback<InputFileChangeEventArgs> OnInputFileChanged { get; set; }
+    
+    private async Task HandleFilesChanged(InputFileChangeEventArgs @event)
+    {
+        await OnInputFileChanged.InvokeAsync(@event);
+    }
+}
