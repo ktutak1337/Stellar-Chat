@@ -1,4 +1,6 @@
 ﻿@inject IAssistantService _assistantService
+@inject ChatState _chatState
+@implements IDisposable
 
 <MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
@@ -49,7 +51,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _chatState.SelectedAssistantChanged += StateHasChanged;
+        
         await LoadAssistants();
+        SelectDefaultAssistantItem();
     }
 
     private async Task LoadAssistants()
@@ -81,5 +86,29 @@
     {
         isEditing = false;
         await LoadAssistants();
+    }
+
+    private void SelectDefaultAssistantItem()
+    {
+        var defaultAssistantToSelect = Assistants.SingleOrDefault(assistant => assistant.IsDefault == true);
+
+        if (defaultAssistantToSelect is not null)
+        {
+            SelectedItem = new MudListItem
+            {
+                Value = defaultAssistantToSelect.Id
+            };
+
+            SelectedValue = defaultAssistantToSelect.Id;
+
+            _chatState.SetSelectedAssistant(defaultAssistantToSelect);
+            StateHasChanged();
+        }
+
+    }
+
+    public void Dispose()
+    {
+        _chatState.SelectedAssistantChanged -= StateHasChanged;
     }
 }
