@@ -1,6 +1,9 @@
 ﻿@inject IAvailableModelsService _availableModelsService
+@inject ChatState _chatState
 
-<MudAutocomplete @bind-Value="CurrentValue"
+@implements IDisposable
+
+<MudAutocomplete Value="CurrentValue"
                  T="string" 
                  Immediate="true" 
                  CoerceValue="@coerceValue"
@@ -14,7 +17,8 @@
                  AdornmentColor="Color.Primary" 
                  MaxItems="null"
                  Margin="Margin.Dense"
-                 Style="width: 400px" />
+                 Style="width: 400px"
+                 ValueChanged="OnValueChanged"/>
 
 @code
 {
@@ -26,15 +30,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _chatState.SelectedModelChanged += StateHasChanged;
+        _chatState.SelectedAssistantChanged += SetDefaultModel;
+
         await LoadModels();
-
-        // TODO: Temporary solution - Should be retrieved from global state indicating the currently selected assistant.
-        var selectedModel = "gpt-4o";
-
-        if (!string.IsNullOrEmpty(selectedModel) && Models.Any(model => model.Name == selectedModel))
-        {
-            CurrentValue = selectedModel;
-        }
+        SetDefaultModel();
     }
 
     private async Task LoadModels()
@@ -44,6 +44,17 @@
         if(models is not null)
         {
             Models = models.ToList();
+        }
+    }
+
+    private void SetDefaultModel()
+    {
+        var selectedModel = _chatState.SelectedAssistant?.DefaultModel;
+
+        if (IsValidModel(selectedModel!))
+        {
+            CurrentValue = selectedModel!;
+            _chatState.SetSelectedModel(selectedModel!);
         }
     }
 
@@ -59,5 +70,26 @@
             .Select(model => model.Name);
 
         return await Task.FromResult(result);
+    }
+
+    private void OnValueChanged(string value)
+    {
+        CurrentValue = value.IsEmpty() ? string.Empty : value;
+        _chatState.SetSelectedModel(CurrentValue);
+    }
+
+    private void OnSelectedModelChanged() 
+        => _chatState.SetSelectedModel(CurrentValue);
+
+    private void OnSelectedAssistantChanged() 
+        => SetDefaultModel();
+
+    private bool IsValidModel(string value) 
+        => value.IsNotEmpty() && Models.Any(model => model.Name == value);
+
+    public void Dispose()
+    {
+        _chatState.SelectedModelChanged -= StateHasChanged;
+        _chatState.SelectedAssistantChanged -= SetDefaultModel;
     }
 }

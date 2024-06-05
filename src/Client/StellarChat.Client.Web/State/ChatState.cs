@@ -19,6 +19,15 @@ public class ChatState
         ChatIdChanged?.Invoke();
     }
 
+    public string SelectedModel { get; set; } = string.Empty;
+    public event Action? SelectedModelChanged;
+
+    public void SetSelectedModel(string selectedModel)
+    {
+        SelectedModel = selectedModel;
+        SelectedModelChanged?.Invoke();
+    }
+
     public string UserName { get; set; } = string.Empty;
     public event Action? UserNameChanged;
 

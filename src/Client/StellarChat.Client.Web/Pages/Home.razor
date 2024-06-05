@@ -51,6 +51,7 @@
     {
         _chatState.ChatIdChanged += async () => await LoadChatHistory();
         _chatState.SelectedAssistantChanged += StateHasChanged;
+        _chatState.SelectedModelChanged += StateHasChanged;
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(HubUrl)
@@ -121,7 +122,7 @@
             ChatMessages.Add(LatestBotMessage);
             await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
 
-            await _chatService.SendMessage(chatId, message, "", "gpt-3.5-turbo");
+            await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
             _textStreaming.Clear();
         }
     }
@@ -163,7 +164,9 @@
     public async ValueTask DisposeAsync()
     {
         _chatState.ChatIdChanged -= async () => await LoadChatHistory();
-        _chatState.SelectedAssistantChanged += StateHasChanged;
+        _chatState.SelectedAssistantChanged -= StateHasChanged;
+        _chatState.SelectedModelChanged -= StateHasChanged;
+
 
         if (_hubConnection is not null)
         {
