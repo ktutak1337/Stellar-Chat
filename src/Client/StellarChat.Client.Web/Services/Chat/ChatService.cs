@@ -38,11 +38,11 @@ public class ChatService : IChatService
         await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}/title", payload);
     }
 
-    public async ValueTask<Guid> CreateChatSession(string title)
+    public async ValueTask<Guid> CreateChatSession(string title, string avatarUrl)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        var payload = new CreateChatSessionRequest(null, title);
+        var payload = new CreateChatSessionRequest(null, title, avatarUrl);
 
         var response = await httpClient.PostAsJsonAsync($"/chat-history/sessions", payload);
 

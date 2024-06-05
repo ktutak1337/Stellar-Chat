@@ -102,7 +102,7 @@
         {
             if (chatId == Guid.Empty)
             {
-                var newChatId = await _chatService.CreateChatSession("New Chat");
+                var newChatId = await _chatService.CreateChatSession("New Chat", "");
                 
                 chatId = newChatId;
                 _chatState.SetChatId(newChatId);
