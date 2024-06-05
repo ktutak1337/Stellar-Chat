@@ -1,6 +1,7 @@
 ﻿@inject NavigationManager _navigationManager
 @inject IAssistantService _assistantService
 @inject IStorageService _storageService
+@inject IAvailableModelsService _availableModelsService
 
 <EditForm Model="@Assistant" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -18,7 +19,7 @@
         <MudSelect @bind-Value="Assistant.DefaultModel" Margin="Margin.Dense" T="string" Variant="Variant.Outlined" For="@(() => Assistant!.DefaultModel)">
             @foreach (var model in AvailableModels)
             {
-                <MudSelectItem Value="@model" />
+                <MudSelectItem Value="@model.Name" />
             }
         </MudSelect>
 
@@ -42,7 +43,7 @@
     [Parameter] public Guid AssistantId { get; set; }
     [Parameter] public EventCallback OnAssistantSubmit { get; set; }
     private AssistantResponse Assistant { get; set; } = new();
-    private List<string> AvailableModels { get; set; } = new() { "gpt-4", "gpt-3.5-turbo" };
+    private List<AvailableModelsResponse> AvailableModels { get; set; } = new();
 
     private const string assistantBehaviorGuidelines = @"
 Enter the Metaprompt here. This set of instructions will define your assistant's behavior
@@ -52,6 +53,11 @@ reflective of the assistant's intended personality and capabilities.";
     private const string DefaultAvatarUrl = "https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn";
 
     private bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadModels();
+    }
 
     protected async override Task OnParametersSetAsync()
     {
@@ -83,6 +89,16 @@ reflective of the assistant's intended personality and capabilities.";
         else
         {
             SetupNewAssistantParameters();
+        }
+    }
+
+    private async Task LoadModels()
+    {
+        var models = await _availableModelsService.BrowseAvailableModels();
+
+        if (models is not null)
+        {
+            AvailableModels = models.ToList();
         }
     }
 
