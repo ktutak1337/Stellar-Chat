@@ -103,7 +103,7 @@
         {
             if (chatId == Guid.Empty)
             {
-                var newChatId = await _chatService.CreateChatSession("New Chat", "");
+                var newChatId = await _chatService.CreateChatSession("New Chat", _chatState.SelectedAssistant!.AvatarUrl);
 
                 chatId = newChatId;
                 _chatState.SetChatId(newChatId);

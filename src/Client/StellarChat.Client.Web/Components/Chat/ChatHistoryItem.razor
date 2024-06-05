@@ -7,7 +7,7 @@
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1">
             <MudAvatar Size="@Size.Medium" Class="my-auto mr-4">
-                <MudImage Src="https://avatars.githubusercontent.com/u/49451143?v=4"/>
+                <MudImage Src="@ChatSessionItem?.AvatarUrl" />
             </MudAvatar>
             
             @if(shouldShowTooltip)
