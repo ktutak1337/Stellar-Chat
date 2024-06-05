@@ -25,7 +25,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
         // TODO: Retrieve activePlugins and metaprompt from settings
         var activePlugins = new HashSet<string>();
 
-        var chatSession = ChatSession.Create(command.ChatId, command.Title, metaprompt: "", activePlugins, createdAt: now, updatedAt: now);
+        var chatSession = ChatSession.Create(command.ChatId, command.Title, metaprompt: "", activePlugins, command.AvatarUrl, createdAt: now, updatedAt: now);
 
         await _chatSessionRepository.AddAsync(chatSession);
         _logger.LogInformation($"Chat session with ID: '{chatSession.Id}' has been created.");
