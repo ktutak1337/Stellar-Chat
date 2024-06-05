@@ -10,7 +10,7 @@
 
                 @*------------ left column ------------ *@
                 <div id="drawer-left-column" class="d-flex flex-column align-items-center pa-1" style="width:72px; background-color:@(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1");">
-                    <AssistantPickerButton OnAvatarClick="OnAvatarClick"/>
+                    <AssistantPickerButton AvatarUrl="@_chatState.SelectedAssistant?.AvatarUrl" OnAvatarClick="OnAvatarClick" />
                     <div class="d-flex flex-column align-items-center flex-grow-1 fixed mb-2" style="bottom: 6px">
                         <MudTooltip Text="New chat" Arrow="true" Placement="Placement.Right" >
                             <MudFab OnClick="CreateNewChat" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 ml-2" />
@@ -72,6 +72,7 @@
     protected override async Task OnInitializedAsync()
     {
         _chatState.ChatIdChanged += SelectNewCreatedChat;
+        _chatState.SelectedAssistantChanged += StateHasChanged;
 
         await LoadChatSessions();
         SelectChatHistoryItem(_chatState.ChatId);
@@ -125,6 +126,7 @@
     public async ValueTask DisposeAsync()
     {
         _chatState.ChatIdChanged -= SelectNewCreatedChat;
+        _chatState.SelectedAssistantChanged -= StateHasChanged;
         await Task.CompletedTask;
     }
 

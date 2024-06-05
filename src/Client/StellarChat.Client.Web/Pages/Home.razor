@@ -16,7 +16,7 @@
             @if (_chatState.ChatId == Guid.Empty)
             {
                 <div style="height: 100%; width: 100%; display: flex; justify-content: center;">
-                    <NewChatPreview AssistantName="Sophia" UserName="Kris" AssistantAvatar="https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn" />
+                    <NewChatPreview AssistantName="@_chatState.SelectedAssistant?.Name" UserName="Kris" AssistantAvatar="@_chatState.SelectedAssistant?.AvatarUrl" />
                 </div>
             }
             else
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-@code 
+@code
 {
     [Parameter] public Guid? ChatId { get; set; }
 
@@ -50,6 +50,7 @@
     protected override async Task OnInitializedAsync()
     {
         _chatState.ChatIdChanged += async () => await LoadChatHistory();
+        _chatState.SelectedAssistantChanged += StateHasChanged;
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(HubUrl)
@@ -72,7 +73,7 @@
         await _hubConnection.StartAsync();
 
         Console.WriteLine($"Connection state: {_hubConnection.State}");
-        
+
         if (ChatId.HasValue && ChatId != Guid.Empty)
         {
             _chatState.SetChatId(ChatId.Value);
@@ -103,7 +104,7 @@
             if (chatId == Guid.Empty)
             {
                 var newChatId = await _chatService.CreateChatSession("New Chat", "");
-                
+
                 chatId = newChatId;
                 _chatState.SetChatId(newChatId);
 
@@ -130,14 +131,14 @@
         var now = _clock.GetLocalNow();
 
         var userMessage = new ChatMessageResponse
-        {
+            {
                 Id = Guid.NewGuid(),
                 ChatId = chatId,
                 Type = messageType,
                 Author = "user",
                 Content = message,
                 Timestamp = now
-        };
+            };
 
         return userMessage;
     }
@@ -147,14 +148,14 @@
         var now = _clock.GetLocalNow();
 
         var chatMessage = new ChatMessageResponse
-        {
-            Id = Guid.NewGuid(),
-            ChatId = chatId,
-            Type = messageType,
-            Author = "bot",
-            Content = message,
-            Timestamp = now
-        };
+            {
+                Id = Guid.NewGuid(),
+                ChatId = chatId,
+                Type = messageType,
+                Author = "bot",
+                Content = message,
+                Timestamp = now
+            };
 
         return chatMessage;
     }
@@ -162,6 +163,7 @@
     public async ValueTask DisposeAsync()
     {
         _chatState.ChatIdChanged -= async () => await LoadChatHistory();
+        _chatState.SelectedAssistantChanged += StateHasChanged;
 
         if (_hubConnection is not null)
         {
