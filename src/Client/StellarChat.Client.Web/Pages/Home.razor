@@ -16,7 +16,7 @@
             @if (_chatState.ChatId == Guid.Empty)
             {
                 <div style="height: 100%; width: 100%; display: flex; justify-content: center;">
-                    <NewChatPreview AssistantName="@_chatState.SelectedAssistant?.Name" UserName="Kris" AssistantAvatar="@_chatState.SelectedAssistant?.AvatarUrl" />
+                    <NewChatPreview AssistantName="@_chatState.SelectedAssistant?.Name" UserName="@_chatState.UserName" AssistantAvatar="@_chatState.SelectedAssistant?.AvatarUrl" />
                 </div>
             }
             else
@@ -52,6 +52,7 @@
         _chatState.ChatIdChanged += async () => await LoadChatHistory();
         _chatState.SelectedAssistantChanged += StateHasChanged;
         _chatState.SelectedModelChanged += StateHasChanged;
+        _chatState.UserNameChanged += StateHasChanged;
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(HubUrl)
@@ -166,7 +167,7 @@
         _chatState.ChatIdChanged -= async () => await LoadChatHistory();
         _chatState.SelectedAssistantChanged -= StateHasChanged;
         _chatState.SelectedModelChanged -= StateHasChanged;
-
+        _chatState.UserNameChanged -= StateHasChanged;
 
         if (_hubConnection is not null)
         {
