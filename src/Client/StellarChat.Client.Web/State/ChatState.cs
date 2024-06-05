@@ -1,4 +1,6 @@
-﻿namespace StellarChat.Client.Web.State;
+﻿using StellarChat.Shared.Contracts.Assistants;
+
+namespace StellarChat.Client.Web.State;
 
 public class ChatState
 {
@@ -33,5 +35,14 @@ public class ChatState
     {
         UserAvatar = userAvatar;
         UserAvatarChanged?.Invoke();
+    }
+
+    public AssistantResponse? SelectedAssistant { get; set; }
+    public event Action? SelectedAssistantChanged;
+
+    public void SetSelectedAssistant(AssistantResponse assistant)
+    {
+        SelectedAssistant = assistant;
+        SelectedAssistantChanged?.Invoke();
     }
 }
