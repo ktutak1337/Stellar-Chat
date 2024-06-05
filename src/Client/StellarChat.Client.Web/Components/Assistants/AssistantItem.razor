@@ -1,7 +1,10 @@
 ﻿@inject IAssistantService _assistantService
 @inject IDialogService _dialogService
+@inject ChatState _chatState
 
-<MudListItem Value="@Assistant!.Id">
+@implements IDisposable
+
+<MudListItem Value="@Assistant!.Id" OnClick="SetSelectedAssistant">
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1 gap-4">
 
@@ -37,6 +40,11 @@
     [Parameter] public EventCallback<Guid> OnEdit { get; set; }
     [Parameter] public EventCallback OnDelete { get; set; }
 
+    protected override void OnInitialized()
+    {
+        _chatState.SelectedAssistantChanged += StateHasChanged;
+    }
+
     private async Task SetDefaultAssitant()
     {
         await Task.CompletedTask;
@@ -45,6 +53,11 @@
     private async Task EditAssistant(Guid id)
     {
         await OnEdit.InvokeAsync(id);
+    }
+
+    private void SetSelectedAssistant()
+    {
+        _chatState.SetSelectedAssistant(Assistant!);
     }
 
     private async Task ConfirmDeleteAssistantDialog()
@@ -66,5 +79,10 @@
             await _assistantService.DeleteAssistant(Assistant!.Id);
             await OnDelete.InvokeAsync();
         }
+    }
+
+    public void Dispose()
+    {
+        _chatState.SelectedAssistantChanged -= StateHasChanged;
     }
 }
