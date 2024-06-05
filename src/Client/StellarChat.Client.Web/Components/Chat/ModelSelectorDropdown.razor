@@ -43,7 +43,10 @@
 
         if(models is not null)
         {
-            Models = models.ToList();
+            // TODO: Temporary solution - Filter models on the backend to include only 'gpt' family in the future
+            // This is a temporary workaround. Implement backend filtering to include only models belonging to the 'gpt' family in the future.
+
+            Models = models.Where(model => model.Name.StartsWith("gpt", StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
     }
 
