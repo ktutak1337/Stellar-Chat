@@ -24,19 +24,18 @@ internal class ChatContext : IChatContext
         _kernel = kernel;
     }
 
-    public async Task SetChatInstructions(Guid chatId)
+    public async Task SetChatInstructions(Guid chatId, Guid? assistantId)
     {
-        var chatSession = await _chatSessionRepository.GetAsync(chatId);
-
-        if (chatSession is null)
-        {
-            throw new ChatSessionNotFoundException(chatId);
-        }
-
+        var chatSession = await _chatSessionRepository.GetAsync(chatId) ?? throw new ChatSessionNotFoundException(chatId);
         var assistants = await _assistantRepository.BrowseAsync();
         var defaultAssistant = assistants.SingleOrDefault(assistant => assistant.IsDefault);
+        var isDefaultAssistant = assistantId.HasValue && assistantId.Value == defaultAssistant?.Id;
 
-        _chatHistory.AddSystemMessage(defaultAssistant!.Metaprompt);
+        var assistant = isDefaultAssistant
+            ? defaultAssistant
+            : assistants.SingleOrDefault(assistant => assistant.Id == assistantId!.Value) ?? defaultAssistant;
+
+        _chatHistory.AddSystemMessage(assistant!.Metaprompt);
     }
 
     public async Task ExtractChatHistoryAsync(Guid chatId)
