@@ -7,7 +7,7 @@ public interface IChatService
 {
     ValueTask<Paged<ChatSessionResponse>> BrowseChatSessions(int page = 0, int pageSize = 10000);
     ValueTask<Paged<ChatMessageResponse>> GetChatMessagesByChatId(Guid chatId, int page = 0, int pageSize = 10000);
-    ValueTask SendMessage(Guid chatId, string message, string messageType, string model);
+    ValueTask SendMessage(Guid chatId, Guid assistantId, string message, string messageType, string model);
     ValueTask ChangeChatSessionTitle(Guid id, string title);
     ValueTask<Guid> CreateChatSession(string title, string avatarUrl);
     ValueTask<HttpResponseMessage> DeleteChatSession(Guid id);

@@ -63,11 +63,11 @@ public class ChatService : IChatService
         return await httpClient.DeleteAsync($"/chat-history/sessions/{id}");
     }
 
-    public async ValueTask SendMessage(Guid chatId, string message, string messageType, string model)
+    public async ValueTask SendMessage(Guid chatId, Guid assistantId, string message, string messageType, string model)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        var payload = new AskRequest(chatId, message, messageType, model);
+        var payload = new AskRequest(chatId, assistantId, message, messageType, model);
 
         await httpClient.PostAsJsonAsync($"/chats/{chatId}/messages", payload);
     }
