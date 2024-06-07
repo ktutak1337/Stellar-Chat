@@ -11,13 +11,17 @@ using StellarChat.Client.Web.Services.Storage;
 using StellarChat.Client.Web.State;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.TryAddSingleton(TimeProvider.System);
 
+var apiUrl = builder.Configuration["api:api_url"];
+
 builder.Services.AddHttpClient("WebAPI", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7057");
+    client.BaseAddress = new Uri(apiUrl!);
 });
 
 builder.Services.AddScoped<ChatState>();
