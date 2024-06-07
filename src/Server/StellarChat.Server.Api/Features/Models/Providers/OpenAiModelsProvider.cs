@@ -22,7 +22,7 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
     {
         var headers = new Dictionary<string, string>
         {
-            { "Authorization", $"Bearer {_openAiOptions.ApiKey}" }
+            { "Authorization", $"Bearer {_openAiOptions.API_KEY}" }
         };
 
         var response = await _httpClientService.GetAsync(OpenAIApiEndpoint, headers, cancellationToken);

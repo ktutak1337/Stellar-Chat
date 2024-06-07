@@ -2,7 +2,7 @@
 
 internal class MongoOptions
 {
-    public string ConnectionString { get; set; } = null!;
-    public string Database { get; set; } = null!;
-    public bool DisableTransactions { get; set; }
+    public string CONNECTION_STRING { get; set; } = null!;
+    public string DATABASE { get; set; } = null!;
+    public bool DISABLE_TRANSACTIONS { get; set; }
 }

@@ -113,8 +113,8 @@ internal static class Extensions
 
         var kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
-                modelId: options.TextModel,
-                apiKey: options.ApiKey)
+                modelId: options.TEXT_MODEL,
+                apiKey: options.API_KEY)
             .Build();
 
         services.AddSingleton(kernel);
@@ -141,14 +141,13 @@ internal static class Extensions
         var memory = new KernelMemoryBuilder()
             .WithOpenAI(new OpenAIConfig
             {
-                APIKey = openAiOptions.ApiKey,
-                OrgId = openAiOptions.OrganizationId,
-                TextModel = openAiOptions.TextModel,
-                EmbeddingModel = openAiOptions.EmbeddingModel
+                APIKey = openAiOptions.API_KEY,
+                TextModel = openAiOptions.TEXT_MODEL,
+                EmbeddingModel = openAiOptions.EMBEDDING_MODEL
             })
             .WithQdrantMemoryDb(new QdrantConfig
             {
-                Endpoint = qdrantOptions.Endpoint,
+                Endpoint = qdrantOptions.ENDPOINT,
             })
             .Build();
 

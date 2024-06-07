@@ -3,8 +3,7 @@
 internal class OpenAiOptions
 {
     public const string Key = "openAI";
-    public string TextModel { get; set; } = string.Empty;
-    public string ApiKey { get; set; } = string.Empty;
-    public string OrganizationId { get; set; } = string.Empty;
-    public string EmbeddingModel { get; set; } = string.Empty;
+    public string TEXT_MODEL { get; set; } = string.Empty;
+    public string API_KEY { get; set; } = string.Empty;
+    public string EMBEDDING_MODEL { get; set; } = string.Empty;
 }

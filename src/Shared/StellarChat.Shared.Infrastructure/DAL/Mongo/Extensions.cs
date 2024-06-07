@@ -24,8 +24,8 @@ public static class Extensions
             return services;
         }
 
-        var mongoClient = new MongoClient(options.ConnectionString);
-        var database = mongoClient.GetDatabase(options.Database);
+        var mongoClient = new MongoClient(options.CONNECTION_STRING);
+        var database = mongoClient.GetDatabase(options.DATABASE);
         services.AddSingleton<IMongoClient>(mongoClient);
         services.AddSingleton(database);
 
