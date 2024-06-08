@@ -2,10 +2,10 @@
 
 public sealed class CorsOptions
 {
-    public bool Enabled { get; set; }
-    public bool AllowCredentials { get; set; }
-    public IEnumerable<string>? AllowedOrigins { get; set; }
-    public IEnumerable<string>? AllowedMethods { get; set; }
-    public IEnumerable<string>? AllowedHeaders { get; set; }
-    public IEnumerable<string>? ExposedHeaders { get; set; }
+    public bool ENABLED { get; set; }
+    public bool ALLOW_CREDENTIALS { get; set; }
+    public IEnumerable<string>? ALLOWED_ORIGINS { get; set; }
+    public IEnumerable<string>? ALLOWED_METHODS { get; set; }
+    public IEnumerable<string>? ALLOWED_HEADERS { get; set; }
+    public IEnumerable<string>? EXPOSED_HEADERS { get; set; }
 }

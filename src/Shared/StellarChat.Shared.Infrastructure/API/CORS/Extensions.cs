@@ -15,21 +15,21 @@ public static class Extensions
         services.Configure<CorsOptions>(section);
         var options = section.BindOptions<CorsOptions>();
 
-        if (!options.Enabled)
+        if (!options.ENABLED)
         {
             return services;
         }
 
         return services.AddCors(cors =>
         {
-            var allowedHeaders = options.AllowedHeaders;
-            var allowedMethods = options.AllowedMethods;
-            var allowedOrigins = options.AllowedOrigins;
-            var exposedHeaders = options.ExposedHeaders;
+            var allowedHeaders = options.ALLOWED_HEADERS;
+            var allowedMethods = options.ALLOWED_METHODS;
+            var allowedOrigins = options.ALLOWED_ORIGINS;
+            var exposedHeaders = options.ALLOWED_HEADERS;
             cors.AddPolicy(PolicyName, corsBuilder =>
             {
-                var origins = allowedOrigins?.ToArray() ?? Array.Empty<string>();
-                if (options.AllowCredentials && origins.FirstOrDefault() != "*")
+                var origins = allowedOrigins?.ToArray() ?? [];
+                if (options.ALLOW_CREDENTIALS && origins.FirstOrDefault() != "*")
                 {
                     corsBuilder.AllowCredentials();
                 }
@@ -38,10 +38,10 @@ public static class Extensions
                     corsBuilder.DisallowCredentials();
                 }
                 corsBuilder
-                    .WithHeaders(allowedHeaders?.ToArray() ?? Array.Empty<string>())
-                    .WithMethods(allowedMethods?.ToArray() ?? Array.Empty<string>())
+                    .WithHeaders(allowedHeaders?.ToArray() ?? [])
+                    .WithMethods(allowedMethods?.ToArray() ?? [])
                     .WithOrigins(origins.ToArray())
-                    .WithExposedHeaders(exposedHeaders?.ToArray() ?? Array.Empty<string>());
+                    .WithExposedHeaders(exposedHeaders?.ToArray() ?? []);
             });
         });
     }
@@ -49,7 +49,7 @@ public static class Extensions
     public static IApplicationBuilder UseCorsPolicy(this IApplicationBuilder app)
     {
         var options = app.ApplicationServices.GetRequiredService<IOptions<CorsOptions>>().Value;
-        if (!options.Enabled)
+        if (!options.ENABLED)
         {
             return app;
         }
