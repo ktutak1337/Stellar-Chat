@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./docs/assets/logo-large.jpg" alt="logo-large" width="400" height="400">
+
 # 🌌 Stellar Chat 🌌
 
 A multi-modal chat application enabling users to create custom agents, and integrate with local LLMs (Local Language Models), as well as OpenAI models, also the capability to generate images, visual recognition capabilities, TTS & STT Voice Conversation, etc.
