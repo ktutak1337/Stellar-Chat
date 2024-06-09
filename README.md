@@ -2,14 +2,24 @@
 
 <img src="./docs/assets/logo-large.jpg" alt="logo-large" width="400" height="400">
 
-# 🌌 Stellar Chat 🌌
+<h1>Stellar Chat</h3>
 
-A multi-modal chat application enabling users to create custom agents, and integrate with local LLMs (Local Language Models), as well as OpenAI models, also the capability to generate images, visual recognition capabilities, TTS & STT Voice Conversation, etc.
+A powerful multi-modal chat application that empowers users to create custom agents, generate images, utilize visual recognition, engage in text-to-speech and speech-to-text voice conversations. It seamlessly integrates with local LLMs and commercial models like OpenAI, Gemini, Perplexity, and Claude, while also offering the capability to converse with uploaded documents and websites.
+
+  <p align="center">
+    <a href="https://docs.stellar-chat.com/"><strong>Documentation</strong></a>
+    |
+    <a href="https://github.com/ktutak1337/Stellar-Chat/issues/new?assignees=&labels=%F0%9F%90%9B+Bug&projects=&template=bug_report.yml&title=%5BBug%5D+"><strong>Report Bug</strong></a>
+    |
+    <a href="https://github.com/ktutak1337/Stellar-Chat/issues/new?assignees=&labels=%F0%9F%A4%A9+Feature+Request&projects=&template=feature_request.yml&title=%5BRequest%5D+"><strong>Request Feature</strong></a>
+  </p>
 
 [![Build & Tests](https://github.com/ktutak1337/Stellar-Chat/actions/workflows/github-actions.yaml/badge.svg?branch=main)](https://github.com/ktutak1337/Stellar-Chat/actions/workflows/github-actions.yaml)
 [![NuGet Package](https://img.shields.io/badge/.NET%20-8.0-blue.svg)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 [![GitHub license](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ktutak1337/Stellar-Chat/blob/main/LICENSE.md)
 [![100 - commitow](https://img.shields.io/badge/100%20-commitow-lightgreen.svg)](https://100commitow.pl)
+
+<h3>⭐️ Your star motivates me greatly! ⭐️</h3>  
 
 > \[!NOTE]
 >
