@@ -2,6 +2,9 @@
 @inject IAssistantService _assistantService
 @inject IStorageService _storageService
 @inject IAvailableModelsService _availableModelsService
+@inject ChatState _chatState
+
+@implements IDisposable
 
 <EditForm Model="@Assistant" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -56,6 +59,8 @@ reflective of the assistant's intended personality and capabilities.";
 
     protected override async Task OnInitializedAsync()
     {
+        _chatState.SelectedAssistantChanged += StateHasChanged;
+
         await LoadModels();
     }
 
@@ -140,6 +145,7 @@ reflective of the assistant's intended personality and capabilities.";
         if (Assistant is not null)
         {
             await _assistantService.CreateAssistant(Assistant);
+            _chatState.SetSelectedAssistant(Assistant);
         }
     }
 
@@ -148,6 +154,7 @@ reflective of the assistant's intended personality and capabilities.";
         if (assistant is not null)
         {
             await _assistantService.UpdateAssistant(assistant);
+            _chatState.SetSelectedAssistant(assistant);
         }
     }
 
@@ -160,5 +167,10 @@ reflective of the assistant's intended personality and capabilities.";
             var response = await _storageService.UploadFileAsync(file, "avatar");
             Assistant.AvatarUrl = response.Url;
         }
+    }
+
+    public void Dispose()
+    {
+        _chatState.SelectedAssistantChanged -= StateHasChanged;
     }
 }
