@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/c/{ChatId:guid}"
 
+@inject IConfiguration _configuration
 @inject ChatState _chatState
 @inject IChatService _chatService
 @inject NavigationManager _navigationManager
@@ -45,7 +46,7 @@
 
     private const string ReceiveMessageUpdateServerCall = "ReceiveChatMessageChunk";
     private const string AddClientToGroupServerCall = "AddClientToGroupAsync";
-    private const string HubUrl = "https://localhost:7057/hub";
+    private string HubUrl => $"{_configuration["api:api_url"]}/hub";
 
     protected override async Task OnInitializedAsync()
     {
