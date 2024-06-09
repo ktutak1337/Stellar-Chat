@@ -33,9 +33,10 @@ A multi-modal chat application enabling users to create custom agents, and integ
    - [`9.` Message and Conversation Search](#9-message-and-conversation-search)
    - [`10.` Custom Action Creation for App Integration](#10-custom-action-creation-for-app-integration)
    - [`11.` Multi-Agent Chat Capability](#11-multi-agent-chat-capability)
-2. [⭐ Enjoying the Project?](#-enjoying-the-project)
-3. [🚧 Issues](#-issues)
-4. [📝 License](#-license)
+2. [⌨️ Local Development](#-local-development)
+3. [⭐ Enjoying the Project?](#-enjoying-the-project)
+4. [🚧 Issues](#-issues)
+5. [📝 License](#-license)
 
 </details>
 
@@ -81,6 +82,41 @@ Create custom actions to seamlessly integrate with your favorite applications su
 
 `11.` Multi-Agent Chat Capability
 Engage in conversations with multiple agents simultaneously within a single chat interface, enabling diverse interactions and enhanced collaboration.
+
+## ⌨️ Local Development
+
+You have the option to utilize `GitHub Codespaces` for online development:
+
+<a href="https://codespaces.new/ktutak1337/Stellar-Chat">
+  <img src="https://github.com/codespaces/badge.svg" alt="Github Codespaces">
+</a>
+
+<br/>
+Or clone it for local development:
+
+```bash
+git clone https://github.com/ktutak1337/Stellar-Chat.git
+
+# It is recommended to use Docker to run the infrastructure components (MongoDB, Qdrant, Seq):
+cd src
+docker compose up -d
+
+# configrure API:
+cd src/Server/StellarChat.Server.Api
+
+# set all api keys (more details in docs):
+dotnet user-secrets init
+dotnet user-secrets set openAI:api_key [your API KEY]
+
+# Run API:
+dotnet run watch
+
+# Run web app:
+cd src/Client/StellarChat.Client.Web
+dotnet run watch
+```
+
+If you want to delve deeper into setting up your local development environment, please feel free to consult our [📘 Development Guide](https://docs.stellar-chat.com//guides/local-development/).
 
 ## ⭐ Enjoying the Project?
 
