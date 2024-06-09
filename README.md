@@ -4,7 +4,7 @@
 
 <h1>Stellar Chat</h3>
 
-A powerful multi-modal chat application that empowers users to create custom agents, generate images, utilize visual recognition, engage in text-to-speech and speech-to-text voice conversations. It seamlessly integrates with local LLMs and commercial models like OpenAI, Gemini, Perplexity, and Claude, while also offering the capability to converse with uploaded documents and websites.
+A powerful multi-modal chat application that empowers users to create custom agents, generate images, utilize visual recognition, and engage in voice conversations. It seamlessly integrates with local LLMs and commercial models like OpenAI, Gemini, Perplexity, and Claude, while also offering the capability to converse with uploaded documents and websites.
 
   <p align="center">
     <a href="https://docs.stellar-chat.com/"><strong>Documentation</strong></a>
