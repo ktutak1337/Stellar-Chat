@@ -33,10 +33,11 @@ A multi-modal chat application enabling users to create custom agents, and integ
    - [`9.` Message and Conversation Search](#9-message-and-conversation-search)
    - [`10.` Custom Action Creation for App Integration](#10-custom-action-creation-for-app-integration)
    - [`11.` Multi-Agent Chat Capability](#11-multi-agent-chat-capability)
-2. [⌨️ Local Development](#-local-development)
-3. [⭐ Enjoying the Project?](#-enjoying-the-project)
-4. [🚧 Issues](#-issues)
-5. [📝 License](#-license)
+2. [🚀 Self-Hosted](#-self-hosted)
+3. [⌨️ Local Development](#-local-development)
+4. [⭐ Enjoying the Project?](#-enjoying-the-project)
+5. [🚧 Issues](#-issues)
+6. [📝 License](#-license)
 
 </details>
 
@@ -83,6 +84,16 @@ Create custom actions to seamlessly integrate with your favorite applications su
 `11.` Multi-Agent Chat Capability
 Engage in conversations with multiple agents simultaneously within a single chat interface, enabling diverse interactions and enhanced collaboration.
 
+## 🚀 Self-Hosted
+
+Choose the deployment method that best suits your needs and get started with Stellar Chat today!
+
+Explore our deployment options to get started quickly:
+
+<a href="https://docs.stellar-chat.com/deployment/deploy-with-docker/">
+  <img src="docs\assets\deploy\btn-deploy-with-docker.jpg" alt="Deploy on Docker">
+</a>
+
 ## ⌨️ Local Development
 
 You have the option to utilize `GitHub Codespaces` for online development:
@@ -90,8 +101,8 @@ You have the option to utilize `GitHub Codespaces` for online development:
 <a href="https://codespaces.new/ktutak1337/Stellar-Chat">
   <img src="https://github.com/codespaces/badge.svg" alt="Github Codespaces">
 </a>
+&nbsp;
 
-<br/>
 Or clone it for local development:
 
 ```bash
@@ -116,7 +127,7 @@ cd src/Client/StellarChat.Client.Web
 dotnet run watch
 ```
 
-If you want to delve deeper into setting up your local development environment, please feel free to consult our [📘 Development Guide](https://docs.stellar-chat.com//guides/local-development/).
+If you want to delve deeper into setting up your local development environment, please feel free to consult our [📘 Development Guide](https://docs.stellar-chat.com/guides/local-development/).
 
 ## ⭐ Enjoying the Project?
 
