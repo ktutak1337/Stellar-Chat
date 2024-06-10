@@ -155,6 +155,7 @@ reflective of the assistant's intended personality and capabilities.";
         {
             await _assistantService.UpdateAssistant(assistant);
             _chatState.SetSelectedAssistant(assistant);
+            _chatState.NotifyAssistantUpdated();
         }
     }
 

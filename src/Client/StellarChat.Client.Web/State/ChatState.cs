@@ -13,12 +13,6 @@ public class ChatState
         ChatIdChanged?.Invoke();
     }
 
-    public void CreateNewChat()
-    {
-        ChatId = Guid.Empty;
-        ChatIdChanged?.Invoke();
-    }
-
     public string SelectedModel { get; set; } = string.Empty;
     public event Action? SelectedModelChanged;
 
@@ -53,5 +47,12 @@ public class ChatState
     {
         SelectedAssistant = assistant;
         SelectedAssistantChanged?.Invoke();
+    }
+
+    public event Action? AssistantUpdated;
+
+    public void NotifyAssistantUpdated()
+    {
+        AssistantUpdated?.Invoke();
     }
 }

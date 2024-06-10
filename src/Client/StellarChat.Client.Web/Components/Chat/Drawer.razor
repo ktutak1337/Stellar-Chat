@@ -73,6 +73,7 @@
     {
         _chatState.ChatIdChanged += SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged += StateHasChanged;
+        _chatState.AssistantUpdated += async () => await LoadChatSessions();
 
         await LoadChatSessions();
         SelectChatHistoryItem(_chatState.ChatId);
@@ -127,6 +128,8 @@
     {
         _chatState.ChatIdChanged -= SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged -= StateHasChanged;
+        _chatState.AssistantUpdated -= async () => await LoadChatSessions();
+
         await Task.CompletedTask;
     }
 
