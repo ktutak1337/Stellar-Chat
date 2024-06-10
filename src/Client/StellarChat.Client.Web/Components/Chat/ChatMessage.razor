@@ -9,13 +9,13 @@
     Use the avatar image URL from the application state. *@
 
         <MudAvatar Rounded="true" Color="Color.Secondary">
-            <MudImage Src="@(Message?.Author == "bot" ? "https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn" : @_chatState.UserAvatar)" />
+            <MudImage Src="@(Message?.Author == "bot" ? _chatState.AssignedAssistant?.AvatarUrl : @_chatState.UserAvatar)" />
         </MudAvatar>
     </div>
     <div id="chat-message-text" class="flex-grow-1">
         <div class="d-flex flex-row">
             @* TODO: temp solution *@
-            <MudText Typo="Typo.inherit" Class="mr-3" Style="font-size: 16px; font-weight: 900;">@(Message?.Author == "bot" ? "Sophia" : @_chatState.UserName)</MudText>
+            <MudText Typo="Typo.inherit" Class="mr-3" Style="font-size: 16px; font-weight: 900;">@(Message?.Author == "bot" ? _chatState.AssignedAssistant?.Name : @_chatState.UserName)</MudText>
             <MudText Typo="Typo.caption" Class="my-auto mt-1">@Message?.Timestamp.ToString("M/d/yyyy 'at' h:mm:ss tt")</MudText>
         </div>
         <MudText Typo="Typo.body1" Class="mr-2 mt-2">@Message?.Content</MudText>
@@ -32,18 +32,19 @@
 
 @code 
 {
-    [Parameter]
-    public ChatMessageResponse? Message { get; set; }
+    [Parameter] public ChatMessageResponse? Message { get; set; }
 
     protected override void OnInitialized()
     {
         _chatState.UserNameChanged += StateHasChanged;
         _chatState.UserAvatarChanged += StateHasChanged;
+        _chatState.AssignedAssistantChanged += StateHasChanged;
     }
 
     public void Dispose()
     {
         _chatState.UserNameChanged -= StateHasChanged;
         _chatState.UserAvatarChanged -= StateHasChanged;
+        _chatState.AssignedAssistantChanged -= StateHasChanged;
     }
 }

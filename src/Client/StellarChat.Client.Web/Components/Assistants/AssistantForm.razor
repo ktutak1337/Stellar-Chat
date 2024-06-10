@@ -154,6 +154,7 @@ reflective of the assistant's intended personality and capabilities.";
         if (assistant is not null)
         {
             await _assistantService.UpdateAssistant(assistant);
+            _chatState.SetAssignedAssistant(assistant);
             _chatState.SetSelectedAssistant(assistant);
             _chatState.NotifyAssistantUpdated();
         }

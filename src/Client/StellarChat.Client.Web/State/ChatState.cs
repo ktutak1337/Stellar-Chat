@@ -49,6 +49,15 @@ public class ChatState
         SelectedAssistantChanged?.Invoke();
     }
 
+    public AssistantResponse? AssignedAssistant { get; set; }
+    public event Action? AssignedAssistantChanged;
+
+    public void SetAssignedAssistant(AssistantResponse assistant)
+    {
+        AssignedAssistant = assistant;
+        AssignedAssistantChanged?.Invoke();
+    }
+
     public event Action? AssistantUpdated;
 
     public void NotifyAssistantUpdated()

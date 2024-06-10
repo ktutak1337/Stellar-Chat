@@ -73,6 +73,7 @@
     {
         _chatState.ChatIdChanged += SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged += StateHasChanged;
+        _chatState.AssignedAssistantChanged += StateHasChanged;
         _chatState.AssistantUpdated += async () => await LoadChatSessions();
 
         await LoadChatSessions();
@@ -128,6 +129,7 @@
     {
         _chatState.ChatIdChanged -= SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged -= StateHasChanged;
+        _chatState.AssignedAssistantChanged -= StateHasChanged;
         _chatState.AssistantUpdated -= async () => await LoadChatSessions();
 
         await Task.CompletedTask;
@@ -145,6 +147,8 @@
 
         if (chatSessionToSelect is not null)
         {
+            _chatState.SetAssignedAssistant(chatSessionToSelect!.AssignedAssistant);
+
             SelectedItem = new MudListItem
             {
                 Value = chatSessionToSelect.Id
