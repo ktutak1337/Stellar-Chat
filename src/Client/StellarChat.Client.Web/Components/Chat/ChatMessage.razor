@@ -4,17 +4,12 @@
 
 <div class="d-flex mb-6">
     <div id="chat-message-avatar" class="avatar mr-4 mt-1">
-
-@*  TODO: Implement logic to display the correct avatar based on whether the author is a user or a bot.
-    Use the avatar image URL from the application state. *@
-
         <MudAvatar Rounded="true" Color="Color.Secondary">
             <MudImage Src="@(Message?.Author == "bot" ? _chatState.AssignedAssistant?.AvatarUrl : @_chatState.UserAvatar)" />
         </MudAvatar>
     </div>
     <div id="chat-message-text" class="flex-grow-1">
         <div class="d-flex flex-row">
-            @* TODO: temp solution *@
             <MudText Typo="Typo.inherit" Class="mr-3" Style="font-size: 16px; font-weight: 900;">@(Message?.Author == "bot" ? _chatState.AssignedAssistant?.Name : @_chatState.UserName)</MudText>
             <MudText Typo="Typo.caption" Class="my-auto mt-1">@Message?.Timestamp.ToString("M/d/yyyy 'at' h:mm:ss tt")</MudText>
         </div>
