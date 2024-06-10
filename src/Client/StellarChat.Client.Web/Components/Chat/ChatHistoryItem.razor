@@ -26,7 +26,7 @@
             <MudSpacer />
             <MudMenu Icon="@Icons.Material.Filled.MoreVert">
                 <MudMenuItem OnClick="OpenChangeTitleDialog">Rename</MudMenuItem>
-                <MudMenuItem OnClick="DeleteChat">Delete</MudMenuItem>
+                <MudMenuItem OnClick="ConfirmDeleteChatDialog">Delete</MudMenuItem>
             </MudMenu>
         </div>
     </ChildContent>
@@ -52,8 +52,24 @@
         NavigationManager.NavigateTo($"/c/{ChatSessionItem.Id}");
     }
 
-    private async Task DeleteChat() 
-        => await OnDeleteChat.InvokeAsync(ChatSessionItem);
+    private async Task ConfirmDeleteChatDialog()
+    {
+        var parameters = new DialogParameters
+        {
+            { "Message", $"This will delete the conversation: '{ChatSessionItem?.Title}'." },
+            { "DetailMessage", "This action cannot be undone." }
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var dialog = _dialogService.Show<ConfirmDialog>("Delete this chat?", parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await OnDeleteChat.InvokeAsync(ChatSessionItem);
+        }
+    }
 
     private async Task OpenChangeTitleDialog()
     {
