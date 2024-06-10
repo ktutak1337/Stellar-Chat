@@ -38,11 +38,11 @@ public class ChatService : IChatService
         await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}/title", payload);
     }
 
-    public async ValueTask<Guid> CreateChatSession(string title, string avatarUrl)
+    public async ValueTask<Guid> CreateChatSession(Guid assistantId, string title)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        var payload = new CreateChatSessionRequest(null, title, avatarUrl);
+        var payload = new CreateChatSessionRequest(null, assistantId, title);
 
         var response = await httpClient.PostAsJsonAsync($"/chat-history/sessions", payload);
 
@@ -63,11 +63,11 @@ public class ChatService : IChatService
         return await httpClient.DeleteAsync($"/chat-history/sessions/{id}");
     }
 
-    public async ValueTask SendMessage(Guid chatId, Guid assistantId, string message, string messageType, string model)
+    public async ValueTask SendMessage(Guid chatId, string message, string messageType, string model)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        var payload = new AskRequest(chatId, assistantId, message, messageType, model);
+        var payload = new AskRequest(chatId, message, messageType, model);
 
         await httpClient.PostAsJsonAsync($"/chats/{chatId}/messages", payload);
     }

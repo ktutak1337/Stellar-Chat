@@ -101,12 +101,13 @@
     private async Task SendMessage(string message)
     {
         var chatId = _chatState.ChatId;
+        var assistantId = _chatState.SelectedAssistant!.Id;
 
         if (!string.IsNullOrWhiteSpace(message))
         {
             if (chatId == Guid.Empty)
             {
-                var newChatId = await _chatService.CreateChatSession("New Chat", _chatState.SelectedAssistant!.AvatarUrl);
+                var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat");
 
                 chatId = newChatId;
                 _chatState.SetChatId(newChatId);
@@ -124,7 +125,7 @@
             ChatMessages.Add(LatestBotMessage);
             await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
 
-            await _chatService.SendMessage(chatId, _chatState.SelectedAssistant!.Id, message, "", _chatState.SelectedModel);
+            await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
             _textStreaming.Clear();
         }
     }
