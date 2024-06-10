@@ -36,7 +36,6 @@ internal sealed class CarryConversationHandler : ICommandHandler<Ask, string>
         contextArguments.TryAdd("messageType", command.MessageType);
         contextArguments.TryAdd("model", command.Model);
         contextArguments.TryAdd("chatId", command.ChatId);
-        contextArguments.TryAdd("assistantId", command.AssistantId);
         contextArguments.TryAdd("hubContext", _hubContext);
 
         return contextArguments;

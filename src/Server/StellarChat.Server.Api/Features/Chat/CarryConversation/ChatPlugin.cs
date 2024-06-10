@@ -18,12 +18,11 @@ internal class ChatPlugin
     public async Task<KernelArguments> ChatAsync(
         [Description("The new message used as input")] string message,
         [Description("Unique identifier for the chat")] Guid chatId,
-        [Description("Unique identifier for the assistant")] Guid? assistantId,
         [Description("Model used for text generation (e.g., gpt-4, gpt-3.5-turbo)")] string model,
         IHubContext<ChatHub, IChatHub> hubContext,
         KernelArguments context)
     {
-        await _chatContext.SetChatInstructions(chatId, assistantId);
+        await _chatContext.SetChatInstructions(chatId);
         await _chatContext.ExtractChatHistoryAsync(chatId);
         
         var userMessage = CreateUserMessage(chatId, message);
