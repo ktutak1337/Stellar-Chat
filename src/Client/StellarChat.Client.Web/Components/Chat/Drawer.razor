@@ -71,6 +71,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _chatState.IsNewChatPendingChanged += StateHasChanged;
         _chatState.ChatIdChanged += SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged += StateHasChanged;
         _chatState.AssignedAssistantChanged += StateHasChanged;
@@ -127,6 +128,7 @@
 
     public async ValueTask DisposeAsync()
     {
+        _chatState.IsNewChatPendingChanged -= StateHasChanged;
         _chatState.ChatIdChanged -= SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged -= StateHasChanged;
         _chatState.AssignedAssistantChanged -= StateHasChanged;
@@ -137,7 +139,12 @@
 
     private async void SelectNewCreatedChat()
     {
-        await LoadChatSessions();
+        if (_chatState.IsNewChatPending)
+        {
+            await LoadChatSessions();
+            _chatState.SetIsNewChatPending(false);
+        }
+
         SelectChatHistoryItem(_chatState.ChatId);
     }
 

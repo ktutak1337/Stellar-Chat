@@ -13,6 +13,15 @@ public class ChatState
         ChatIdChanged?.Invoke();
     }
 
+    public bool IsNewChatPending { get; set; }
+    public event Action? IsNewChatPendingChanged;
+
+    public void SetIsNewChatPending(bool value)
+    {
+        IsNewChatPending = value;
+        IsNewChatPendingChanged?.Invoke();
+    }
+
     public string SelectedModel { get; set; } = string.Empty;
     public event Action? SelectedModelChanged;
 

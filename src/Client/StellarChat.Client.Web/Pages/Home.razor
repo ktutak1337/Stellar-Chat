@@ -110,6 +110,7 @@
                 var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat");
 
                 chatId = newChatId;
+                _chatState.SetIsNewChatPending(true);
                 _chatState.SetChatId(newChatId);
 
                 await LoadChatHistory();
