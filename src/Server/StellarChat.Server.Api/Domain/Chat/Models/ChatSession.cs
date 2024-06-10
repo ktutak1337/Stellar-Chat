@@ -3,24 +3,24 @@
 internal class ChatSession
 {
     public Guid Id { get; set; }
+    public Guid AssistantId { get; set; }
     public string Title { get; set; }
     public string Metaprompt { get; set; }
     public HashSet<string> ActivePlugins { get; set; } = new();
-    public string AvatarUrl { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
-    public ChatSession(Guid id, string title, string metaprompt, HashSet<string> activePlugins, string avatarUrl, DateTimeOffset createdAt, DateTimeOffset updatedAt)
+    public ChatSession(Guid id, Guid assistantId, string title, string metaprompt, HashSet<string> activePlugins, DateTimeOffset createdAt, DateTimeOffset updatedAt)
     {
         Id = id;
+        AssistantId = assistantId;
         Title = title;
         Metaprompt = metaprompt;
         ActivePlugins = activePlugins;
-        AvatarUrl = avatarUrl;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
 
-    public static ChatSession Create(Guid id, string title, string metaprompt, HashSet<string> activePlugins, string avatarUrl, DateTimeOffset createdAt, DateTimeOffset updatedAt)
-        => new(id, title, metaprompt, activePlugins, avatarUrl, createdAt, updatedAt);
+    public static ChatSession Create(Guid id, Guid assistantId, string title, string metaprompt, HashSet<string> activePlugins, DateTimeOffset createdAt, DateTimeOffset updatedAt)
+        => new(id, assistantId, title, metaprompt, activePlugins, createdAt, updatedAt);
 }

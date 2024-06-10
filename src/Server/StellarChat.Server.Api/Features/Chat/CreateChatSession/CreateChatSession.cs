@@ -1,3 +1,3 @@
 ﻿namespace StellarChat.Server.Api.Features.Chat.CreateChatSession;
 
-internal sealed record CreateChatSession([Required] Guid ChatId, string Title, string AvatarUrl) : ICommand;
+internal sealed record CreateChatSession([Required] Guid ChatId, Guid AssistantId, string Title) : ICommand;
