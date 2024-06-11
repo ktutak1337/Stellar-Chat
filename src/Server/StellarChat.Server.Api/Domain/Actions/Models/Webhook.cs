@@ -11,7 +11,7 @@ internal class Webhook
     public string? Payload { get; set; }
     public bool IsRetryEnabled { get; set; }
     public int RetryCount { get; set; }
-    public TimeSpan RetryInterval { get; set; }
+    public int RetryInterval { get; set; }
     public bool IsScheduled { get; set; }
     public string? CronExpression { get; set; }
     public Dictionary<string, string>? Headers { get; set; }
@@ -22,7 +22,7 @@ internal class Webhook
         string? payload, 
         bool isRetryEnabled, 
         int retryCount, 
-        TimeSpan retryInterval, 
+        int retryInterval, 
         bool isScheduled, 
         string? cronExpression, 
         Dictionary<string, string>? headers = null)
@@ -44,7 +44,7 @@ internal class Webhook
         string? payload, 
         bool isRetryEnabled, 
         int retryCount, 
-        TimeSpan retryInterval, 
+        int retryInterval, 
         bool isScheduled, 
         string? cronExpression, 
         Dictionary<string, string>? headers = null) 

@@ -8,7 +8,7 @@ public class WebhookDocument : IIdentifiable<Guid>
     public string? Payload { get; set; }
     public bool IsRetryEnabled { get; set; }
     public int RetryCount { get; set; }
-    public TimeSpan RetryInterval { get; set; }
+    public int RetryInterval { get; set; }
     public bool IsScheduled { get; set; }
     public string? CronExpression { get; set; }
     public Dictionary<string, string>? Headers { get; set; }
