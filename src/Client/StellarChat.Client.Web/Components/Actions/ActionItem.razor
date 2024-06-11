@@ -1,0 +1,31 @@
+﻿<MudListItem Value="@Action!.Id">
+    <ChildContent>
+        <div class="d-flex flex-row flex-grow-1 gap-4">
+            <MudIcon Icon="@Icons.Material.Filled.Rocket" Size="@Size.Medium" Class="my-auto" />
+            <MudText Typo="Typo.body1" Class="my-auto">@Action?.Name</MudText>
+            <MudSpacer />
+            <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+                <MudMenuItem OnClick="() => EditAction(Action!.Id)">Edit</MudMenuItem>
+                <MudMenuItem OnClick="ConfirmDeleteActionDialog">Delete</MudMenuItem>
+            </MudMenu>
+        </div>
+    </ChildContent>
+</MudListItem>
+<MudDivider />
+
+@code 
+{
+    [Parameter] public NativeActionResponse? Action { get; set; }
+    [Parameter] public EventCallback<Guid> OnEdit { get; set; }
+    [Parameter] public EventCallback OnDelete { get; set; }
+
+    private async Task EditAction(Guid id)
+    {
+        await OnEdit.InvokeAsync(id);
+    }
+
+    private async Task ConfirmDeleteActionDialog()
+    {
+
+    }
+}
