@@ -13,11 +13,17 @@
                     <AssistantPickerButton AvatarUrl="@_chatState.SelectedAssistant?.AvatarUrl" OnAvatarClick="OnAvatarClick" />
                     <div class="d-flex flex-column align-items-center flex-grow-1 fixed mb-2" style="bottom: 6px">
                         <MudTooltip Text="New chat" Arrow="true" Placement="Placement.Right" >
-                            <MudFab OnClick="CreateNewChat" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-4 ml-2" />
+                            <MudFab OnClick="CreateNewChat" Size="Size.Medium" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Class="mb-6 ml-2" />
                         </MudTooltip>
+                        
                         <MudDivider Class="mx-auto" Style="width:70%;" />
+
+                        <MudTooltip Text="Actions" Arrow="true" Placement="Placement.Right">
+                            <MudFab OnClick="OnActionsClick" Size="Size.Medium" Color="Color.Default" StartIcon="@Icons.Material.Filled.AutoAwesome" IconSize="Size.Large" Class="mt-6 ml-2" />
+                        </MudTooltip>
+
                         <MudTooltip Text="Settings" Arrow="true" Placement="Placement.Right">
-                            <MudIconButton OnClick="OnSettingsClick" Style="margin-left: 2px;" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" />
+                            <MudIconButton OnClick="OnSettingsClick" Style="margin-left: 2px;" Size="Size.Large" Icon="@Icons.Material.Filled.Settings" Class="mt-4" />
                         </MudTooltip >
                     </div>
                 </div>
@@ -48,6 +54,14 @@
     </MudContainer>
 </MudDrawer>
 
+<style>
+    <style >
+        .no-hover:hover {
+            background-color: transparent !important;
+        }
+    </style>
+</style>
+
 @code
 {
     [CascadingParameter]
@@ -61,6 +75,9 @@
 
     [Parameter]
     public EventCallback OnSettingsClick { get; set; }
+
+    [Parameter]
+    public EventCallback OnActionsClick { get; set; }
 
     private MudListItem? SelectedItem { get; set; }
     private object? SelectedValue { get; set; }

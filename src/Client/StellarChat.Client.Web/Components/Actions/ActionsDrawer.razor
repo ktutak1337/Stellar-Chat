@@ -1,0 +1,47 @@
+﻿<MudDrawerContainer Class="mud-height-full">
+    <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
+        @if (isEditing)
+        {
+            <DrawerHeader Title="@(SelectedActionId == Guid.Empty ? "Create a new action" : "Edit the action")" OnClose="CloseDrawer" />
+            
+        }
+        else
+        {
+            <DrawerHeader Title="Select or Manage Actions" OnClose="CloseDrawer" DisplayDivider="false" />
+
+            <MudSpacer />
+            <MudPaper class="d-flex flex-row justify-end gap-4 pa-4" Style="@BackgroundColorStyle">
+                <MudButton OnClick="CreateNewAction" Variant="Variant.Filled" Color="Color.Primary">New Action</MudButton>
+            </MudPaper>
+        }
+    </MudDrawer>
+</MudDrawerContainer>
+
+@code 
+{
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [CascadingParameter]
+    private bool _IsDarkModeEnabled { get; set; }
+    private Guid SelectedActionId { get; set; }
+
+    private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
+    private bool isEditing = false;
+
+    private void CloseDrawer()
+    {
+        IsOpen = false;
+        isEditing = false;
+        IsOpenChanged.InvokeAsync(IsOpen);
+    }
+
+    private void CreateNewAction()
+    {
+        SelectedActionId = Guid.Empty;
+        isEditing = true;
+    }
+}
