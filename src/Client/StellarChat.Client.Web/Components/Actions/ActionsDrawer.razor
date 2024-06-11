@@ -1,4 +1,6 @@
-﻿<MudDrawerContainer Class="mud-height-full">
+﻿@inject IActionService _actionService
+
+<MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
         @if (isEditing)
         {
@@ -8,7 +10,15 @@
         else
         {
             <DrawerHeader Title="Select or Manage Actions" OnClose="CloseDrawer" DisplayDivider="false" />
-
+            <MudList Clickable="true" Class="pt-0" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
+                <MudDivider />
+                @foreach (var action in Actions)
+                {
+                    <ActionItem Action="@action"
+                                OnEdit="() => EditAction(action.Id)"
+                                OnDelete="HandleActionSubmitted" />
+                }
+            </MudList>
             <MudSpacer />
             <MudPaper class="d-flex flex-row justify-end gap-4 pa-4" Style="@BackgroundColorStyle">
                 <MudButton OnClick="CreateNewAction" Variant="Variant.Filled" Color="Color.Primary">New Action</MudButton>
@@ -27,10 +37,42 @@
 
     [CascadingParameter]
     private bool _IsDarkModeEnabled { get; set; }
+
+    private MudListItem? SelectedItem { get; set; }
+    private object? SelectedValue { get; set; }
     private Guid SelectedActionId { get; set; }
 
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
     private bool isEditing = false;
+    
+    public List<NativeActionResponse> Actions { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadActions();
+    }
+
+    private async Task LoadActions()
+    {
+        var actions = await _actionService.BrowseActions();
+
+        if (actions is not null)
+        {
+            Actions = actions.ToList();
+        }
+    }
+
+    private void EditAction(Guid id)
+    {
+        SelectedActionId = id;
+        isEditing = true;
+    }
+
+    private async Task HandleActionSubmitted()
+    {
+        isEditing = false;
+        await LoadActions();
+    }
 
     private void CloseDrawer()
     {
