@@ -1,4 +1,7 @@
-﻿<MudListItem Value="@Action!.Id">
+﻿@inject IActionService _actionService
+@inject IDialogService _dialogService
+
+<MudListItem Value="@Action!.Id">
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1 gap-4">
             <MudIcon Icon="@Icons.Material.Filled.Rocket" Size="@Size.Medium" Class="my-auto" />
@@ -27,5 +30,21 @@
     private async Task ConfirmDeleteActionDialog()
     {
 
+        var parameters = new DialogParameters
+        {
+            { "Message", $"Confirm deletion of action '{Action?.Name}'?" },
+            { "DetailMessage", "This action cannot be undone." }
+        };
+
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var dialog = _dialogService.Show<ConfirmDialog>("Delete Action", parameters, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await _actionService.DeleteAction(Action!.Id);
+            await OnDelete.InvokeAsync();
+        }
     }
 }
