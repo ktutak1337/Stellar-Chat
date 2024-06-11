@@ -1,4 +1,6 @@
-﻿namespace StellarChat.Server.Api.Features.Actions.CreateNativeAction;
+﻿using Webhook = StellarChat.Server.Api.Domain.Actions.Models.Webhook;
+
+namespace StellarChat.Server.Api.Features.Actions.CreateNativeAction;
 
 internal sealed class CreateNativeActionEndpoint : IEndpoint
 {
@@ -9,9 +11,27 @@ internal sealed class CreateNativeActionEndpoint : IEndpoint
         actions.MapPost("", async ([FromBody] CreateNativeActionRequest request, IMediator mediator) =>
         {
             var id = Guid.NewGuid();
-            var command = request.Adapt<CreateNativeAction>();
 
-            command = command with { Id = id };
+            var command = new CreateNativeAction(
+                id,
+                request.Name,
+                request.Category,
+                request.Icon,
+                request.Model,
+                request.Metaprompt,
+                request.IsRemoteAction,
+                request.ShouldRephraseResponse,
+                Webhook.Create(
+                    request.Webhook!.httpMethod,
+                    request.Webhook.url,
+                    request.Webhook.payload,
+                    request.Webhook.isRetryEnabled,
+                    request.Webhook.retryCount,
+                    request.Webhook.retryInterval,
+                    request.Webhook.isScheduled,
+                    request.Webhook.cronExpression,
+                    request.Webhook.headers));
+
             await mediator.Send(command);
 
             return Results.CreatedAtRoute("GetNativeAction", new { Id = id }, id);
