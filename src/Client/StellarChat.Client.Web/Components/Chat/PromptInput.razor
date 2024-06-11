@@ -1,4 +1,7 @@
-﻿<MudPaper Class="overflow-hidden text-field-custom py-5 w-100" Elevation="0" Style="@BackgroundColorStyle">
+﻿@using static StellarChat.Client.Web.Components.Actions.ActionSelectorPopover
+@inject IJSRuntime JSRuntime
+
+<MudPaper Class="overflow-hidden text-field-custom py-5 w-100" Elevation="0" Style="@BackgroundColorStyle">
     <MudPaper Class="inner-paper mud-theme-lighten w-100 mt-0 mx-auto" Style="max-width: 960px;" Elevation="0">
         <MudGrid>
             <MudItem xs="12">
@@ -8,19 +11,21 @@
                               @bind-Value="Message"
                               Immediate="true"
                               Class="text-field-custom mt-n5"
-                              Placeholder="Type a message"
+                              Placeholder="@(SelectedActionId != Guid.Empty ? ActionPromptText : ChatPromptText)"
                               Lines="5"
                               FullWidth="true" />
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-content-between align-items-center pa-0">
                 <div class="d-flex gap-0.25 ml-4">
-                    <MudIconButton id="prompt-input-plugins-button" Color="Color.Inherit" Disabled="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
-                            <path fill="currentColor" d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.7-53.3L160 80l-53.3-26.7L80 0 53.3 53.3 0 80l53.3 26.7L80 160zm352 128l-26.7 53.3L352 368l53.3 26.7L432 448l26.7-53.3L512 368l-53.3-26.7L432 288zm70.6-193.8L417.8 9.4C411.5 3.1 403.3 0 395.2 0c-8.2 0-16.4 3.1-22.6 9.4L9.4 372.5c-12.5 12.5-12.5 32.8 0 45.3l84.9 84.9c6.3 6.3 14.4 9.4 22.6 9.4 8.2 0 16.4-3.1 22.6-9.4l363.1-363.2c12.5-12.5 12.5-32.8 0-45.2zM359.5 203.5l-50.9-50.9 86.6-86.6 50.9 50.9-86.6 86.6z" />
-                        </svg>
-                    </MudIconButton>
+
+                    <ActionSelectorPopover CurrentValue="CurrentValue" ValueChanged="OnValueChanged" />
+
                     <MudIconButton id="prompt-input-attach-file-button" Icon="@Icons.Material.Filled.AttachFile" Color="Color.Inherit" Disabled="true" />
                     <MudIconButton id="prompt-input-mic-button" Icon="@Icons.Material.Filled.Mic" Color="Color.Inherit" Disabled="true" />
+                    @if (selectedChipText.IsNotEmpty())
+                    {
+                        <MudChip Class="my-auto" Color="Color.Dark" OnClose="@(() => CloseChip(selectedChipText))">@selectedChipText</MudChip>
+                    }
                 </div>
                 <div class="flex-grow-1"></div>
                     @if (IsProcessing)
@@ -64,6 +69,13 @@
     private bool IsSendButtonDisabled => string.IsNullOrWhiteSpace(Message);
     private bool IsProcessing { get; set; }
 
+    private Options? CurrentValue { get; set; }
+    private Guid SelectedActionId { get; set; }
+
+    private string selectedChipText = string.Empty;
+    private string ActionPromptText => $"Ready to perform '{CurrentValue?.Name}'? Provide your command or close the action chip to go back to chatting";
+    private string ChatPromptText = "Type a message";
+
     private async Task SendMessage(string message)
     {
         if (!IsSendButtonDisabled)
@@ -72,8 +84,25 @@
             
             Message = string.Empty;
             await OnSend.InvokeAsync(message);
-            
+
             IsProcessing = false;
         }
+    }
+
+    private void OnValueChanged(Options options)
+    {
+        if (options is not null)
+        {
+            SelectedActionId = options.Id;
+            CurrentValue = options;
+            selectedChipText = options.Name;
+        }
+    }
+
+    private void CloseChip(string chipText)
+    {
+        CurrentValue = null;
+        selectedChipText = string.Empty;
+        SelectedActionId = Guid.Empty;
     }
 }
