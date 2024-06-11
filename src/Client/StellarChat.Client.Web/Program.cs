@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using MudBlazor.Services;
 using StellarChat.Client.Web;
+using StellarChat.Client.Web.Services.Actions;
 using StellarChat.Client.Web.Services.Assistants;
 using StellarChat.Client.Web.Services.Chat;
 using StellarChat.Client.Web.Services.Models;
@@ -27,6 +28,7 @@ builder.Services.AddHttpClient("WebAPI", client =>
 builder.Services.AddScoped<ChatState>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IActionService, ActionService>();
 builder.Services.AddScoped<IAssistantService, AssistantService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
