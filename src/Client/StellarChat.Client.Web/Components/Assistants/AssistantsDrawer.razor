@@ -6,7 +6,7 @@
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
         @if (isEditing)
         {
-            <DrawerHeader Title="Edit Assistant" OnClose="CloseDrawer" />
+            <DrawerHeader Title="@(SelectedAssistantId == Guid.Empty ? "Create a new Assistant" : "Edit the Assistant")" OnClose="CloseDrawer" />
             <AssistantForm AssistantId="SelectedAssistantId" OnAssistantSubmit="HandleAssistantSubmitted" />
         }
         else
