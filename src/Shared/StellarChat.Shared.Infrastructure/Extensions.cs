@@ -81,6 +81,9 @@ public static class Extensions
         return $"{number:n2} {suffixes[counter]}";
     }
 
+    public static string ReplaceDatePlaceholder(this TimeProvider timeProvider, string prompt) 
+        => prompt.Replace("{DATE}", timeProvider.GetLocalNow().ToString());
+
     public static IApplicationBuilder UseCorrelationId(this IApplicationBuilder app)
     => app.Use((ctx, next) =>
     {
