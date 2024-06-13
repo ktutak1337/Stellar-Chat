@@ -1,0 +1,11 @@
+﻿<div class="px-2 flex-grow-1">
+    <MudText Typo="Typo.caption" Class="mt-0" Style="color: var(--mud-palette-text-secondary); font-size: .75rem; text-align: start; font-weight: 400; line-height: 1.66; letter-spacing: .03333em;">
+        @Text
+    </MudText>
+</div>
+
+@code 
+{
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+}
