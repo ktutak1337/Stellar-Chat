@@ -1,5 +1,6 @@
 ﻿@inject IActionService _actionService
 @inject IDialogService _dialogService
+@inject ChatState _chatState
 
 <MudListItem Value="@Action!.Id">
     <ChildContent>
@@ -45,6 +46,7 @@
         {
             await _actionService.DeleteAction(Action!.Id);
             await OnDelete.InvokeAsync();
+            _chatState.NotifyActionsRefreshed();
         }
     }
 }

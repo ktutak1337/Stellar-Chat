@@ -1,5 +1,6 @@
 ﻿@inject IActionService _actionService
 @inject IAvailableModelsService _availableModelsService
+@inject ChatState _chatState
 
 <EditForm Model="@Action" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -210,6 +211,7 @@ or integrate with various APIs and webhooks.";
         if (Action is not null)
         {
             await _actionService.CreateAction(Action);
+            _chatState.NotifyActionsRefreshed();
         }
     }
 
@@ -218,6 +220,7 @@ or integrate with various APIs and webhooks.";
         if (action is not null)
         {
             await _actionService.UpdateAction(action);
+            _chatState.NotifyActionsRefreshed();
         }
     }
 }

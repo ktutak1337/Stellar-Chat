@@ -82,4 +82,11 @@ public class ChatState
     {
         AssistantUpdated?.Invoke();
     }
+
+    public event Action? ActionsRefreshed;
+
+    public void NotifyActionsRefreshed()
+    {
+        ActionsRefreshed?.Invoke();
+    }
 }

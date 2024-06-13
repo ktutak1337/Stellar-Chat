@@ -1,4 +1,6 @@
 ﻿@inject IActionService _actionService
+@inject ChatState _chatState
+@implements IDisposable
 
 <MudIconButton DisableElevation="false" OnClick="@ToggleOpen" id="prompt-input-plugins-button" Color="Color.Inherit">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
@@ -58,6 +60,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _chatState.ActionsRefreshed += async () => await LoadActions();
+
         await LoadActions();
     }
 
@@ -102,5 +106,10 @@
             ActionChanged.InvokeAsync(action);
             _isOpen = false;
         }
+    }
+
+    public void Dispose()
+    {
+        _chatState.ActionsRefreshed -= async () => await LoadActions();
     }
 }
