@@ -1,0 +1,223 @@
+﻿@inject IActionService _actionService
+@inject IAvailableModelsService _availableModelsService
+
+<EditForm Model="@Action" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="d-flex flex-column flex-grow-1 gap-3 pa-4">
+        <MudText>Name</MudText>
+        <MudTextField  @bind-Value="Action!.Name" 
+                       Variant="Variant.Outlined" 
+                       Margin="Margin.Dense" 
+                       For="@(() => Action!.Name)" 
+                       HelperText="Use a short name that clearly describes what this action represents." />
+
+        <MudText>Category</MudText>
+        <MudTextField @bind-Value="Action!.Category"
+                      Variant="Variant.Outlined"
+                      Margin="Margin.Dense"
+                      For="@(() => Action!.Category)"
+                      HelperText="Used to group actions displayed in the main actions view." />
+
+        <MudText>Icon</MudText>
+        <IconSelector @bind-SelectedIcon="Action.Icon" />
+        <HelperText Text="Icons help to identify actions. Select one from the available choices by clicking the button." />
+
+        <MudText>Model</MudText>
+        <MudSelect  @bind-Value="Action.Model" 
+                    Margin="Margin.Dense" 
+                    T="string" 
+                    Variant="Variant.Outlined" 
+                    For="@(() => Action!.Model)" 
+                    HelperText="The model that will be used when executing actions.">
+            
+            @foreach (var model in AvailableModels)
+            {
+                <MudSelectItem Value="@model.Name" />
+            }
+        </MudSelect>
+
+        <MudText>Metaprompt</MudText>
+        <MudTextField @bind-Value="Action!.Metaprompt"
+                      T="string" Variant="Variant.Outlined"
+                      AutoGrow
+                      Lines="7"
+                      MaxLines="10"
+                      Margin="Margin.Dense"
+                      HelperText="@metapromptGuidelines"
+                      For="@(() => Action!.Metaprompt)" />
+
+        <MudText>Remote action</MudText>
+        <div class="d-flex flex-grow-1">
+            <HelperText Text="@remoteActionGuidelines" />
+            <MudSwitch @bind-Value="@Action.IsRemoteAction" Color="Color.Primary" Class="my-auto" Style="margin-left: auto; margin-right: -4px;" />
+        </div>
+
+        @if (Action.IsRemoteAction)
+        {
+            <MudText>Webhook URL</MudText>
+            <div class="d-flex ">
+                <MudTextField   @bind-Value="Action.Webhook!.Url" 
+                                InputType="@(showWebhookUrl ? InputType.Text : InputType.Password)" 
+                                Variant="Variant.Outlined" 
+                                Margin="Margin.Dense" 
+                                For="@(() => Action.Webhook!.Url)"
+                              HelperText="@webhookUrlGuidelines" />
+                <MudIconButton Icon="@(showWebhookUrl ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)" OnClick="ToggleWebhookUrlVisibility" Edge="Edge.End" Class="ml-1 mb-16" />
+            </div>
+            <MudText>Authorization Token (Optional)</MudText>
+            <div class="d-flex align-items-center">
+                <MudTextField   @bind-Value="Action.Webhook!.Headers" 
+                                InputType="@(showAuthorizationToken ? InputType.Text : InputType.Password)"
+                                Variant="Variant.Outlined" 
+                                Margin="Margin.Dense" 
+                                For="@(() => Action.Webhook!.Headers)" 
+                                HelperText="Provide the API key for secure access to external services."
+                                Disabled="true"/>
+                <MudIconButton Icon="@(showAuthorizationToken ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)" OnClick="ToggleAuthorizationTokenVisibility" Edge="Edge.End" Class="ml-1 mb-5" />
+            </div>
+        }
+    </div>
+    <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+    </div>
+</EditForm>
+
+@code 
+{
+    [Parameter] public Guid ActiontId { get; set; }
+    [Parameter] public EventCallback OnActionSubmit { get; set; }
+    private NativeActionResponse Action { get; set; } = new();
+    private List<AvailableModelsResponse> AvailableModels { get; set; } = new();
+
+    private bool showWebhookUrl = false;
+    private bool showAuthorizationToken = false;
+    private void ToggleWebhookUrlVisibility() => showWebhookUrl = !showWebhookUrl;
+    private void ToggleAuthorizationTokenVisibility() => showAuthorizationToken = !showAuthorizationToken;
+
+    private const string webhookUrlGuidelines = @"
+Provide the URL for the webhook endpoint. Ensure the response returns a JSON object.
+Example: { ""status"": ""success"", ""data"": { ""key"": ""value"" } }.";
+
+    private const string metapromptGuidelines = @"
+A set of instructions defining what this action should perform. 
+If 'Remote Action' is selected, ensure to specify 'return JSON object' in the instructions.
+Example: { ""status"": ""success"", ""data"": { ""key"": ""value"" } }.";
+
+    private const string remoteActionGuidelines = @"
+Enabling this option allows connection to external services, enabling you to trigger automation scenarios 
+or integrate with various APIs and webhooks.";
+
+    private bool success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadModels();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await PopulateForm();
+    }
+
+    private async Task LoadModels()
+    {
+        var models = await _availableModelsService.BrowseAvailableModels();
+
+        if (models is not null)
+        {
+            // TODO: Temporary solution - Filter models on the backend to include only 'gpt' family in the future
+            // This is a temporary workaround. Implement backend filtering to include only models belonging to the 'gpt' family in the future.
+
+            AvailableModels = models.Where(model => model.Name.StartsWith("gpt", StringComparison.InvariantCultureIgnoreCase)).ToList();
+        }
+    }
+
+    private async void OnValidSubmit(EditContext context)
+    {
+        if (ActiontId != Guid.Empty)
+        {
+            await UpdateActiontAsync(Action!);
+        }
+        else
+        {
+            await CreateActionAsync();
+        }
+
+        success = true;
+        await OnActionSubmit.InvokeAsync();
+        StateHasChanged();
+    }
+
+    private async Task PopulateForm()
+    {
+        if (Guid.Empty != ActiontId)
+        {
+            await FetchActionToUpdate();
+        }
+        else
+        {
+            SetupNewActionParameters();
+        }
+    }
+
+    private async Task FetchActionToUpdate()
+    {
+        var action = await _actionService.GetAction(ActiontId);
+
+        if (action is not null)
+        {
+            Action = new NativeActionResponse
+            {
+                Id = action.Id,
+                Name = action.Name,
+                Category = action.Category,
+                Icon = action.Icon,
+                Model = action.Model,
+                Metaprompt = action.Metaprompt,
+                IsRemoteAction = action.IsRemoteAction,
+                ShouldRephraseResponse = action.ShouldRephraseResponse,
+                Webhook = new WebhookResponse
+                {
+                    HttpMethod = action.Webhook!.HttpMethod,
+                    Url = action.Webhook!.Url,
+                    Payload = action.Webhook.Payload,
+                    IsRetryEnabled = action.Webhook.IsRetryEnabled,
+                    RetryCount = action.Webhook.RetryCount,
+                    RetryInterval = action.Webhook.RetryInterval,
+                    IsScheduled = action.Webhook.IsScheduled,
+                    CronExpression = action.Webhook.CronExpression,
+                    Headers = action.Webhook.Headers
+                }
+            };
+        }
+    }
+
+    private void SetupNewActionParameters()
+    {
+        Action.ShouldRephraseResponse = false;
+        Action.Webhook!.HttpMethod = "POST";
+        Action.Webhook!.Payload = string.Empty;
+        Action.Webhook!.IsRetryEnabled = false;
+        Action.Webhook!.RetryCount = 3;
+        Action.Webhook!.RetryInterval = 10;
+        Action.Webhook!.IsScheduled = false;
+        Action.Webhook!.CronExpression = string.Empty;
+        Action.Webhook!.Headers = [];
+    }
+
+    private async Task CreateActionAsync()
+    {
+        if (Action is not null)
+        {
+            await _actionService.CreateAction(Action);
+        }
+    }
+
+    private async Task UpdateActiontAsync(NativeActionResponse action)
+    {
+        if (action is not null)
+        {
+            await _actionService.UpdateAction(action);
+        }
+    }
+}

@@ -5,7 +5,7 @@
         @if (isEditing)
         {
             <DrawerHeader Title="@(SelectedActionId == Guid.Empty ? "Create a new action" : "Edit the action")" OnClose="CloseDrawer" />
-            
+            <ActionForm ActiontId="SelectedActionId" OnActionSubmit="HandleActionSubmitted" />
         }
         else
         {
