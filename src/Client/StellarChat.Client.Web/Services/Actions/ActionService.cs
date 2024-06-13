@@ -12,11 +12,11 @@ public class ActionService : IActionService
     public ActionService(IHttpClientFactory httpClientFactory) 
         => _httpClientFactory = httpClientFactory;
 
-    public async ValueTask<NativeActionResponse> GetAction(Guid id)
+    public async ValueTask<NativeActionResponse> GetAction(Guid actionId)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        var result = await httpClient.GetFromJsonAsync<NativeActionResponse>($"/actions/{id}");
+        var result = await httpClient.GetFromJsonAsync<NativeActionResponse>($"/actions/{actionId}");
 
         return result!;
     }
@@ -66,13 +66,13 @@ public class ActionService : IActionService
         return result;
     }
 
-    public async ValueTask<string> ExecuteAction(Guid id, Guid chatId, string message)
+    public async ValueTask<string> ExecuteAction(Guid actionId, Guid chatId, string message)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        var payload = new ExecuteNativeActionRequest(id, chatId, message);
+        var payload = new ExecuteNativeActionRequest(actionId, chatId, message);
 
-        var response = await httpClient.PostAsJsonAsync($"/actions", payload);
+        var response = await httpClient.PostAsJsonAsync($"/actions/{actionId}/execute", payload);
 
         var result = string.Empty;
 
@@ -113,10 +113,10 @@ public class ActionService : IActionService
         await httpClient.PutAsJsonAsync($"/actions/{actionId}", payload);
     }
 
-    public async ValueTask DeleteAction(Guid id)
+    public async ValueTask DeleteAction(Guid actionId)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        await httpClient.DeleteAsync($"/actions/{id}");
+        await httpClient.DeleteAsync($"/actions/{actionId}");
     }
 }

@@ -4,10 +4,10 @@ namespace StellarChat.Client.Web.Services.Actions;
 
 public interface IActionService
 {
-    ValueTask<NativeActionResponse> GetAction(Guid id);
+    ValueTask<NativeActionResponse> GetAction(Guid actionId);
     ValueTask<IEnumerable<NativeActionResponse>> BrowseActions();
     ValueTask<Guid> CreateAction(NativeActionResponse action);
-    ValueTask<string> ExecuteAction(Guid id, Guid chatId, string message);
+    ValueTask<string> ExecuteAction(Guid actionId, Guid chatId, string message);
     ValueTask UpdateAction(NativeActionResponse action);
-    ValueTask DeleteAction(Guid id);
+    ValueTask DeleteAction(Guid actionId);
 }
