@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="mt-2 fixed-bottom w-auto">
-        <PromptInput OnSend="@SendMessage" />
+        <PromptInput OnSend="@SendMessageAsync" />
     </div>
 </div>
 
@@ -68,7 +68,7 @@
             LatestBotMessage.Content = _textStreaming.ToString();
 
             await InvokeAsync(StateHasChanged);
-            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
+            await ScrollToBottomAsync();
 
             Console.WriteLine($"ReceiveChatMessageChunk: {message}");
         });
@@ -96,52 +96,80 @@
             ChatMessages = response.Items.ToList();
 
             await InvokeAsync(StateHasChanged);
-            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
+            await ScrollToBottomAsync();
         }
     }
 
-    private async Task SendMessage(string message)
+    private async Task SendMessageAsync(string message)
     {
         var chatId = _chatState.ChatId;
         var actionId = _chatState.ActionId;
         var assistantId = _chatState.SelectedAssistant!.Id;
 
-        if (!string.IsNullOrWhiteSpace(message))
+        if (message.IsNotEmpty())
         {
-            if (chatId == Guid.Empty)
+            if (ShouldCreateNewChat(chatId))
             {
-                var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat");
-
-                chatId = newChatId;
-                _chatState.SetIsNewChatPending(true);
-                _chatState.SetChatId(newChatId);
-
-                await LoadChatHistory();
-                _navigationManager.NavigateTo($"/c/{chatId}");
+                chatId = await CreateNewChatAsync(assistantId);
             }
 
-            var userMessage = CreateUserMessage(chatId, message);
-            LatestBotMessage = CreateBotMessage(chatId, string.Empty);
+            await AppendMessagesToChatAsync(chatId, message);
 
-            ChatMessages.Add(userMessage);
-            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
-
-            ChatMessages.Add(LatestBotMessage);
-            await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
-
-            if (actionId != Guid.Empty && chatId != Guid.Empty)
+            if (ShouldExecuteAction(actionId, chatId))
             {
-                await _actionService.ExecuteAction(actionId, chatId, message);
-                _textStreaming.Clear();
+                await ExecuteActionAsync(actionId, chatId, message);
                 return;
             }
 
-            await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
-            _textStreaming.Clear();
+            await AskAssistant(chatId, message);
         }
     }
 
+    private async Task<Guid> CreateNewChatAsync(Guid assistantId)
+    {
+        var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat");
 
+        _chatState.SetIsNewChatPending(true);
+        _chatState.SetChatId(newChatId);
+
+        await LoadChatHistory();
+        _navigationManager.NavigateTo($"/c/{newChatId}");
+
+        return newChatId;
+    }
+
+    private async Task AppendMessagesToChatAsync(Guid chatId, string message)
+    {
+        var userMessage = CreateUserMessage(chatId, message);
+        LatestBotMessage = CreateBotMessage(chatId, string.Empty);
+
+        ChatMessages.Add(userMessage);
+        await ScrollToBottomAsync();
+
+        ChatMessages.Add(LatestBotMessage);
+        await ScrollToBottomAsync();
+    }
+
+    private async Task ExecuteActionAsync(Guid actionId, Guid chatId, string message)
+    {
+        await _actionService.ExecuteAction(actionId, chatId, message);
+        _textStreaming.Clear();
+    }
+
+    private async Task AskAssistant(Guid chatId, string message)
+    {
+        await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
+        _textStreaming.Clear();
+    }
+
+    private bool ShouldCreateNewChat(Guid chatId)
+        => chatId == Guid.Empty;
+
+    private bool ShouldExecuteAction(Guid actionId, Guid chatId)
+        => actionId != Guid.Empty && chatId != Guid.Empty;
+
+    private async Task ScrollToBottomAsync()
+        => await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
 
     private ChatMessageResponse CreateUserMessage(Guid chatId, string message, ChatMessageType messageType = ChatMessageType.Message)
     {
