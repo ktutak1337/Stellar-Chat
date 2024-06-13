@@ -6,12 +6,11 @@ public class ExecuteNativeActionEndpoint : IEndpoint
     {
         var actions = endpoints.MapGroup("/actions").WithTags("Actions");
 
-        actions.MapPost("execute", async ([FromBody] ExecuteNativeActionRequest request, IMediator mediator) =>
+        actions.MapPost("{id:guid}/execute", async (Guid id, [FromBody] ExecuteNativeActionRequest request, IMediator mediator) =>
         {
-            var id = Guid.NewGuid();
             var command = request.Adapt<ExecuteNativeAction>();
-
             command = command with { Id = id };
+
             var result = await mediator.Send(command);
 
             return Results.Ok(result);
