@@ -1,0 +1,52 @@
+﻿@using MudBlazor
+
+<div>
+    <MudButton OnClick="@ToggleOpen" Variant="Variant.Filled" StartIcon="@SelectedIcon" Color="Color.Primary">Select Icon</MudButton>
+
+    <MudPopover Open="@_isOpen" OverflowBehavior="OverflowBehavior.FlipAlways" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Paper="false">
+        <MudPaper Outlined="true" Class="d-flex flex-wrap gap-6 pa-4" Style="width: 412px; max-height: 300px; overflow-y: auto;">
+            @foreach (var icon in Icons)
+            {
+                <MudIcon Icon="@icon" Size="Size.Medium" Class="m-2 cursor-pointer fa-solid"
+                         @onclick="() => SelectIcon(icon)"
+                         Style="@GetIconStyle(icon)">
+                </MudIcon>
+            }
+        </MudPaper>
+    </MudPopover>
+</div>
+
+@code 
+{
+    [Parameter]
+    public string SelectedIcon { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> SelectedIconChanged { get; set; }
+
+    private bool _isOpen = false;
+
+    private List<string> Icons = new List<string>
+    {
+        "fa-solid fa-search",
+        "fa-solid fa-tachometer-alt",
+        "fa-solid fa-user",
+        "fa-solid fa-envelope",
+        "fa-solid fa-tasks",
+        "fa-solid fa-rocket",
+    };
+
+    private void SelectIcon(string icon)
+    {
+        SelectedIcon = icon;
+        SelectedIconChanged.InvokeAsync(icon);
+        _isOpen = false;
+    }
+
+    private void ToggleOpen() => _isOpen = !_isOpen;
+
+    private string GetIconStyle(string icon)
+    {
+        return icon == SelectedIcon ? "color: var(--mud-palette-primary);" : "";
+    }
+}
