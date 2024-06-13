@@ -12,11 +12,17 @@
             <DrawerHeader Title="Select or Manage Actions" OnClose="CloseDrawer" DisplayDivider="false" />
             <MudList Clickable="true" Class="pt-0" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
                 <MudDivider />
-                @foreach (var action in Actions)
+                @foreach (var group in Actions.GroupBy(a => a.Category))
                 {
-                    <ActionItem Action="@action"
-                                OnEdit="() => EditAction(action.Id)"
-                                OnDelete="HandleActionSubmitted" />
+                    <MudListSubheader>
+                        @group.Key
+                    </MudListSubheader>
+                    @foreach (var action in group)
+                    {
+                        <ActionItem Action="@action"
+                                    OnEdit="() => EditAction(action.Id)"
+                                    OnDelete="HandleActionSubmitted" />
+                    }
                 }
             </MudList>
             <MudSpacer />
