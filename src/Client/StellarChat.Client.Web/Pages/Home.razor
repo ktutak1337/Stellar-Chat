@@ -4,6 +4,7 @@
 @inject IConfiguration _configuration
 @inject ChatState _chatState
 @inject IChatService _chatService
+@inject IActionService _actionService
 @inject NavigationManager _navigationManager
 @inject IJSRuntime JS
 @inject TimeProvider _clock
@@ -54,6 +55,7 @@
         _chatState.SelectedAssistantChanged += StateHasChanged;
         _chatState.SelectedModelChanged += StateHasChanged;
         _chatState.UserNameChanged += StateHasChanged;
+        _chatState.ActionIdChanged += StateHasChanged;
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(HubUrl)
@@ -101,6 +103,7 @@
     private async Task SendMessage(string message)
     {
         var chatId = _chatState.ChatId;
+        var actionId = _chatState.ActionId;
         var assistantId = _chatState.SelectedAssistant!.Id;
 
         if (!string.IsNullOrWhiteSpace(message))
@@ -126,10 +129,19 @@
             ChatMessages.Add(LatestBotMessage);
             await JS.InvokeVoidAsync("scrollToBottom", ChatMessagesDiv);
 
+            if (actionId != Guid.Empty && chatId != Guid.Empty)
+            {
+                await _actionService.ExecuteAction(actionId, chatId, message);
+                _textStreaming.Clear();
+                return;
+            }
+
             await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
             _textStreaming.Clear();
         }
     }
+
+
 
     private ChatMessageResponse CreateUserMessage(Guid chatId, string message, ChatMessageType messageType = ChatMessageType.Message)
     {
@@ -171,6 +183,7 @@
         _chatState.SelectedAssistantChanged -= StateHasChanged;
         _chatState.SelectedModelChanged -= StateHasChanged;
         _chatState.UserNameChanged -= StateHasChanged;
+        _chatState.ActionIdChanged -= StateHasChanged;
 
         if (_hubConnection is not null)
         {

@@ -1,4 +1,7 @@
-﻿<MudPaper Class="overflow-hidden text-field-custom py-5 w-100" Elevation="0" Style="@BackgroundColorStyle">
+﻿@inject ChatState _chatState
+@implements IDisposable
+
+<MudPaper Class="overflow-hidden text-field-custom py-5 w-100" Elevation="0" Style="@BackgroundColorStyle">
     <MudPaper Class="inner-paper mud-theme-lighten w-100 mt-0 mx-auto" Style="max-width: 960px;" Elevation="0">
         <MudGrid>
             <MudItem xs="12">
@@ -73,12 +76,17 @@
     private string ActionPromptText => $"Ready to perform '{CurrentValueAction?.Name}' action? Provide your command or close the action chip to go back to chatting";
     private string ChatPromptText = "Type a message";
 
+    protected override void OnInitialized()
+    {
+        _chatState.ActionIdChanged += StateHasChanged;
+    }
+
     private async Task SendMessage(string message)
     {
         if (!IsSendButtonDisabled)
         {
             IsProcessing = true;
-            
+
             Message = string.Empty;
             await OnSend.InvokeAsync(message);
 
@@ -90,7 +98,8 @@
     {
         if (action is not null)
         {
-            SelectedActionId = action.Id;
+            _chatState.SetActionId(action.Id);
+            SelectedActionId = _chatState.ActionId;
             CurrentValueAction = action;
             selectedChipText = action.Name;
         }
@@ -100,6 +109,12 @@
     {
         CurrentValueAction = null;
         selectedChipText = string.Empty;
-        SelectedActionId = Guid.Empty;
+        _chatState.SetActionId(Guid.Empty);
+        SelectedActionId = _chatState.ActionId;
+    }
+
+    public void Dispose()
+    {
+        _chatState.ActionIdChanged -= StateHasChanged;
     }
 }

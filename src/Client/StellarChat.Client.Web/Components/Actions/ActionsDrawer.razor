@@ -1,4 +1,6 @@
 ﻿@inject IActionService _actionService
+@inject ChatState _chatState
+@implements IDisposable
 
 <MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
@@ -50,11 +52,13 @@
 
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
     private bool isEditing = false;
-    
+
     public List<NativeActionResponse> Actions { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
+        _chatState.ActionIdChanged += StateHasChanged;
+
         await LoadActions();
     }
 
@@ -70,7 +74,8 @@
 
     private void EditAction(Guid id)
     {
-        SelectedActionId = id;
+        _chatState.SetActionId(id);
+        SelectedActionId = _chatState.ActionId;
         isEditing = true;
     }
 
@@ -89,7 +94,13 @@
 
     private void CreateNewAction()
     {
-        SelectedActionId = Guid.Empty;
+        _chatState.SetActionId(Guid.Empty);
+        SelectedActionId = _chatState.ActionId;
         isEditing = true;
+    }
+
+    public void Dispose()
+    {
+        _chatState.ActionIdChanged -= StateHasChanged;
     }
 }
