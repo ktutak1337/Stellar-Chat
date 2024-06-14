@@ -38,15 +38,20 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
     public async ValueTask<string> Handle(ExecuteNativeAction command, CancellationToken cancellationToken)
     {
         var (id, chatId, message) = command;
-        
+        string semanticResponse = string.Empty;
+
         var action = await _nativeActionRepository.GetAsync(id) ?? throw new NativeActionNotFoundException(id);
         var isRemoteAction = action.IsRemoteAction;
 
-        action.Metaprompt = action.Metaprompt.IsEmpty() 
-            ? string.Empty 
+        action.Metaprompt = action.Metaprompt.IsEmpty()
+            ? string.Empty
             : _clock.ReplaceDatePlaceholder(action.Metaprompt);
-        
-        string semanticResponse = string.Empty;
+
+        var processingMessage = isRemoteAction
+            ? RemoteActionMessagesConstant.PreparingPayload
+            : RemoteActionMessagesConstant.ProcessingStatus;
+
+        await _hubContext.Clients.All.ReceiveProcessingStatus(processingMessage, RemoteActionStatus.Processing);
 
         await _chatContext.SetChatInstructions(chatId, action.Metaprompt);
         await _chatContext.ExtractChatHistoryAsync(chatId);

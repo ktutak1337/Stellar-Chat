@@ -49,7 +49,7 @@ internal sealed class HttpClientService : IHttpClientService
             }
         }
 
-        using var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await httpClient.SendAsync(request, cancellationToken);
         
         return response;
     }
