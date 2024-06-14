@@ -2,6 +2,7 @@
 @page "/c/{ChatId:guid}"
 
 @inject IConfiguration _configuration
+@inject ISnackbar Snackbar
 @inject ChatState _chatState
 @inject IChatService _chatService
 @inject IActionService _actionService
@@ -71,6 +72,19 @@
             await ScrollToBottomAsync();
 
             Console.WriteLine($"ReceiveChatMessageChunk: {message}");
+        });
+
+        _hubConnection.On<string, RemoteActionStatus>(nameof(IChatHub.ReceiveProcessingStatus), (message, status) =>
+        {
+            var severity = status switch
+            {
+                RemoteActionStatus.Processing => Severity.Info,
+                RemoteActionStatus.Success => Severity.Success,
+                RemoteActionStatus.Failed => Severity.Error,
+                _ => Severity.Info
+            };
+
+            ShowSnackbar(message, severity);
         });
 
         Console.WriteLine("Starting connection...");
@@ -203,6 +217,16 @@
             };
 
         return chatMessage;
+    }
+
+    private void ShowSnackbar(string message, Severity severity)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, severity, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
     }
 
     public async ValueTask DisposeAsync()
