@@ -26,7 +26,8 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
         };
 
         var response = await _httpClientService.GetAsync(OpenAIApiEndpoint, headers, cancellationToken);
-        var responseData = JsonConvert.DeserializeObject<OpenAiModelResponse>(response);
+        var content = await response.Content.ReadAsStringAsync(cancellationToken) ?? string.Empty;
+        var responseData = JsonConvert.DeserializeObject<OpenAiModelResponse>(content);
 
         if (responseData?.Data is null)
         {
