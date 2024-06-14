@@ -29,7 +29,7 @@ internal class ChatPlugin
         await _chatContext.SaveChatMessageAsync(chatId, userMessage);
 
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, model, botMessage, hubContext);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, model, botMessage, isRemoteAction: false, hubContext);
         await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);
 
         context["input"] = botResponseMessage.Content;

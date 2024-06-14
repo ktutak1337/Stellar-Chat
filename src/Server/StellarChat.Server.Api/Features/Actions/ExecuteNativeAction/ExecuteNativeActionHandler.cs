@@ -1,5 +1,7 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.Features.Actions.CreateNativeAction;
+using StellarChat.Server.Api.Features.Actions.Webhooks.Exceptions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
 
@@ -38,6 +40,7 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
         var (id, chatId, message) = command;
         
         var action = await _nativeActionRepository.GetAsync(id) ?? throw new NativeActionNotFoundException(id);
+        var isRemoteAction = action.IsRemoteAction;
 
         action.Metaprompt = action.Metaprompt.IsEmpty() 
             ? string.Empty 
@@ -52,18 +55,31 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
         await _chatContext.SaveChatMessageAsync(chatId, userMessage);
 
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, botMessage, _hubContext);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, botMessage, isRemoteAction, _hubContext);
 
         semanticResponse = botResponseMessage.Content;
 
-        if (action.IsRemoteAction)
+        if (isRemoteAction)
         {
-            var response = await _httpClientService.PostAsync(action.Webhook!.Url, semanticResponse, action.Webhook.Headers, cancellationToken);
-            botResponseMessage.Content = response;
-            await _hubContext.Clients.All.ReceiveChatMessageChunk(response);
-            await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);
+            await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.ProcessingStatus);
 
-            return response;
+            var response = await _httpClientService.PostAsync(action.Webhook!.Url, semanticResponse, action.Webhook.Headers, cancellationToken);
+
+            if(!response.IsSuccessStatusCode)
+            {
+                await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.FailedProcessingStatus);
+                throw new RemoteActionExecutionFailedException(action.Id, action.Name);
+            }
+
+            var content = await response.Content.ReadAsStringAsync(cancellationToken) 
+                ?? string.Format(RemoteActionMessagesConstant.NoContentStatus, (int)response.StatusCode);
+
+            botResponseMessage.Content = content;
+                
+            await _hubContext.Clients.All.ReceiveChatMessageChunk(content);
+            await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);
+                
+            return content;
         }
 
         await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);

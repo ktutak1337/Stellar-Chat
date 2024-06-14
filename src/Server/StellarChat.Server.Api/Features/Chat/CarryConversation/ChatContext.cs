@@ -68,7 +68,7 @@ internal class ChatContext : IChatContext
     }
 
     public async Task<ChatMessage> StreamResponseToClientAsync(
-        Guid chatId, string model, ChatMessage botMessage, IHubContext<ChatHub, IChatHub> hubContext, CancellationToken cancellationToken = default)
+        Guid chatId, string model, ChatMessage botMessage, bool isRemoteAction, IHubContext<ChatHub, IChatHub> hubContext, CancellationToken cancellationToken = default)
     {
         var reply = new StringBuilder();
         var chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
@@ -84,7 +84,11 @@ internal class ChatContext : IChatContext
             {
                 reply.Append(contentPiece.Content);
                 botMessage.Content = reply.ToString();
-                await hubContext.Clients.All.ReceiveChatMessageChunk(contentPiece.Content);
+
+                if(!isRemoteAction)
+                {
+                    await hubContext.Clients.All.ReceiveChatMessageChunk(contentPiece.Content);
+                }
             }
         }
 

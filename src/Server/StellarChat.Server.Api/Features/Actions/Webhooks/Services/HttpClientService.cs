@@ -11,10 +11,10 @@ internal sealed class HttpClientService : IHttpClientService
     public HttpClientService(IHttpClientFactory httpClientFactory) 
         => _httpClientFactory = httpClientFactory;
 
-    public async Task<string> GetAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken) 
+    public async Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken) 
         => await SendRequestAsync(url, HttpMethod.Get, null, headers, cancellationToken);
 
-    public async Task<string> GetAsync(string url, Dictionary<string, string>? queryParams, Dictionary<string, string>? headers, CancellationToken cancellationToken)
+    public async Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string>? queryParams, Dictionary<string, string>? headers, CancellationToken cancellationToken)
     {
         if (queryParams is not null && queryParams.Count > 0)
         {
@@ -24,16 +24,16 @@ internal sealed class HttpClientService : IHttpClientService
         return await SendRequestAsync(url, HttpMethod.Get, null, headers, cancellationToken);
     }
 
-    public async Task<string> PostAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
+    public async Task<HttpResponseMessage> PostAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
         => await SendRequestAsync(url, HttpMethod.Post, CreateJsonContent(body), headers, cancellationToken);
 
-    public async Task<string> PutAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
+    public async Task<HttpResponseMessage> PutAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
         => await SendRequestAsync(url, HttpMethod.Put, CreateJsonContent(body), headers, cancellationToken);
 
-    public async Task<string> DeleteAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
+    public async Task<HttpResponseMessage> DeleteAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
         => await SendRequestAsync(url, HttpMethod.Delete, null, headers, cancellationToken);
 
-    private async Task<string> SendRequestAsync(string url, HttpMethod httpMethod, HttpContent? content, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
+    private async Task<HttpResponseMessage> SendRequestAsync(string url, HttpMethod httpMethod, HttpContent? content, Dictionary<string, string>? headers, CancellationToken cancellationToken = default)
     {
         var httpClient = _httpClientFactory.CreateClient("Webhooks");
 
@@ -50,10 +50,8 @@ internal sealed class HttpClientService : IHttpClientService
         }
 
         using var response = await httpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-        var responseContent = await response.Content.ReadAsStringAsync();
         
-        return responseContent;
+        return response;
     }
 
     private static HttpContent CreateJsonContent(string jsonData) 

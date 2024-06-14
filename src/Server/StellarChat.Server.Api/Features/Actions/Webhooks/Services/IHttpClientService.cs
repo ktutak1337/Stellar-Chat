@@ -2,9 +2,9 @@
 
 internal interface IHttpClientService
 {
-    Task<string> GetAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken);
-    Task<string> GetAsync(string url, Dictionary<string, string>? queryParams, Dictionary<string, string>? headers, CancellationToken cancellationToken);
-    Task<string> PostAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default);
-    Task<string> PutAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default);
-    Task<string> DeleteAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken = default);
+    Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken);
+    Task<HttpResponseMessage> GetAsync(string url, Dictionary<string, string>? queryParams, Dictionary<string, string>? headers, CancellationToken cancellationToken);
+    Task<HttpResponseMessage> PostAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default);
+    Task<HttpResponseMessage> PutAsync(string url, string body, Dictionary<string, string>? headers, CancellationToken cancellationToken = default);
+    Task<HttpResponseMessage> DeleteAsync(string url, Dictionary<string, string>? headers, CancellationToken cancellationToken = default);
 }
