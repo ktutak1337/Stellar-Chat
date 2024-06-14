@@ -61,13 +61,13 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
 
         if (isRemoteAction)
         {
-            await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.ProcessingStatus);
+            await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.ProcessingStatus, RemoteActionStatus.Processing);
 
             var response = await _httpClientService.PostAsync(action.Webhook!.Url, semanticResponse, action.Webhook.Headers, cancellationToken);
 
             if(!response.IsSuccessStatusCode)
             {
-                await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.FailedProcessingStatus);
+                await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.FailedProcessingStatus, RemoteActionStatus.Failed);
                 throw new RemoteActionExecutionFailedException(action.Id, action.Name);
             }
 
