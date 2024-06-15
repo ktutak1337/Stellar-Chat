@@ -21,6 +21,6 @@ internal sealed class BrowseChatSessionsEndpoint : IEndpoint
     public void Use(IApplicationBuilder app) { }
 
     private const string PaginationDescription = $"The `Page` and `PageSize` query parameters are used for pagination.\n" +
-                          $"\nWhen the `Page` and `PageSize` are set to `0` the entire collection will be returned; " +
-                          $"otherwise, results will be returned based on the specified pagination parameters.";
+                          $"\nWhen page = 1 and pageSize = 0, the entire collection is returned.Otherwise, " +
+                          $"results follow the specified pagination parameters.";
 }
