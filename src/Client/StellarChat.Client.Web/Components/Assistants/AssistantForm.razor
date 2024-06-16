@@ -53,7 +53,7 @@ Enter the Metaprompt here. This set of instructions will define your assistant's
 in every conversation, guiding how it interacts and responds. Keep it concise, clear, and
 reflective of the assistant's intended personality and capabilities.";
 
-    private const string DefaultAvatarUrl = "https://th.bing.com/th/id/OIG3.PYK1.ctv1ceJsoR9RZxZ?w=270&h=270&c=6&r=0&o=5&dpr=1.1&pid=ImgGn";
+    private const string DefaultAvatarUrl = "https://github.com/ktutak1337/Stellar-Chat/blob/main/docs/assets/images/_ed19c10c-bbad-4514-8df4-eef37400e218.jpg";
 
     private bool success;
 
@@ -122,7 +122,6 @@ reflective of the assistant's intended personality and capabilities.";
                 Name = assistant.Name,
                 Metaprompt = assistant.Metaprompt,
                 Description = assistant.Description,
-                // TODO: temp solution
                 AvatarUrl = assistant.AvatarUrl ?? DefaultAvatarUrl,
                 DefaultModel = assistant.DefaultModel,
                 DefaultVoice = assistant.DefaultVoice,
@@ -135,7 +134,6 @@ reflective of the assistant's intended personality and capabilities.";
 
     private void SetupNewAssistantParameters()
     {
-        // TODO: temp solution
         Assistant!.AvatarUrl = DefaultAvatarUrl;
         Assistant.IsDefault = false;
     }
