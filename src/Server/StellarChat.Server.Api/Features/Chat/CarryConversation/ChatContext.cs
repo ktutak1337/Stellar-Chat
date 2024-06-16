@@ -11,17 +11,20 @@ internal class ChatContext : IChatContext
     private readonly IAssistantRepository _assistantRepository;
     private readonly Kernel _kernel;
     private readonly ChatHistory _chatHistory = new();
+    private readonly TimeProvider _clock;
 
     public ChatContext(
         IChatSessionRepository chatSessionRepository,
         IChatMessageRepository chatMessageRepository,
         IAssistantRepository assistantRepository,
-        Kernel kernel)
+        Kernel kernel,
+        TimeProvider clock)
     {
         _chatSessionRepository = chatSessionRepository;
         _chatMessageRepository = chatMessageRepository;
         _assistantRepository = assistantRepository;
         _kernel = kernel;
+        _clock = clock;
     }
 
     public async Task SetChatInstructions(Guid chatId, string? actionMetaprompt = null)
@@ -40,6 +43,10 @@ internal class ChatContext : IChatContext
         var assistant = isDefaultAssistant
             ? defaultAssistant
             : assistants.SingleOrDefault(assistant => assistant.Id == chatSession.AssistantId) ?? defaultAssistant;
+
+        assistant!.Metaprompt = assistant.Metaprompt.IsEmpty()
+            ? string.Empty
+            : _clock.ReplaceDatePlaceholder(assistant.Metaprompt);
 
         _chatHistory.AddSystemMessage(assistant!.Metaprompt);
     }
