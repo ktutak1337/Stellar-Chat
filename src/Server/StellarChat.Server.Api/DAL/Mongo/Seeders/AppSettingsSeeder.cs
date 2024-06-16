@@ -23,8 +23,8 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
             Id = Guid.NewGuid(),
             Profile = new ProfileDocument
             {
-                Name = "Stellar",
-                AvatarUrl = string.Empty,
+                Name = "User",
+                AvatarUrl = "https://github.com/ktutak1337/Stellar-Chat/blob/main/docs/assets/logo-small.jpg",
                 Description = string.Empty,
             },
             CreatedAt = now,
