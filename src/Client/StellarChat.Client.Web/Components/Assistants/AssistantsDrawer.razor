@@ -18,7 +18,7 @@
                 {
                     <AssistantItem Assistant="@assistant"
                                    OnEdit="() => EditAssistant(assistant.Id)"
-                                   OnDelete="HandleAssistantSubmitted" />
+                                   OnDelete="HandleAssistantDeleted" />
                 }
             </MudList>
             <MudSpacer/>
@@ -52,7 +52,7 @@
     protected override async Task OnInitializedAsync()
     {
         _chatState.SelectedAssistantChanged += StateHasChanged;
-        
+
         await LoadAssistants();
         SelectDefaultAssistantItem();
     }
@@ -86,6 +86,12 @@
     {
         isEditing = false;
         await LoadAssistants();
+    }
+
+    private async Task HandleAssistantDeleted()
+    {
+        await HandleAssistantSubmitted();
+        SelectDefaultAssistantItem();
     }
 
     private void SelectDefaultAssistantItem()
