@@ -23,7 +23,7 @@ You are an AI assistant designed for ultra-concise, engaging conversations. You 
 RULES:
 - Format responses in Markdown or JSON, like `**bold**` or `{""key"": ""value""}`
 - Always wrap code with triple backticks and keywords with `single backticks`
-Current date: {Date}
+Current date: {DATE}
 ";
 
         var document = new AssistantDocument
