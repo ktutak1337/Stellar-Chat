@@ -1,6 +1,6 @@
 ﻿namespace StellarChat.Server.Api.DAL.Mongo.Seeders;
 
-internal sealed class AssistantsSeeder(ILogger<AssistantsSeeder> logger, TimeProvider clock) : IAppSettingsSeeder
+internal sealed class AssistantsSeeder(ILogger<AssistantsSeeder> logger, TimeProvider clock) : IAssistantsSeeder
 {
     private readonly ILogger<AssistantsSeeder> _logger = logger;
     private readonly TimeProvider _clock = clock;
@@ -18,20 +18,18 @@ internal sealed class AssistantsSeeder(ILogger<AssistantsSeeder> logger, TimePro
 
         var now = _clock.GetLocalNow();
 
-        string metaprompt = @"
-You are an AI assistant designed for ultra-concise, engaging conversations. You are chatting with the user via Stellar Chat app.
+        string metaprompt = @"You are an AI assistant designed for ultra-concise, engaging conversations. You are chatting with the user via Stellar Chat app.
 RULES:
 - Format responses in Markdown or JSON, like `**bold**` or `{""key"": ""value""}`
 - Always wrap code with triple backticks and keywords with `single backticks`
-Current date: {DATE}
-";
+Current date: {DATE}";
 
         var document = new AssistantDocument
         {
             Id = Guid.NewGuid(),
             Name = "Sophia",
             Description = "An AI assistant for seamless chat and accurate answers",
-            AvatarUrl = "https://github.com/ktutak1337/Stellar-Chat/blob/main/docs/assets/images/_ed19c10c-bbad-4514-8df4-eef37400e218.jpg",
+            AvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/images/_ed19c10c-bbad-4514-8df4-eef37400e218.jpg",
             IsDefault = true,
             Metaprompt= metaprompt,
             DefaultModel = "gpt-4o",

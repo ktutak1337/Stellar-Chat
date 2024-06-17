@@ -44,6 +44,8 @@ internal static class Extensions
     {
         builder.Services.TryAddSingleton(TimeProvider.System);
         builder.Services.AddScoped<IAppSettingsSeeder, AppSettingsSeeder>();
+        builder.Services.AddScoped<IAssistantsSeeder, AssistantsSeeder>();
+        builder.Services.AddScoped<IActionsSeeder, ActionsSeeder>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         builder.AddSharedInfrastructure();

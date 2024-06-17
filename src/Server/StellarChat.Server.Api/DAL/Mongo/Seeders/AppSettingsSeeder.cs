@@ -24,7 +24,7 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
             Profile = new ProfileDocument
             {
                 Name = "User",
-                AvatarUrl = "https://github.com/ktutak1337/Stellar-Chat/blob/main/docs/assets/logo-small.jpg",
+                AvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/logo-small.jpg",
                 Description = string.Empty,
             },
             CreatedAt = now,
