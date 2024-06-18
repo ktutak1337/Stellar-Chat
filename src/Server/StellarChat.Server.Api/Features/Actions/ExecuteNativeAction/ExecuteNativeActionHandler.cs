@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.Features.Actions.CreateNativeAction;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Exceptions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
@@ -43,42 +42,17 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
         var action = await _nativeActionRepository.GetAsync(id) ?? throw new NativeActionNotFoundException(id);
         var isRemoteAction = action.IsRemoteAction;
 
-        action.Metaprompt = action.Metaprompt.IsEmpty()
-            ? string.Empty
-            : _clock.ReplaceDatePlaceholder(action.Metaprompt);
+        await NotifyProcessingStatusAsync(isRemoteAction);
+        await BuildChatContextAsync(chatId, action.Metaprompt);
 
-        var processingMessage = isRemoteAction
-            ? RemoteActionMessagesConstant.PreparingPayload
-            : RemoteActionMessagesConstant.ProcessingStatus;
+        await SaveUserMessageAsync(chatId, message);
 
-        await _hubContext.Clients.All.ReceiveProcessingStatus(processingMessage, RemoteActionStatus.Processing);
-
-        await _chatContext.SetChatInstructions(chatId, action.Metaprompt);
-        await _chatContext.ExtractChatHistoryAsync(chatId);
-
-        var userMessage = CreateUserMessage(chatId, message);
-        await _chatContext.SaveChatMessageAsync(chatId, userMessage);
-
-        var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, botMessage, isRemoteAction, _hubContext);
-
+        var botResponseMessage = await GetBotResponseAsync(chatId, action);
         semanticResponse = botResponseMessage.Content;
 
         if (isRemoteAction)
         {
-            await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.ProcessingStatus, RemoteActionStatus.Processing);
-
-            var response = await _httpClientService.PostAsync(action.Webhook!.Url, semanticResponse, action.Webhook.Headers, cancellationToken);
-
-            if(!response.IsSuccessStatusCode)
-            {
-                await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.FailedProcessingStatus, RemoteActionStatus.Failed);
-                throw new RemoteActionExecutionFailedException(action.Id, action.Name);
-            }
-
-            var content = await response.Content.ReadAsStringAsync(cancellationToken) 
-                ?? string.Format(RemoteActionMessagesConstant.NoContentStatus, (int)response.StatusCode);
-
+            var content = await ExecuteRemoteActionAsync(action, payload: semanticResponse, cancellationToken);
             botResponseMessage.Content = content;
                 
             await _hubContext.Clients.All.ReceiveChatMessageChunk(content);
@@ -90,6 +64,59 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
         await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);
 
         return semanticResponse;
+    }
+
+    private async Task<string> ExecuteRemoteActionAsync(NativeAction action, string payload, CancellationToken cancellationToken = default)
+    {
+        await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.ProcessingStatus, RemoteActionStatus.Processing);
+        var response = await _httpClientService.PostAsync(action.Webhook!.Url, payload, action.Webhook.Headers, cancellationToken);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            await _hubContext.Clients.All.ReceiveProcessingStatus(RemoteActionMessagesConstant.FailedProcessingStatus, RemoteActionStatus.Failed);
+            throw new RemoteActionExecutionFailedException(action.Id, action.Name);
+        }
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken)
+            ?? string.Format(RemoteActionMessagesConstant.NoContentStatus, (int)response.StatusCode);
+
+        return content;
+    }
+
+    private string PrepareMetaprompt(string metaprompt) 
+        => metaprompt.IsEmpty()
+            ? string.Empty
+            : _clock.ReplaceDatePlaceholder(metaprompt);
+
+    private async Task BuildChatContextAsync(Guid chatId, string metaprompt)
+    {
+        var preparedMetaprompt = PrepareMetaprompt(metaprompt);
+
+        await _chatContext.SetChatInstructions(chatId, preparedMetaprompt);
+        await _chatContext.ExtractChatHistoryAsync(chatId);
+    }
+
+    private async Task<ChatMessage> GetBotResponseAsync(Guid chatId, NativeAction action)
+    {
+        var botMessage = CreateBotMessage(chatId, content: string.Empty);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, botMessage, action.IsRemoteAction, _hubContext);
+        
+        return botResponseMessage;
+    }
+
+    private async Task SaveUserMessageAsync(Guid chatId, string message)
+    {
+        var userMessage = CreateUserMessage(chatId, message);
+        await _chatContext.SaveChatMessageAsync(chatId, userMessage);
+    }
+
+    private async Task NotifyProcessingStatusAsync(bool isRemoteAction)
+    {
+        var processingMessage = isRemoteAction
+            ? RemoteActionMessagesConstant.PreparingPayload
+            : RemoteActionMessagesConstant.ProcessingStatus;
+
+        await _hubContext.Clients.All.ReceiveProcessingStatus(processingMessage, RemoteActionStatus.Processing);
     }
 
     private ChatMessage CreateUserMessage(Guid chatId, string message, ChatMessageType messageType = ChatMessageType.Message)
