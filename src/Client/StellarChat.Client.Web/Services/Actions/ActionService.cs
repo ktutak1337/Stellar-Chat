@@ -41,6 +41,7 @@ public class ActionService : IActionService
             action.Icon,
             action.Model,
             action.Metaprompt,
+            action.IsSingleMessageMode,
             action.IsRemoteAction,
             action.ShouldRephraseResponse,
             new Webhook(
@@ -97,6 +98,7 @@ public class ActionService : IActionService
             action.Icon,
             action.Model,
             action.Metaprompt,
+            action.IsSingleMessageMode,
             action.IsRemoteAction,
             action.ShouldRephraseResponse,
             new Webhook(

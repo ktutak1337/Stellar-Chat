@@ -47,6 +47,12 @@
                       HelperText="@metapromptGuidelines"
                       For="@(() => Action!.Metaprompt)" />
 
+        <MudText>Single Message Mode</MudText>
+        <div class="d-flex flex-grow-1">
+            <HelperText Text="@singleMessageModeGuidelines" />
+            <MudSwitch @bind-Value="@Action.IsSingleMessageMode" Color="Color.Primary" Class="my-auto" Style="margin-left: auto; margin-right: -4px;" />
+        </div>
+
         <MudText>Remote action</MudText>
         <div class="d-flex flex-grow-1">
             <HelperText Text="@remoteActionGuidelines" />
@@ -107,6 +113,11 @@ Example: { ""status"": ""success"", ""data"": { ""key"": ""value"" } }.";
     private const string remoteActionGuidelines = @"
 Enabling this option allows connection to external services, enabling you to trigger automation scenarios 
 or integrate with various APIs and webhooks.";
+
+    private const string singleMessageModeGuidelines = @"
+Enabling this option sends only the user's last message to the action instead of the entire chat history.
+
+Some actions require just the latest message, while others need the full conversation context. Enable as needed.";
 
     private bool success;
 
@@ -175,6 +186,7 @@ or integrate with various APIs and webhooks.";
                 Icon = action.Icon,
                 Model = action.Model,
                 Metaprompt = action.Metaprompt,
+                IsSingleMessageMode = action.IsSingleMessageMode,
                 IsRemoteAction = action.IsRemoteAction,
                 ShouldRephraseResponse = action.ShouldRephraseResponse,
                 Webhook = new WebhookResponse
@@ -195,6 +207,7 @@ or integrate with various APIs and webhooks.";
 
     private void SetupNewActionParameters()
     {
+        Action.IsSingleMessageMode = false;
         Action.ShouldRephraseResponse = false;
         Action.Webhook!.HttpMethod = "POST";
         Action.Webhook!.Payload = string.Empty;
