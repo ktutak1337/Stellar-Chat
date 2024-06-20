@@ -8,23 +8,25 @@ internal class NativeAction
     public string Icon { get; set; }
     public string Model { get; set; }
     public string Metaprompt { get; set; }
+    public bool IsSingleMessageMode { get; set; }
     public bool IsRemoteAction { get; set; }
     public bool ShouldRephraseResponse { get; set; }
     public Webhook? Webhook { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
-    
+
     public NativeAction(
-        Guid id, 
-        string name, 
-        string category, 
-        string icon, 
-        string model, 
-        string metaprompt, 
+        Guid id,
+        string name,
+        string category,
+        string icon,
+        string model,
+        string metaprompt,
+        bool isSingleMessageMode,
         bool isRemoteAction,
         bool shouldRephraseResponse,
-        Webhook? webhook, 
-        DateTimeOffset createdAt, 
+        Webhook? webhook,
+        DateTimeOffset createdAt,
         DateTimeOffset updatedAt)
     {
         Id = id;
@@ -33,6 +35,7 @@ internal class NativeAction
         Icon = icon;
         Model = model;
         Metaprompt = metaprompt;
+        IsSingleMessageMode = isSingleMessageMode;
         IsRemoteAction = isRemoteAction;
         ShouldRephraseResponse = shouldRephraseResponse;
         Webhook = webhook;
@@ -47,10 +50,11 @@ internal class NativeAction
         string icon,
         string model,
         string metaprompt,
+        bool isSingleMessageMode,
         bool isRemoteAction,
         bool shouldRephraseResponse,
         Webhook? webhook,
         DateTimeOffset createdAt,
         DateTimeOffset updatedAt)
-            => new(id, name, category, icon, model, metaprompt, isRemoteAction, shouldRephraseResponse, webhook, createdAt, updatedAt);
+            => new(id, name, category, icon, model, metaprompt, isSingleMessageMode, isRemoteAction, shouldRephraseResponse, webhook, createdAt, updatedAt);
 }

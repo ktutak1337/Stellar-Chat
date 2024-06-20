@@ -9,6 +9,7 @@ public record CreateNativeActionRequest(
     string Icon,
     string Model,
     string Metaprompt,
+    bool IsSingleMessageMode,
     bool IsRemoteAction,
     bool ShouldRephraseResponse,
     Webhook? Webhook);

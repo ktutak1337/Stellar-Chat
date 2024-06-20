@@ -46,6 +46,7 @@ Hello";
             Icon = "fas fa-compress-arrows-alt",
             Model = "gpt-3.5-turbo",
             Metaprompt = metaprompt,
+            IsSingleMessageMode = false,
             IsRemoteAction = false,
             ShouldRephraseResponse = false,
             Webhook = new WebhookDocument

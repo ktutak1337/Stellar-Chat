@@ -43,7 +43,7 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
         var isRemoteAction = action.IsRemoteAction;
 
         await NotifyProcessingStatusAsync(isRemoteAction);
-        await BuildChatContextAsync(chatId, action.Metaprompt);
+        await BuildChatContextAsync(chatId, action.Metaprompt, action.IsSingleMessageMode);
 
         await SaveUserMessageAsync(chatId, message);
 
@@ -88,11 +88,17 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
             ? string.Empty
             : _clock.ReplaceDatePlaceholder(metaprompt);
 
-    private async Task BuildChatContextAsync(Guid chatId, string metaprompt)
+    private async Task BuildChatContextAsync(Guid chatId, string metaprompt, bool isSingleMessageMode)
     {
         var preparedMetaprompt = PrepareMetaprompt(metaprompt);
 
         await _chatContext.SetChatInstructions(chatId, preparedMetaprompt);
+
+        if (isSingleMessageMode)
+        {
+            return;
+        }
+
         await _chatContext.ExtractChatHistoryAsync(chatId);
     }
 

@@ -8,6 +8,7 @@ public class NativeActionDocument : IIdentifiable<Guid>
     public string Icon { get; set; } = string.Empty;
     public string Model { get; set; } = string.Empty;
     public string Metaprompt { get; set; } = string.Empty;
+    public bool IsSingleMessageMode { get; set; }
     public bool IsRemoteAction { get; set; }
     public bool ShouldRephraseResponse { get; set; }
     public WebhookDocument? Webhook { get; set; }

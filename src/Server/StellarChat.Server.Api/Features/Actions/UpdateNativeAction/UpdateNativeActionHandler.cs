@@ -15,7 +15,7 @@ internal sealed class UpdateNativeActionHandler : ICommandHandler<UpdateNativeAc
 
     public async ValueTask<Unit> Handle(UpdateNativeAction command, CancellationToken cancellationToken)
     {
-        var (id, name, category, icon, model, metaprompt, isRemoteAction, shouldRephraseResponse, webhook) = command;
+        var (id, name, category, icon, model, metaprompt, isSingleMessageMode, isRemoteAction, shouldRephraseResponse, webhook) = command;
 
         var action = await _nativeActionRepository.GetAsync(id) ?? throw new NativeActionNotFoundException(id);
 
@@ -26,6 +26,7 @@ internal sealed class UpdateNativeActionHandler : ICommandHandler<UpdateNativeAc
         action.Icon = icon;
         action.Model = model;
         action.Metaprompt = metaprompt;
+        action.IsSingleMessageMode = isSingleMessageMode;
         action.IsRemoteAction = isRemoteAction;
         action.ShouldRephraseResponse = shouldRephraseResponse;
         

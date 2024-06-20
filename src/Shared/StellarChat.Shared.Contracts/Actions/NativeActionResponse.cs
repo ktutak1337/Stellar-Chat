@@ -10,6 +10,7 @@ public class NativeActionResponse
     [Required] public string Icon { get; set; } = string.Empty;
     [Required] public string Model { get; set; } = string.Empty;
     [Required, MinLength(3)] public string Metaprompt { get; set; } = string.Empty;
+    public bool IsSingleMessageMode { get; set; }
     public bool IsRemoteAction { get; set; }
     public bool ShouldRephraseResponse { get; set; }
     public WebhookResponse? Webhook { get; set; } = new();

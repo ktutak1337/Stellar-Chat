@@ -9,6 +9,7 @@ internal sealed record CreateNativeAction(
     string Icon,
     string Model,
     string Metaprompt,
+    bool IsSingleMessageMode,
     bool IsRemoteAction,
     bool ShouldRephraseResponse,
     Webhook? Webhook) : ICommand;

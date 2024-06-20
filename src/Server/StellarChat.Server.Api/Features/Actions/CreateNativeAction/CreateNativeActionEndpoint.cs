@@ -20,6 +20,7 @@ internal sealed class CreateNativeActionEndpoint : IEndpoint
                 request.Model,
                 request.Metaprompt,
                 request.IsRemoteAction,
+                request.IsSingleMessageMode,
                 request.ShouldRephraseResponse,
                 Webhook.Create(
                     request.Webhook!.httpMethod,

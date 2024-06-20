@@ -15,7 +15,7 @@ internal sealed class CreateNativeActionHandler : ICommandHandler<CreateNativeAc
 
     public async ValueTask<Unit> Handle(CreateNativeAction command, CancellationToken cancellationToken)
     {
-        var (id, name, category, icon, model, metaprompt, isRemoteAction, shouldRephraseResponse, webhook) = command;
+        var (id, name, category, icon, model, metaprompt, isSingleMessageMode, isRemoteAction, shouldRephraseResponse, webhook) = command;
 
         if (await _nativeActionRepository.ExistsAsync(id))
         {
@@ -31,6 +31,7 @@ internal sealed class CreateNativeActionHandler : ICommandHandler<CreateNativeAc
             icon,
             model,
             metaprompt,
+            isSingleMessageMode,
             isRemoteAction,
             shouldRephraseResponse,
             webhook,

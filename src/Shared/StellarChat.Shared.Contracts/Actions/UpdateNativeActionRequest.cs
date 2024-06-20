@@ -9,6 +9,7 @@ public sealed record UpdateNativeActionRequest(
     string Icon,
     string Model,
     string Metaprompt,
+    bool IsSingleMessageMode,
     bool IsRemoteAction,
     bool ShouldRephraseResponse,
     Webhook? Webhook);

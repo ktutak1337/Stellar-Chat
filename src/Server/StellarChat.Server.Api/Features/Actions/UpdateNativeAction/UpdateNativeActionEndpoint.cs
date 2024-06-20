@@ -17,6 +17,7 @@ internal sealed class UpdateNativeActionEndpoint : IEndpoint
                 request.Icon,
                 request.Model,
                 request.Metaprompt,
+                request.IsSingleMessageMode,
                 request.IsRemoteAction,
                 request.ShouldRephraseResponse,
                 Webhook.Create(
