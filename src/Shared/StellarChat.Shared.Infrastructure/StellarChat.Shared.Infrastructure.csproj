@@ -11,16 +11,16 @@
   </ItemGroup>  
 	
   <ItemGroup>
-	  <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.50.240504.7" />
-	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.11.0" />
-	  <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
-	  <PackageReference Include="Serilog" Version="4.0.0-dev-02167" />
+	  <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.65.240620.1" />
+	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.15.0" />
+	  <PackageReference Include="MongoDB.Driver" Version="2.26.0" />
+	  <PackageReference Include="Serilog" Version="4.0.0" />
 	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00338" />
-	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10389" />
-	  <PackageReference Include="Serilog.Sinks.Console" Version="5.1.0-dev-00943" />
-	  <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00972" />
-	  <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0-dev-00299" />
-	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10391" />
+	  <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+	  <PackageReference Include="Serilog.Sinks.File" Version="6.0.0-dev-00979" />
+	  <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>  
 
 </Project>
