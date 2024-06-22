@@ -1,4 +1,5 @@
-﻿@inject IConfiguration _configuration
+﻿@using System.Globalization
+@inject IConfiguration _configuration
 @inject IChatService _chatService
 @inject ChatState _chatState
 @inject NavigationManager _navigationManager
@@ -40,11 +41,17 @@
                             <MudTextField Class="pl-4 pr-4 pb-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
                             <MudDivider />
                             <MudList Clickable="true" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
-                                @foreach (var chatSession in ChatSessions)
+                                @foreach (var group in ChatSessions.GroupBy(a => a.CreatedAt))
                                 {
-                                    <ChatHistoryItem ChatSessionItem="@chatSession" 
-                                                     OnChangeTitle="ChangeChatSessionTitle" 
-                                                     OnDeleteChat="DeleteChatSession" />
+                                    <MudListSubheader Class="pb-1">
+                                        @group.Key.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture)
+                                    </MudListSubheader>
+                                    @foreach (var chatSession in group)
+                                    {
+                                        <ChatHistoryItem ChatSessionItem="@chatSession"
+                                                         OnChangeTitle="ChangeChatSessionTitle"
+                                                         OnDeleteChat="DeleteChatSession" />
+                                    }
                                 }
                             </MudList>
                         </div>
