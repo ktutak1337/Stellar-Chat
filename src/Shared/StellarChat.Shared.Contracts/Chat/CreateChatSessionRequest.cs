@@ -2,4 +2,4 @@
 
 namespace StellarChat.Shared.Contracts.Chat;
 
-public record CreateChatSessionRequest([property: JsonIgnore] Guid? ChatId, Guid AssistantId, string Title);
+public record CreateChatSessionRequest([property: JsonIgnore] Guid? ChatId, Guid AssistantId, string Title, string Message);
