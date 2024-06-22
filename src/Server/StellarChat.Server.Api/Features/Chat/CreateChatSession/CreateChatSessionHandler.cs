@@ -35,7 +35,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
         }
 
         var now = _clock.GetLocalNow();
-
+        
         // TODO: Retrieve activePlugins and metaprompt from settings
         var activePlugins = new HashSet<string>();
 
@@ -46,6 +46,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
 
         _ = Task.Run(async () =>
         {
+            _logger.LogInformation($"Generating chat title using LLM for chat ID: '{chatSession.Id}'...");
             await GenerateChatTitle(chatSession, command.Message);
         });
 
@@ -55,6 +56,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
     private async Task GenerateChatTitle(ChatSession chatSession, string message)
     {
         await Task.Delay(1000);
+
         var chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
         var reply = new StringBuilder();
 
@@ -72,10 +74,15 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
                 await _hubContext.Clients.All.ReceiveUpdateChatTitle(chatSession.Id, contentPiece.Content);
             }
         }
+        
+        var now = _clock.GetLocalNow();
 
         chatSession.Title = reply.ToString();
+        chatSession.UpdatedAt = now;
+        
         reply.Clear();
 
         await _chatSessionRepository.UpdateAsync(chatSession);
+        _logger.LogInformation($"Chat session with ID: '{chatSession.Id}' title has been updated.");
     }
 }
