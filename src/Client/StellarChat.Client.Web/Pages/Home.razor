@@ -124,7 +124,7 @@
         {
             if (ShouldCreateNewChat(chatId))
             {
-                chatId = await CreateNewChatAsync(assistantId);
+                chatId = await CreateNewChatAsync(assistantId, message);
             }
 
             await AppendMessagesToChatAsync(chatId, message);
@@ -139,9 +139,9 @@
         }
     }
 
-    private async Task<Guid> CreateNewChatAsync(Guid assistantId)
+    private async Task<Guid> CreateNewChatAsync(Guid assistantId, string message)
     {
-        var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat");
+        var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat", message);
 
         _chatState.SetIsNewChatPending(true);
         _chatState.SetChatId(newChatId);

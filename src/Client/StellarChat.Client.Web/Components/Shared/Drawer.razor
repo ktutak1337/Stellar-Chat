@@ -1,4 +1,5 @@
-﻿@inject IChatService _chatService
+﻿@inject IConfiguration _configuration
+@inject IChatService _chatService
 @inject ChatState _chatState
 @inject NavigationManager _navigationManager
 @implements IAsyncDisposable
@@ -86,8 +87,38 @@
 
     public List<ChatSessionResponse> ChatSessions { get; set; } = new();
 
+    private StringBuilder _textStreaming = new();
+    private HubConnection? _hubConnection;
+    private string HubUrl => $"{_configuration["api:api_url"]}/hub";
+
     protected override async Task OnInitializedAsync()
     {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(HubUrl)
+            .WithAutomaticReconnect()
+            .Build();
+
+        _hubConnection.On<Guid, string>(nameof(IChatHub.ReceiveUpdateChatTitle), async (chatId, message) =>
+        {
+            _textStreaming.Append(message);
+
+            var chatSession = ChatSessions.SingleOrDefault(x => x.Id == chatId);
+
+            if (chatSession is not null)
+            {
+                ChatSessions[ChatSessions.IndexOf(chatSession)] = chatSession with { Title = _textStreaming.ToString() };
+                StateHasChanged();
+            }
+
+            await Task.CompletedTask;
+        });
+
+        Console.WriteLine("Starting connection...");
+
+        await _hubConnection.StartAsync();
+
+        Console.WriteLine($"Connection state: {_hubConnection.State}");
+
         _chatState.IsNewChatPendingChanged += StateHasChanged;
         _chatState.ChatIdChanged += SelectNewCreatedChat;
         _chatState.SelectedAssistantChanged += StateHasChanged;
@@ -139,6 +170,7 @@
     private void CreateNewChat()
     {
         DeselectChatHistoryItem();
+        _textStreaming.Clear();
         _chatState.SetChatId(Guid.Empty);
         _navigationManager.NavigateTo("/");
     }

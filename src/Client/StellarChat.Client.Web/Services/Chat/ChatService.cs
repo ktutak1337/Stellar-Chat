@@ -20,6 +20,15 @@ public class ChatService : IChatService
         return result!;
     }
 
+    public async ValueTask<ChatSessionResponse> GetChatSession(Guid id)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var result = await httpClient.GetFromJsonAsync<ChatSessionResponse>($"/chat-history/sessions/{id}");
+
+        return result!;
+    }
+
     public async ValueTask<Paged<ChatMessageResponse>> GetChatMessagesByChatId(Guid chatId, int page = 0, int pageSize = 10000)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
@@ -38,11 +47,11 @@ public class ChatService : IChatService
         await httpClient.PutAsJsonAsync($"/chat-history/sessions/{id}/title", payload);
     }
 
-    public async ValueTask<Guid> CreateChatSession(Guid assistantId, string title)
+    public async ValueTask<Guid> CreateChatSession(Guid assistantId, string title, string message)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        var payload = new CreateChatSessionRequest(null, assistantId, title);
+        var payload = new CreateChatSessionRequest(null, assistantId, title, message);
 
         var response = await httpClient.PostAsJsonAsync($"/chat-history/sessions", payload);
 
