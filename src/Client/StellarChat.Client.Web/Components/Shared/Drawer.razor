@@ -41,7 +41,7 @@
                             <MudTextField Class="pl-4 pr-4 pb-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
                             <MudDivider />
                             <MudList Clickable="true" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
-                                @foreach (var group in ChatSessions.GroupBy(a => a.CreatedAt.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture)))
+                                @foreach (var group in ChatSessions.OrderByDescending(x => x.CreatedAt).GroupBy(a => a.CreatedAt.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture)))
                                 {
                                     <MudListSubheader Class="pb-1">
                                         @group.Key
