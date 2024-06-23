@@ -37,8 +37,8 @@
                         <MudText Typo="Typo.h5" Class="mx-auto mt-3 mb-2">Stellar Chat</MudText>
                         <MudDivider />
                         <MudText Typo="Typo.h6" Class="mt-2 ml-4">Chat History</MudText>
-                        <div class="flex-grow-1 overflow-y-auto w-100 h-100 mt-1">
-                            <MudTextField Class="pl-4 pr-4 pb-4" @bind-Value="@SearchText" Label="Find a conversation" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+                        <div class="flex-grow-1 overflow-y-auto w-100 h-100 mt-2">
+                            <MudTextField Class="pl-4 pr-4 pb-4 custom-placeholder" T="string" @bind-Value="SearchText" TextChanged="HandleSearchTextChanged" Immediate="true" Clearable="true" Placeholder="Explore previous conversations" Margin="Margin.Dense" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
                             <MudDivider />
                             <MudList Clickable="true" @bind-SelectedItem="SelectedItem" @bind-SelectedValue="SelectedValue" Color="@(_IsDarkModeEnabled ? Color.Tertiary : Color.Dark)">
                                 @foreach (var group in ChatSessions.OrderByDescending(x => x.CreatedAt).GroupBy(a => a.CreatedAt.ToString("yyyy-MM-dd", CultureInfo.CurrentCulture)))
@@ -63,11 +63,9 @@
 </MudDrawer>
 
 <style>
-    <style >
-        .no-hover:hover {
+    .no-hover:hover {
             background-color: transparent !important;
         }
-    </style>
 </style>
 
 @code
@@ -94,6 +92,7 @@
 
     public List<ChatSessionResponse> ChatSessions { get; set; } = new();
 
+    private CancellationTokenSource? _cts;
     private StringBuilder _textStreaming = new();
     private HubConnection? _hubConnection;
     private string HubUrl => $"{_configuration["api:api_url"]}/hub";
@@ -172,6 +171,23 @@
     {
         var response = await _chatService.BrowseChatSessions();
         ChatSessions = response.Items.ToList();
+    }
+
+    private async Task HandleSearchTextChanged(string searchText)
+    {
+        _cts?.Cancel();
+        _cts = new CancellationTokenSource();
+
+        try
+        {
+            await Task.Delay(500, _cts.Token);
+
+            var response = await _chatService.SearchChatSessions(searchText);
+            ChatSessions = response.Items.ToList();
+        }
+        catch (TaskCanceledException)
+        {
+        }
     }
 
     private void CreateNewChat()
