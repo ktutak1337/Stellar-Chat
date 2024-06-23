@@ -112,50 +112,42 @@ internal static class Extensions
         var chatMessages = app.Services.GetRequiredService<IMongoRepository<ChatMessageDocument, Guid>>().Collection;
         var chatMessageBuilder = Builders<ChatMessageDocument>.IndexKeys;
 
-        chatMessages.Indexes.CreateMany(
+        Task.Run(async () => await chatMessages.Indexes.CreateManyAsync(
         [
-            new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Text(i => i.Content),
-                new CreateIndexOptions
-                {
-                    Background = true
-                }),
             new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Ascending(i => i.Id),
                 new CreateIndexOptions
                 {
-                    Unique = true,
-                    Background = true
                 }),
             new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Ascending(i => i.ChatId),
                 new CreateIndexOptions
                 {
-                    Unique = true,
-                    Background = true
-                })
-        ]);
+                }),
+            new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Text(i => i.Content),
+                new CreateIndexOptions
+                {
+                }),
+        ]));
 
         return app;
     }
+
 
     public static WebApplication ConfigureChatSessionIndexes(this WebApplication app)
     {
         var chatSessions = app.Services.GetRequiredService<IMongoRepository<ChatSessionDocument, Guid>>().Collection;
         var chatSessionBuilder = Builders<ChatSessionDocument>.IndexKeys;
 
-        chatSessions.Indexes.CreateMany(
+        Task.Run(async () => await chatSessions.Indexes.CreateManyAsync(
         [
             new CreateIndexModel<ChatSessionDocument>(chatSessionBuilder.Ascending(i => i.Id),
                 new CreateIndexOptions
                 {
-                    Unique = true,
-                    Background = true
                 }),
             new CreateIndexModel<ChatSessionDocument>(chatSessionBuilder.Ascending(i => i.AssistantId),
                 new CreateIndexOptions
                 {
-                    Unique = true,
-                    Background = true
                 })
-        ]);
+        ]));
 
         return app;
     }
@@ -165,20 +157,17 @@ internal static class Extensions
         var assistants = app.Services.GetRequiredService<IMongoRepository<AssistantDocument, Guid>>().Collection;
         var assistantBuilder = Builders<AssistantDocument>.IndexKeys;
 
-        assistants.Indexes.CreateMany(
+        Task.Run(async () => await assistants.Indexes.CreateManyAsync(
         [
             new CreateIndexModel<AssistantDocument>(assistantBuilder.Ascending(i => i.Id),
                 new CreateIndexOptions
                 {
-                    Unique = true,
-                    Background = true
                 }),
             new CreateIndexModel<AssistantDocument>(assistantBuilder.Ascending(i => i.Name),
                 new CreateIndexOptions
                 {
-                    Background = true
                 })
-        ]);
+        ]));
 
         return app;
     }
@@ -188,20 +177,17 @@ internal static class Extensions
         var nativeActions = app.Services.GetRequiredService<IMongoRepository<NativeActionDocument, Guid>>().Collection;
         var nativeActionBuilder = Builders<NativeActionDocument>.IndexKeys;
 
-        nativeActions.Indexes.CreateMany(
+        Task.Run(async () => await nativeActions.Indexes.CreateManyAsync(
         [
             new CreateIndexModel<NativeActionDocument>(nativeActionBuilder.Ascending(i => i.Id),
                 new CreateIndexOptions
                 {
-                    Unique = true,
-                    Background = true
                 }),
             new CreateIndexModel<NativeActionDocument>(nativeActionBuilder.Ascending(i => i.Name),
                 new CreateIndexOptions
                 {
-                    Background = true
                 })
-        ]);
+        ]));
 
         return app;
     }
