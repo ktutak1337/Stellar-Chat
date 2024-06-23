@@ -6,6 +6,7 @@
         <MudGrid>
             <MudItem xs="12">
                 <MudTextField id="prompt-input"
+                              OnKeyDown="HandleKeyDown"
                               T="string"
                               Variant="Variant.Filled"
                               @bind-Value="Message"
@@ -91,6 +92,14 @@
             await OnSend.InvokeAsync(message);
 
             IsProcessing = false;
+        }
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !IsSendButtonDisabled)
+        {
+            await SendMessage(Message);
         }
     }
 
