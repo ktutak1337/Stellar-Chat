@@ -11,11 +11,20 @@ public class ChatService : IChatService
     public ChatService(IHttpClientFactory httpClientFactory) 
         => _httpClientFactory = httpClientFactory;
 
-    public async ValueTask<Paged<ChatSessionResponse>> BrowseChatSessions(int page = 0, int pageSize = 0)
+    public async ValueTask<Paged<ChatSessionResponse>> BrowseChatSessions(int page = 1, int pageSize = 0)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
         var result = await httpClient.GetFromJsonAsync<Paged<ChatSessionResponse>>($"/chat-history/sessions?Page={page}&PageSize={pageSize}");
+
+        return result!;
+    }
+
+    public async ValueTask<Paged<ChatSessionResponse>> SearchChatSessions(string query, int page = 1, int pageSize = 0)
+    {
+        var httpClient = _httpClientFactory.CreateClient("WebAPI");
+
+        var result = await httpClient.GetFromJsonAsync<Paged<ChatSessionResponse>>($"/chat-history/sessions/search?query={query}&Page={page}&PageSize={pageSize}");
 
         return result!;
     }

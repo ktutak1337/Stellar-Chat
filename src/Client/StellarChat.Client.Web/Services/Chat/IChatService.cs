@@ -5,7 +5,8 @@ namespace StellarChat.Client.Web.Services.Chat;
 
 public interface IChatService
 {
-    ValueTask<Paged<ChatSessionResponse>> BrowseChatSessions(int page = 0, int pageSize = 10000);
+    ValueTask<Paged<ChatSessionResponse>> BrowseChatSessions(int page = 1, int pageSize = 0);
+    ValueTask<Paged<ChatSessionResponse>> SearchChatSessions(string query, int page = 1, int pageSize = 0);
     ValueTask<ChatSessionResponse> GetChatSession(Guid id);
     ValueTask<Paged<ChatMessageResponse>> GetChatMessagesByChatId(Guid chatId, int page = 0, int pageSize = 10000);
     ValueTask SendMessage(Guid chatId, string message, string messageType, string model);
