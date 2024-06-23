@@ -82,6 +82,8 @@ internal static class Extensions
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
+        app.UseMongo();
+
         var basePath = Path.Combine(app.Environment.ContentRootPath, "_data");
 
         app.UseStaticFiles(new StaticFileOptions
@@ -91,6 +93,115 @@ internal static class Extensions
         });
         app.MapHub<ChatHub>("/hub");
         app.UseSharedInfrastructure();
+
+        return app;
+    }
+
+    public static WebApplication UseMongo(this WebApplication app)
+    {
+        app.ConfigureChatMessageIndexes()
+           .ConfigureChatSessionIndexes()
+           .ConfigureAssistantIndexes()
+           .ConfigureNativeActionIndexes();
+
+        return app;
+    }
+
+    public static WebApplication ConfigureChatMessageIndexes(this WebApplication app)
+    {
+        var chatMessages = app.Services.GetRequiredService<IMongoRepository<ChatMessageDocument, Guid>>().Collection;
+        var chatMessageBuilder = Builders<ChatMessageDocument>.IndexKeys;
+
+        chatMessages.Indexes.CreateMany(
+        [
+            new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Text(i => i.Content),
+                new CreateIndexOptions
+                {
+                    Background = true
+                }),
+            new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Ascending(i => i.Id),
+                new CreateIndexOptions
+                {
+                    Unique = true,
+                    Background = true
+                }),
+            new CreateIndexModel<ChatMessageDocument>(chatMessageBuilder.Ascending(i => i.ChatId),
+                new CreateIndexOptions
+                {
+                    Unique = true,
+                    Background = true
+                })
+        ]);
+
+        return app;
+    }
+
+    public static WebApplication ConfigureChatSessionIndexes(this WebApplication app)
+    {
+        var chatSessions = app.Services.GetRequiredService<IMongoRepository<ChatSessionDocument, Guid>>().Collection;
+        var chatSessionBuilder = Builders<ChatSessionDocument>.IndexKeys;
+
+        chatSessions.Indexes.CreateMany(
+        [
+            new CreateIndexModel<ChatSessionDocument>(chatSessionBuilder.Ascending(i => i.Id),
+                new CreateIndexOptions
+                {
+                    Unique = true,
+                    Background = true
+                }),
+            new CreateIndexModel<ChatSessionDocument>(chatSessionBuilder.Ascending(i => i.AssistantId),
+                new CreateIndexOptions
+                {
+                    Unique = true,
+                    Background = true
+                })
+        ]);
+
+        return app;
+    }
+
+    public static WebApplication ConfigureAssistantIndexes(this WebApplication app)
+    {
+        var assistants = app.Services.GetRequiredService<IMongoRepository<AssistantDocument, Guid>>().Collection;
+        var assistantBuilder = Builders<AssistantDocument>.IndexKeys;
+
+        assistants.Indexes.CreateMany(
+        [
+            new CreateIndexModel<AssistantDocument>(assistantBuilder.Ascending(i => i.Id),
+                new CreateIndexOptions
+                {
+                    Unique = true,
+                    Background = true
+                }),
+            new CreateIndexModel<AssistantDocument>(assistantBuilder.Ascending(i => i.Name),
+                new CreateIndexOptions
+                {
+                    Background = true
+                })
+        ]);
+
+        return app;
+    }
+
+    public static WebApplication ConfigureNativeActionIndexes(this WebApplication app)
+    {
+        var nativeActions = app.Services.GetRequiredService<IMongoRepository<NativeActionDocument, Guid>>().Collection;
+        var nativeActionBuilder = Builders<NativeActionDocument>.IndexKeys;
+
+        nativeActions.Indexes.CreateMany(
+        [
+            new CreateIndexModel<NativeActionDocument>(nativeActionBuilder.Ascending(i => i.Id),
+                new CreateIndexOptions
+                {
+                    Unique = true,
+                    Background = true
+                }),
+            new CreateIndexModel<NativeActionDocument>(nativeActionBuilder.Ascending(i => i.Name),
+                new CreateIndexOptions
+                {
+                    Background = true
+                })
+        ]);
 
         return app;
     }
