@@ -16,7 +16,7 @@
                 <MudDivider />
                 @foreach (var group in Actions.GroupBy(a => a.Category))
                 {
-                    <MudListSubheader>
+                    <MudListSubheader Class="pb-1">
                         @group.Key
                     </MudListSubheader>
                     @foreach (var action in group)
