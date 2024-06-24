@@ -87,20 +87,22 @@
         if (!IsSendButtonDisabled)
         {
             IsProcessing = true;
-
             Message = string.Empty;
-            await OnSend.InvokeAsync(message);
 
+            await OnSend.InvokeAsync(message);
+            
+            Message = string.Empty;
             IsProcessing = false;
         }
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter" && !IsSendButtonDisabled)
+        await (e switch
         {
-            await SendMessage(Message);
-        }
+            { Key: "Enter", ShiftKey: false } when !IsSendButtonDisabled => SendMessage(Message),
+            _ => Task.CompletedTask
+        });
     }
 
     private void OnActionChanged(NativeActionResponse action)
