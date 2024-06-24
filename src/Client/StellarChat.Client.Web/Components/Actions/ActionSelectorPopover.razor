@@ -31,7 +31,8 @@
                              DisableUnderLine="true"
                              Style="width: 400px"
                              Class="mx-2"
-                             ValueChanged="OnValueChanged">
+                             ValueChanged="OnValueChanged"
+                             IsOpenChanged="OnAutocompleteMenuChanged">
                 <ItemTemplate Context="context">
                     <MudText>
                         @context.Name
@@ -47,16 +48,18 @@
     </ChildContent>
 </MudPopover>
 
-@code {
+@code 
+{
     [Parameter] public EventCallback<NativeActionResponse> ActionChanged { get; set; }
     [Parameter] public NativeActionResponse? CurrentValue { get; set; }
     [Parameter] public List<NativeActionResponse> Actions { get; set; } = new();
 
     private MudAutocomplete<NativeActionResponse>? _autocomplete;
-    
+
     private bool coerceText;
     private bool coerceValue;
     private bool _isOpen = false;
+    private bool _isAutocompleteOpen = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,21 +84,53 @@
         {
             return Actions;
         }
-        
+
         var result = Actions
             .Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-        
+
         return await Task.FromResult(result);
     }
 
     private async Task ToggleOpen()
     {
         _isOpen = !_isOpen;
-        await Task.Delay(50);
 
+        await (_isOpen switch
+        {
+            true => OpenMenuAsync(),
+            false => CloseMenuAsync(),
+        });
+    }
+
+    private async Task OpenMenuAsync()
+    {
+        await Task.Delay(50);
+        await ToggleMenu();
+    }
+
+    private async Task CloseMenuAsync()
+    {
+        if (_isAutocompleteOpen)
+        {
+            await ToggleMenu();
+        }
+    }
+
+    private async Task ToggleMenu()
+    {
         if (_autocomplete is not null)
         {
             await _autocomplete.ToggleMenu();
+        }
+    }
+
+    private void OnAutocompleteMenuChanged(bool isOpen)
+    {
+        _isAutocompleteOpen = isOpen;
+
+        if (!isOpen && _isOpen)
+        {
+            _isOpen = false;
         }
     }
 
