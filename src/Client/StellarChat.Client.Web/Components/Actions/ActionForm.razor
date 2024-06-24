@@ -13,11 +13,18 @@
                        HelperText="Use a short name that clearly describes what this action represents." />
 
         <MudText>Category</MudText>
-        <MudTextField @bind-Value="Action!.Category"
-                      Variant="Variant.Outlined"
-                      Margin="Margin.Dense"
-                      For="@(() => Action!.Category)"
-                      HelperText="Used to group actions displayed in the main actions view." />
+        <MudSelect @bind-Value="Action.Category"
+                   Margin="Margin.Dense"
+                   T="string"
+                   Variant="Variant.Outlined"
+                   For="@(() => Action!.Category)"
+                   HelperText="Used to group actions displayed in the main actions view.">
+
+            @foreach (var category in Categories)
+            {
+                <MudSelectItem Value="@category" />
+            }
+        </MudSelect>
 
         <MudText>Icon</MudText>
         <IconSelector @bind-SelectedIcon="Action.Icon" />
@@ -95,6 +102,50 @@
     [Parameter] public EventCallback OnActionSubmit { get; set; }
     private NativeActionResponse Action { get; set; } = new();
     private List<AvailableModelsResponse> AvailableModels { get; set; } = new();
+
+    public List<string> Categories { get; set; } = new()
+    {
+        "AI",
+        "Audio",
+        "Automation Scenarios",
+        "Business",
+        "Chatbots",
+        "Coding",
+        "Content Creation",
+        "Copywriting",
+        "Critical Thinking",
+        "Customer Support",
+        "Data Analysis",
+        "Data Visualization",
+        "DevOps",
+        "E-commerce",
+        "External API",
+        "Finance",
+        "Fun",
+        "Homelab",
+        "Human Resources",
+        "Image Generation",
+        "Image Vision",
+        "Integration",
+        "Low Code",
+        "Marketing",
+        "No Code",
+        "Notifications",
+        "Productivity",
+        "Project Management",
+        "Remote Action",
+        "Sales",
+        "SEO",
+        "Social Media",
+        "Text",
+        "Video",
+        "Webhooks",
+        "Workflow Automation",
+        "Other"
+    };
+
+    private bool coerceText;
+    private bool coerceValue;
 
     private bool showWebhookUrl = false;
     private bool showAuthorizationToken = false;
@@ -235,5 +286,23 @@ Some actions require just the latest message, while others need the full convers
             await _actionService.UpdateAction(action);
             _chatState.NotifyActionsRefreshed();
         }
+    }
+
+    private async Task<IEnumerable<string>?> SearchAsync(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return Categories;
+        }
+
+        var result = Categories
+            .Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+
+        return await Task.FromResult(result);
+    }
+
+    private void OnValueChanged(string value)
+    {
+        Action.Category = value.IsEmpty() ? string.Empty : value;
     }
 }
