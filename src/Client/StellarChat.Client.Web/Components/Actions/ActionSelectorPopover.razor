@@ -34,14 +34,16 @@
                              ValueChanged="OnValueChanged"
                              IsOpenChanged="OnAutocompleteMenuChanged">
                 <ItemTemplate Context="context">
-                    <MudText>
-                        @context.Name
-                    </MudText>
+                    <div class="d-flex flex-row flex-grow-1 gap-3 align-items-center">
+                        <MudIcon Class="my-auto" Icon="@context.Icon" Size="@Size.Small" />
+                        <MudText Typo="Typo.body1">@context.Name</MudText>
+                    </div>
                 </ItemTemplate>
                 <ItemSelectedTemplate Context="context">
-                    <MudText>
-                        @context.Name
-                    </MudText>
+                    <div class="d-flex flex-row flex-grow-1 gap-3 align-items-center">
+                        <MudIcon Class="my-auto" Icon="@context.Icon" Size="@Size.Small" />
+                        <MudText Typo="Typo.body1">@context.Name</MudText>
+                    </div>
                 </ItemSelectedTemplate>
             </MudAutocomplete>
         </MudPaper>
