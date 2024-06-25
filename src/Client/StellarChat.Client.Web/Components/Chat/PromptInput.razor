@@ -14,7 +14,8 @@
                               Class="text-field-custom mt-n5"
                               Placeholder="@(SelectedActionId != Guid.Empty ? ActionPromptText : ChatPromptText)"
                               Lines="5"
-                              FullWidth="true" />
+                              FullWidth="true"
+                              KeyDownPreventDefault="_preventDefault" />
             </MudItem>
             <MudItem xs="12" Class="d-flex justify-content-between align-items-center pa-0">
                 <div class="d-flex gap-0.25 ml-4">
@@ -73,6 +74,7 @@
     private NativeActionResponse? CurrentValueAction { get; set; }
     private Guid SelectedActionId { get; set; }
 
+    private bool _preventDefault = false;
     private string selectedChipText = string.Empty;
     private string ActionPromptText => $"Ready to perform '{CurrentValueAction?.Name}' action? Provide your command or close the action chip to go back to chatting";
     private string ChatPromptText = "Type a message";
@@ -90,19 +92,25 @@
             Message = string.Empty;
 
             await OnSend.InvokeAsync(message);
-            
-            Message = string.Empty;
+
             IsProcessing = false;
         }
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
-        await (e switch
+        if (e.Key == "Enter" && !e.ShiftKey && !IsSendButtonDisabled)
         {
-            { Key: "Enter", ShiftKey: false } when !IsSendButtonDisabled => SendMessage(Message),
-            _ => Task.CompletedTask
-        });
+            _preventDefault = true;
+            var tempMessage = Message;
+            await SendMessage(tempMessage);
+        }
+
+        if (e.Key == "Enter" && e.ShiftKey)
+        {
+        }
+
+        _preventDefault = false;
     }
 
     private void OnActionChanged(NativeActionResponse action)
