@@ -1,0 +1,89 @@
+services:
+  webapp:
+    image: ktutak/stellarchat-web:latest
+    container_name: stellarchat-web
+    hostname: stellar-chat-web
+    restart: unless-stopped
+    environment:
+      - API__URL=${API_URL}
+    ports:
+      - 7080:7080
+    networks:
+      - stellarchat-network
+    depends_on:
+      - webapi
+
+  webapi:
+    image: ktutak/stellarchat-api:latest
+    container_name: stellarchat-api
+    hostname: stellar-chat-api
+    restart: unless-stopped
+    environment:
+      - OPENAI__API_KEY=${OPENAI_API_KEY}
+      - MONGO__CONNECTION_STRING=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@stellar-chat-mongo:27017
+      - MONGO__DATABASE=${MONGO_DATABASE}
+      - QDRANT__ENDPOINT=${QDRANT_ENDPOINT}
+      - SEQ__URL=${SEQ_URL}
+      - SEQ__API_KEY=${SEQ_API_KEY}
+      - CORS__ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+    ports:
+      - 8080:8080
+    networks:
+      - stellarchat-network
+    volumes:
+      - webapi_data:/app/_data
+    depends_on:
+      - mongodb
+      - qdrant
+
+  mongodb:
+    image: mongo
+    container_name: stellarchat-mongo
+    hostname: stellar-chat-mongo
+    restart: unless-stopped
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+    - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}     
+    ports:
+      - 27018:27017
+    networks:
+      - stellarchat-network
+    volumes:
+      - mongo_data:/data/db
+  
+  seq:
+    image: datalust/seq 
+    container_name: stellarchat-seq
+    hostname: stellar-chat-seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      # - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${SEQ_ADMIN_PASSWORD}
+    networks:
+      - stellarchat-network
+    ports:
+      - 5342:80
+    volumes:
+      - seq_data:/data
+  
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: stellarchat-qdrant
+    hostname: stellar-chat-qdrant
+    restart: unless-stopped
+    networks:
+      - stellarchat-network
+    ports:
+      - 6334:6333
+    volumes:
+      - qdrant_data:/data
+
+networks:
+  stellarchat-network:
+    driver: bridge
+
+volumes:
+  webapi_data:
+  seq_data:
+  mongo_data:
+  qdrant_data:
