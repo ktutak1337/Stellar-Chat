@@ -7,12 +7,12 @@
 <div class="d-flex mb-6">
     <div id="chat-message-avatar" class="avatar mr-4 mt-1">
         <MudAvatar Rounded="true" Color="Color.Secondary">
-            <MudImage Src="@(Message?.Author == "bot" ? _chatState.AssignedAssistant?.AvatarUrl : @_chatState.UserAvatar)" />
+            <MudImage Src="@(Message?.Author == "bot" ? !string.IsNullOrEmpty(@_chatState.AssignedAssistant?.AvatarUrl) ? @_chatState.AssignedAssistant?.AvatarUrl : @DefaultAvatarUrl : @_chatState.UserAvatar)" />
         </MudAvatar>
     </div>
     <div id="chat-message-text" class="flex-grow-1">
         <div class="d-flex flex-row">
-            <MudText Typo="Typo.inherit" Class="mr-3" Style="font-size: 16px; font-weight: 900;">@(Message?.Author == "bot" ? _chatState.AssignedAssistant?.Name : @_chatState.UserName)</MudText>
+            <MudText Typo="Typo.inherit" Class="mr-3" Style="font-size: 16px; font-weight: 900;">@(Message?.Author == "bot" ? !string.IsNullOrEmpty(@_chatState.AssignedAssistant?.Name) ? @_chatState.AssignedAssistant.Name : "Assistant’s Ghost" : @_chatState.UserName)</MudText>
             <MudText Typo="Typo.caption" Class="my-auto mt-1">@Message?.Timestamp.ToString("M/d/yyyy 'at' h:mm:ss tt")</MudText>
         </div>
         <MudText Typo="Typo.body1" Class="mr-2 mt-2">
@@ -54,6 +54,8 @@
 @code 
 {
     [Parameter] public ChatMessageResponse? Message { get; set; }
+
+    private const string DefaultAvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/images/_1863a13f-cfb3-454d-ada0-34595b28c2e6.jpg";
 
     protected override void OnInitialized()
     {

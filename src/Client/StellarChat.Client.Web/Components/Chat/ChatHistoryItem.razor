@@ -7,7 +7,7 @@
     <ChildContent>
         <div class="d-flex flex-row flex-grow-1">
             <MudAvatar Size="@Size.Medium" Class="my-auto mr-4">
-                <MudImage Src="@ChatSessionItem.AssignedAssistant?.AvatarUrl" />
+                <MudImage Src="@(!string.IsNullOrEmpty(ChatSessionItem.AssignedAssistant?.AvatarUrl) ? ChatSessionItem.AssignedAssistant?.AvatarUrl : DefaultAvatarUrl)" />
             </MudAvatar>
             
             @if(shouldShowTooltip)
@@ -39,6 +39,7 @@
     [Parameter] public EventCallback<ChatSessionResponse> OnDeleteChat { get; set; }
     [Parameter] public EventCallback<ChangeTitleInfo> OnChangeTitle { get; set; }
 
+    private const string DefaultAvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/images/_1863a13f-cfb3-454d-ada0-34595b28c2e6.jpg";
     private bool shouldShowTooltip;
 
     protected override void OnParametersSet()
