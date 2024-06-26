@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace StellarChat.Shared.Infrastructure.API.CORS;
+
 public static class Extensions
 {
     private const string SectionName = "cors";
@@ -26,9 +27,23 @@ public static class Extensions
             var allowedMethods = options.ALLOWED_METHODS;
             var allowedOrigins = options.ALLOWED_ORIGINS;
             var exposedHeaders = options.ALLOWED_HEADERS;
+
+            var allowedOriginsEnv = Environment.GetEnvironmentVariable("CORS__ALLOWED_ORIGINS");
+
+            if (allowedOriginsEnv!.IsNotEmpty())
+            {
+                allowedOrigins = allowedOriginsEnv!.Split(",");
+            }
+
             cors.AddPolicy(PolicyName, corsBuilder =>
             {
                 var origins = allowedOrigins?.ToArray() ?? [];
+
+                if (origins.Contains("*"))
+                {
+                    options.ALLOW_CREDENTIALS = false;
+                }
+
                 if (options.ALLOW_CREDENTIALS && origins.FirstOrDefault() != "*")
                 {
                     corsBuilder.AllowCredentials();
