@@ -48,7 +48,7 @@
 
     private const string ReceiveMessageUpdateServerCall = "ReceiveChatMessageChunk";
     private const string AddClientToGroupServerCall = "AddClientToGroupAsync";
-    private string HubUrl => $"{_configuration["api:api_url"]}/hub";
+    private string HubUrl => $"{_configuration["api:url"]}/hub";
 
     protected override async Task OnInitializedAsync()
     {

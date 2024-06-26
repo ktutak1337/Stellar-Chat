@@ -18,7 +18,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.TryAddSingleton(TimeProvider.System);
 
-var apiUrl = builder.Configuration["api:api_url"];
+var apiUrl = builder.Configuration["api:url"];
 
 builder.Services.AddHttpClient("WebAPI", client =>
 {

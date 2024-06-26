@@ -95,7 +95,7 @@
     private CancellationTokenSource? _cts;
     private StringBuilder _textStreaming = new();
     private HubConnection? _hubConnection;
-    private string HubUrl => $"{_configuration["api:api_url"]}/hub";
+    private string HubUrl => $"{_configuration["api:url"]}/hub";
 
     protected override async Task OnInitializedAsync()
     {
