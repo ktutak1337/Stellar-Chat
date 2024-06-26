@@ -45,7 +45,7 @@ services:
     - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
     - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}     
     ports:
-      - 27018:27017
+      - 27017:27017
     networks:
       - stellarchat-network
     volumes:
@@ -62,7 +62,7 @@ services:
     networks:
       - stellarchat-network
     ports:
-      - 5342:80
+      - 5341:80
     volumes:
       - seq_data:/data
   
@@ -74,7 +74,7 @@ services:
     networks:
       - stellarchat-network
     ports:
-      - 6334:6333
+      - 6333:6333
     volumes:
       - qdrant_data:/data
 
