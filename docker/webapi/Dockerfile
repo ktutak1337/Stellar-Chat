@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8000
+EXPOSE 8080
 EXPOSE 8443
 
 RUN adduser --disabled-password --gecos "" stellar
