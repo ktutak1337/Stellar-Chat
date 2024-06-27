@@ -31,7 +31,8 @@ A powerful multi-modal chat application that empowers users to create custom age
 <details>
 <summary><kbd>Table of Contents</kbd></summary>
 
-1. [✨ Features](#-features)
+1. [🎥 Demo](#-demo)
+2. [✨ Features](#-features)
    - [`1.` Support for Local Open Source Models](#1-support-for-local-open-source-models)
    - [`2.` Support for Commercial Models](#2-support-for-commercial-models)
    - [`3.` Visual Recognition](#3-visual-recognition)
@@ -43,11 +44,11 @@ A powerful multi-modal chat application that empowers users to create custom age
    - [`9.` Message and Conversation Search](#9-message-and-conversation-search)
    - [`10.` Custom Action Creation for App Integration](#10-custom-action-creation-for-app-integration)
    - [`11.` Multi-Agent Chat Capability](#11-multi-agent-chat-capability)
-2. [🚀 Self-Hosted](#-self-hosted)
-3. [⌨️ Local Development](#-local-development)
-4. [⭐ Enjoying the Project?](#-enjoying-the-project)
-5. [🚧 Issues](#-issues)
-6. [📝 License](#-license)
+3. [🚀 Self-Hosted](#-self-hosted)
+4. [⌨️ Local Development](#-local-development)
+5. [⭐ Enjoying the Project?](#-enjoying-the-project)
+6. [🚧 Issues](#-issues)
+7. [📝 License](#-license)
 
 </details>
 
