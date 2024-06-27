@@ -51,6 +51,9 @@ A powerful multi-modal chat application that empowers users to create custom age
 
 </details>
 
+## 🎥 Demo
+https://github.com/ktutak1337/Stellar-Chat/assets/49451143/3482d401-70cb-4ce8-bf2e-ec69f5859367
+
 ## ✨ Features
 
 
