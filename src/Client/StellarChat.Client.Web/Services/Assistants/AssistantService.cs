@@ -30,7 +30,7 @@ public class AssistantService : IAssistantService
         return result!;
     }
 
-    public async ValueTask CreateAssistant(AssistantResponse assistant)
+    public async ValueTask<HttpResponseMessage> CreateAssistant(AssistantResponse assistant)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
@@ -44,10 +44,10 @@ public class AssistantService : IAssistantService
             assistant.DefaultVoice, 
             assistant.IsDefault);
 
-        await httpClient.PostAsJsonAsync($"/assistants", payload);
+        return await httpClient.PostAsJsonAsync($"/assistants", payload);
     }
 
-    public async ValueTask UpdateAssistant(AssistantResponse assistant)
+    public async ValueTask<HttpResponseMessage> UpdateAssistant(AssistantResponse assistant)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
         
@@ -63,22 +63,22 @@ public class AssistantService : IAssistantService
             assistant.DefaultVoice,
             assistant.IsDefault);
 
-        await httpClient.PutAsJsonAsync($"/assistants/{assistantId}", payload);
+        return await httpClient.PutAsJsonAsync($"/assistants/{assistantId}", payload);
     }
 
-    public async ValueTask SetDefaultAssistant(Guid id, bool isDefault)
+    public async ValueTask<HttpResponseMessage> SetDefaultAssistant(Guid id, bool isDefault)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
         var payload = new SetDefaultAssistantRequest(id, isDefault);
 
-        await httpClient.PutAsJsonAsync($"/assistants/{id}/default", payload);
+        return await httpClient.PutAsJsonAsync($"/assistants/{id}/default", payload);
     }
 
-    public async ValueTask DeleteAssistant(Guid id)
+    public async ValueTask<HttpResponseMessage> DeleteAssistant(Guid id)
     {
         var httpClient = _httpClientFactory.CreateClient("WebAPI");
 
-        await httpClient.DeleteAsync($"/assistants/{id}");
+        return await httpClient.DeleteAsync($"/assistants/{id}");
     }
 }
