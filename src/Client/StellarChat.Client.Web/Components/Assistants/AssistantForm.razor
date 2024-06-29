@@ -3,6 +3,7 @@
 @inject IStorageService _storageService
 @inject IAvailableModelsService _availableModelsService
 @inject ChatState _chatState
+@inject ISnackbar Snackbar
 
 @implements IDisposable
 
@@ -151,10 +152,21 @@ reflective of the assistant's intended personality and capabilities.";
     {
         if (assistant is not null)
         {
-            await _assistantService.UpdateAssistant(assistant);
-            _chatState.SetAssignedAssistant(assistant);
-            _chatState.SetSelectedAssistant(assistant);
-            _chatState.NotifyAssistantUpdated();
+            var response = await _assistantService.UpdateAssistant(assistant);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _chatState.SetAssignedAssistant(assistant);
+                _chatState.SetSelectedAssistant(assistant);
+                _chatState.NotifyAssistantUpdated();
+                success = true;
+
+                ShowSnackbar($"Assistant {assistant.Name} was updated successfully!", Severity.Success);
+            }
+            else
+            {
+                ShowSnackbar("Failed to update assistant {assistant.Name}. Please try again.", Severity.Error);
+            }
         }
     }
 
@@ -167,6 +179,16 @@ reflective of the assistant's intended personality and capabilities.";
             var response = await _storageService.UploadFileAsync(file, "avatar");
             Assistant.AvatarUrl = response.Url;
         }
+    }
+
+    private void ShowSnackbar(string message, Severity severity)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, severity, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
     }
 
     public void Dispose()
