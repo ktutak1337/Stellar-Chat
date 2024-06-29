@@ -85,7 +85,7 @@ public class ActionService : IActionService
         return result!;
     }
 
-    public async ValueTask UpdateAction(NativeActionResponse action)
+    public async ValueTask<HttpResponseMessage> UpdateAction(NativeActionResponse action)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -112,13 +112,13 @@ public class ActionService : IActionService
                 action.Webhook.CronExpression,
                 action.Webhook.Headers));
 
-        await httpClient.PutAsJsonAsync($"/actions/{actionId}", payload);
+        return await httpClient.PutAsJsonAsync($"/actions/{actionId}", payload);
     }
 
-    public async ValueTask DeleteAction(Guid actionId)
+    public async ValueTask<HttpResponseMessage> DeleteAction(Guid actionId)
     {
         var httpClient = _httpClientFactory.CreateClient(HttpClientName);
 
-        await httpClient.DeleteAsync($"/actions/{actionId}");
+        return await httpClient.DeleteAsync($"/actions/{actionId}");
     }
 }

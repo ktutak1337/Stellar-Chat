@@ -8,6 +8,6 @@ public interface IActionService
     ValueTask<IEnumerable<NativeActionResponse>> BrowseActions();
     ValueTask<Guid> CreateAction(NativeActionResponse action);
     ValueTask<string> ExecuteAction(Guid actionId, Guid chatId, string message);
-    ValueTask UpdateAction(NativeActionResponse action);
-    ValueTask DeleteAction(Guid actionId);
+    ValueTask<HttpResponseMessage> UpdateAction(NativeActionResponse action);
+    ValueTask<HttpResponseMessage> DeleteAction(Guid actionId);
 }
