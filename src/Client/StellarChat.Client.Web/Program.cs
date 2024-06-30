@@ -9,6 +9,7 @@ using StellarChat.Client.Web.Services.Chat;
 using StellarChat.Client.Web.Services.Models;
 using StellarChat.Client.Web.Services.Settings;
 using StellarChat.Client.Web.Services.Storage;
+using StellarChat.Client.Web.Shared.Http;
 using StellarChat.Client.Web.State;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -25,6 +26,7 @@ builder.Services.AddHttpClient("WebAPI", client =>
     client.BaseAddress = new Uri(apiUrl!);
 });
 
+builder.Services.AddScoped<IRestHttpClient, RestHttpClient>();
 builder.Services.AddScoped<ChatState>();
 builder.Services.AddMudServices();
 builder.Services.AddScoped<IChatService, ChatService>();
