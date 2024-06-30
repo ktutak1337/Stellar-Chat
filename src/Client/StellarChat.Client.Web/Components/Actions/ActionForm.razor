@@ -1,6 +1,7 @@
 ﻿@inject IActionService _actionService
 @inject IAvailableModelsService _availableModelsService
 @inject ChatState _chatState
+@inject ISnackbar Snackbar
 
 <EditForm Model="@Action" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
@@ -275,8 +276,16 @@ Some actions require just the latest message, while others need the full convers
     {
         if (Action is not null)
         {
-            await _actionService.CreateAction(Action);
+            var response = await _actionService.CreateAction(Action);
+
+            if(!response.Succeeded)
+            {
+                ShowSnackbar("Failed to create action. Please try again later.", Severity.Error);
+                return;
+            }
+
             _chatState.NotifyActionsRefreshed();
+            ShowSnackbar("Action created successfully.", Severity.Success);
         }
     }
 
@@ -305,5 +314,15 @@ Some actions require just the latest message, while others need the full convers
     private void OnValueChanged(string value)
     {
         Action.Category = value.IsEmpty() ? string.Empty : value;
+    }
+
+    private void ShowSnackbar(string message, Severity severity)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, severity, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
     }
 }
