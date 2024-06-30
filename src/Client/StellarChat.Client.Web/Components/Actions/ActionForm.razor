@@ -293,8 +293,16 @@ Some actions require just the latest message, while others need the full convers
     {
         if (action is not null)
         {
-            await _actionService.UpdateAction(action);
+            var response = await _actionService.UpdateAction(action);
+
+            if (!response.Succeeded)
+            {
+                ShowSnackbar("Failed to update action. Please try again later.", Severity.Error);
+                return;
+            }
+
             _chatState.NotifyActionsRefreshed();
+            ShowSnackbar("Action updated successfully.", Severity.Success);
         }
     }
 
