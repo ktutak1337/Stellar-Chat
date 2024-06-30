@@ -69,7 +69,8 @@
 
     private async Task LoadActions()
     {
-        var actions = await _actionService.BrowseActions();
+        var response = await _actionService.BrowseActions();
+        var actions = response.Value;
 
         if (actions is not null)
         {

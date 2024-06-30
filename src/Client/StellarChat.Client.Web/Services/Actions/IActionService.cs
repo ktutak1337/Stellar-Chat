@@ -1,13 +1,14 @@
-﻿using StellarChat.Shared.Contracts.Actions;
+﻿using StellarChat.Client.Web.Shared.Http;
+using StellarChat.Shared.Contracts.Actions;
 
 namespace StellarChat.Client.Web.Services.Actions;
 
 public interface IActionService
 {
-    ValueTask<NativeActionResponse> GetAction(Guid actionId);
-    ValueTask<IEnumerable<NativeActionResponse>> BrowseActions();
-    ValueTask<Guid> CreateAction(NativeActionResponse action);
-    ValueTask<string> ExecuteAction(Guid actionId, Guid chatId, string message);
-    ValueTask<HttpResponseMessage> UpdateAction(NativeActionResponse action);
-    ValueTask<HttpResponseMessage> DeleteAction(Guid actionId);
+    ValueTask<ApiResponse<NativeActionResponse>> GetAction(Guid actionId);
+    ValueTask<ApiResponse<IEnumerable<NativeActionResponse>>> BrowseActions();
+    ValueTask<ApiResponse<Guid>> CreateAction(NativeActionResponse action);
+    ValueTask<ApiResponse<string>> ExecuteAction(Guid actionId, Guid chatId, string message);
+    ValueTask<ApiResponse> UpdateAction(NativeActionResponse action);
+    ValueTask<ApiResponse> DeleteAction(Guid actionId);
 }

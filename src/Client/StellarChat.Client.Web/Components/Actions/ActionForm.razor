@@ -225,7 +225,8 @@ Some actions require just the latest message, while others need the full convers
 
     private async Task FetchActionToUpdate()
     {
-        var action = await _actionService.GetAction(ActiontId);
+        var response = await _actionService.GetAction(ActiontId);
+        var action = response.Value;
 
         if (action is not null)
         {

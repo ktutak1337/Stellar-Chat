@@ -1,39 +1,20 @@
-﻿using StellarChat.Shared.Contracts.Actions;
-using System.Net.Http.Json;
+﻿using StellarChat.Client.Web.Shared.Http;
+using StellarChat.Shared.Contracts.Actions;
 
 namespace StellarChat.Client.Web.Services.Actions;
 
-public class ActionService : IActionService
+public class ActionService(IRestHttpClient httpClient) : IActionService
 {
-    private const string HttpClientName = "WebAPI";
+    private readonly IRestHttpClient _httpClient = httpClient;
 
-    private readonly IHttpClientFactory _httpClientFactory;
+    public async ValueTask<ApiResponse<NativeActionResponse>> GetAction(Guid actionId) 
+        => await _httpClient.GetAsync<NativeActionResponse>($"/actions/{actionId}");
 
-    public ActionService(IHttpClientFactory httpClientFactory) 
-        => _httpClientFactory = httpClientFactory;
+    public async ValueTask<ApiResponse<IEnumerable<NativeActionResponse>>> BrowseActions()
+        => await _httpClient.GetAsync<IEnumerable<NativeActionResponse>>($"/actions");
 
-    public async ValueTask<NativeActionResponse> GetAction(Guid actionId)
+    public async ValueTask<ApiResponse<Guid>> CreateAction(NativeActionResponse action)
     {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
-        var result = await httpClient.GetFromJsonAsync<NativeActionResponse>($"/actions/{actionId}");
-
-        return result!;
-    }
-
-    public async ValueTask<IEnumerable<NativeActionResponse>> BrowseActions()
-    {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
-        var result = await httpClient.GetFromJsonAsync<IEnumerable<NativeActionResponse>>($"/actions");
-
-        return result!;
-    }
-
-    public async ValueTask<Guid> CreateAction(NativeActionResponse action)
-    {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-        
         var payload = new CreateNativeActionRequest(
             action.Id,
             action.Name,
@@ -55,40 +36,22 @@ public class ActionService : IActionService
                 action.Webhook.CronExpression,
                 action.Webhook.Headers));
 
-        var response = await httpClient.PostAsJsonAsync($"/actions", payload);
+        var response = await _httpClient.PostAsync<Guid>($"/actions", payload);
 
-        var result = Guid.Empty;
-
-        if (response.IsSuccessStatusCode)
-        {
-            result = await response.Content.ReadFromJsonAsync<Guid>();
-        }
-
-        return result;
+        return response;
     }
 
-    public async ValueTask<string> ExecuteAction(Guid actionId, Guid chatId, string message)
+    public async ValueTask<ApiResponse<string>> ExecuteAction(Guid actionId, Guid chatId, string message)
     {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
         var payload = new ExecuteNativeActionRequest(actionId, chatId, message);
+        
+        var response = await _httpClient.PostAsync<string>($"/actions/{actionId}/execute", payload);
 
-        var response = await httpClient.PostAsJsonAsync($"/actions/{actionId}/execute", payload);
-
-        var result = string.Empty;
-
-        if (response.IsSuccessStatusCode)
-        {
-            result = await response.Content.ReadFromJsonAsync<string>();
-        }
-
-        return result!;
+        return response;
     }
 
-    public async ValueTask<HttpResponseMessage> UpdateAction(NativeActionResponse action)
+    public async ValueTask<ApiResponse> UpdateAction(NativeActionResponse action)
     {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
         var actionId = action.Id;
 
         var payload = new UpdateNativeActionRequest(
@@ -112,13 +75,11 @@ public class ActionService : IActionService
                 action.Webhook.CronExpression,
                 action.Webhook.Headers));
 
-        return await httpClient.PutAsJsonAsync($"/actions/{actionId}", payload);
+        var response = await _httpClient.PutAsync($"/actions/{actionId}", payload);
+
+        return response;
     }
 
-    public async ValueTask<HttpResponseMessage> DeleteAction(Guid actionId)
-    {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
-        return await httpClient.DeleteAsync($"/actions/{actionId}");
-    }
+    public async ValueTask<ApiResponse> DeleteAction(Guid actionId) 
+        => await _httpClient.DeleteAsync($"/actions/{actionId}");
 }
