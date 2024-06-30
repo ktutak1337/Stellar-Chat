@@ -5,8 +5,8 @@ namespace StellarChat.Shared.Contracts.Actions;
 public class NativeActionResponse
 {
     public Guid Id { get; set; }
-    [Required, MinLength(3)] public string Name { get; set; } = string.Empty;
-    [Required, MinLength(3)] public string Category { get; set; } = string.Empty;
+    [Required, MinLength(2)] public string Name { get; set; } = string.Empty;
+    [Required, MinLength(2)] public string Category { get; set; } = string.Empty;
     [Required] public string Icon { get; set; } = string.Empty;
     [Required] public string Model { get; set; } = string.Empty;
     [Required, MinLength(3)] public string Metaprompt { get; set; } = string.Empty;
