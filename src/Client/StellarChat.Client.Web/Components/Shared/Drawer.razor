@@ -3,6 +3,8 @@
 @inject IChatService _chatService
 @inject ChatState _chatState
 @inject NavigationManager _navigationManager
+@inject ISnackbar Snackbar
+
 @implements IAsyncDisposable
 
 <MudDrawer @bind-Open="IsDrawerOpen" Elevation="1" ClipMode="DrawerClipMode.Never" Variant="DrawerVariant.Persistent" Anchor="Anchor.Left" Width="480px">
@@ -139,7 +141,12 @@
     {
         var (chatId, newTitle) = changeTitleInfo;
 
-        await _chatService.ChangeChatSessionTitle(chatId, newTitle!);
+        var response = await _chatService.ChangeChatSessionTitle(chatId, newTitle!);
+
+        if(!response.Succeeded)
+        {
+            ShowSnackbar("Failed to change chat title. Please try again.", Severity.Error);
+        }
 
         var chatSession = ChatSessions.SingleOrDefault(x => x.Id == chatId);
 
@@ -147,6 +154,8 @@
         {
             ChatSessions[ChatSessions.IndexOf(chatSession)] = chatSession with { Title = newTitle! };
         }
+
+        ShowSnackbar($"Chat title was updated successfully!", Severity.Success);
     }
 
     private async Task DeleteChatSession(ChatSessionResponse chatSession)
@@ -162,8 +171,13 @@
                 _navigationManager.NavigateTo("/");
             }
         }
+        else
+        {
+            ShowSnackbar("Failed to delete a chat. Please try again.", Severity.Error);
+        }
 
         ChatSessions.Remove(chatSession);
+        ShowSnackbar($"Chat '{chatSession.Title}' was deleted successfully!", Severity.Success);
         await LoadChatSessions();
     }
 
@@ -252,5 +266,15 @@
     {
         SelectedItem = null;
         SelectedValue = null;
+    }
+
+    private void ShowSnackbar(string message, Severity severity)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, severity, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
     }
 }

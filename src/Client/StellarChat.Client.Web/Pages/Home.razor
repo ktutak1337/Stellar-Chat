@@ -9,6 +9,8 @@
 @inject NavigationManager _navigationManager
 @inject IJSRuntime JS
 @inject TimeProvider _clock
+@inject ISnackbar Snackbar
+
 @implements IAsyncDisposable
 
 <PageTitle>Home</PageTitle>
@@ -144,6 +146,12 @@
     private async Task<Guid> CreateNewChatAsync(Guid assistantId, string message)
     {
         var response = await _chatService.CreateChatSession(assistantId, "New Chat", message);
+
+        if(!response.Succeeded)
+        {
+            ShowSnackbar("Failed to create a new chat. Please try again.", Severity.Error);
+        }
+
         var newChatId = response.Value;
 
         _chatState.SetIsNewChatPending(true);
@@ -193,14 +201,14 @@
         var now = _clock.GetLocalNow();
 
         var userMessage = new ChatMessageResponse
-            {
-                Id = Guid.NewGuid(),
-                ChatId = chatId,
-                Type = messageType,
-                Author = "user",
-                Content = message,
-                Timestamp = now
-            };
+        {
+            Id = Guid.NewGuid(),
+            ChatId = chatId,
+            Type = messageType,
+            Author = "user",
+            Content = message,
+            Timestamp = now
+        };
 
         return userMessage;
     }
