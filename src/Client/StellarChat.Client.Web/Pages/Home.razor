@@ -183,7 +183,14 @@
 
     private async Task AskAssistant(Guid chatId, string message)
     {
-        await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
+        var response = await _chatService.SendMessage(chatId, message, "", _chatState.SelectedModel);
+
+        if(!response.Succeeded)
+        {
+            var error = response.Errors?.Errors?.FirstOrDefault();
+            LatestBotMessage.Content = error?.UserMessage ?? "An unknown error occurred.";
+        }
+
         _textStreaming.Clear();
     }
 
@@ -218,14 +225,14 @@
         var now = _clock.GetLocalNow();
 
         var chatMessage = new ChatMessageResponse
-            {
-                Id = Guid.NewGuid(),
-                ChatId = chatId,
-                Type = messageType,
-                Author = "bot",
-                Content = message,
-                Timestamp = now
-            };
+        {
+            Id = Guid.NewGuid(),
+            ChatId = chatId,
+            Type = messageType,
+            Author = "bot",
+            Content = message,
+            Timestamp = now
+        };
 
         return chatMessage;
     }
