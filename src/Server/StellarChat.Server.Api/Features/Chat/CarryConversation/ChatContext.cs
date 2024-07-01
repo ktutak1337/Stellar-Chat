@@ -1,6 +1,9 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Newtonsoft.Json.Linq;
+using StellarChat.Server.Api.Features.Chat.CarryConversation.Exceptions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace StellarChat.Server.Api.Features.Chat.CarryConversation;
 
@@ -85,18 +88,28 @@ internal class ChatContext : IChatContext
             ModelId = model
         };
 
-        await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(_chatHistory, executionSettings))
+        try
         {
-            if (contentPiece.Content is { Length: > 0 })
+            await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(_chatHistory, executionSettings, _kernel))
             {
-                reply.Append(contentPiece.Content);
-                botMessage.Content = reply.ToString();
-
-                if(!isRemoteAction)
+                if (contentPiece.Content is { Length: > 0 })
                 {
-                    await hubContext.Clients.All.ReceiveChatMessageChunk(contentPiece.Content);
+                    reply.Append(contentPiece.Content);
+                    botMessage.Content = reply.ToString();
+
+                    if (!isRemoteAction)
+                    {
+                        await hubContext.Clients.All.ReceiveChatMessageChunk(contentPiece.Content);
+                    }
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            var match = Regex.Match(ex.Message, @"\""message\"": \""(.+?)\""");
+            var errorMessage = match.Success ? match.Groups[1].Value : "Unknown error";
+
+            throw new ChatCompletionStreamFailedException(chatId, errorMessage);
         }
 
         reply.Clear();
