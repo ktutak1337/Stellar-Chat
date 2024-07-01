@@ -60,7 +60,9 @@
     private async Task LoadAssistants()
     {
         var response = await _assistantService.BrowseAssistants();
-        Assistants = response.Items.ToList();
+        var assistants = response.Value;
+
+        Assistants = assistants.Items.ToList();
     }
 
     private void CloseDrawer()

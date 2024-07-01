@@ -113,7 +113,8 @@ reflective of the assistant's intended personality and capabilities.";
 
     private async Task FetchAssistantToUpdate()
     {
-        var assistant = await _assistantService.GetAssistant(AssistantId);
+        var response = await _assistantService.GetAssistant(AssistantId);
+        var assistant = response.Value;
 
         if (assistant is not null)
         {
@@ -143,8 +144,15 @@ reflective of the assistant's intended personality and capabilities.";
     {
         if (Assistant is not null)
         {
-            await _assistantService.CreateAssistant(Assistant);
+            var response = await _assistantService.CreateAssistant(Assistant);
+
+            if (!response.Succeeded)
+            {
+                ShowSnackbar("Failed to create assistant {assistant.Name}. Please try again.", Severity.Error);
+            }
+
             _chatState.SetSelectedAssistant(Assistant);
+            ShowSnackbar($"Assistant {Assistant.Name} was created successfully!", Severity.Success);
         }
     }
 
@@ -154,19 +162,17 @@ reflective of the assistant's intended personality and capabilities.";
         {
             var response = await _assistantService.UpdateAssistant(assistant);
 
-            if (response.IsSuccessStatusCode)
-            {
-                _chatState.SetAssignedAssistant(assistant);
-                _chatState.SetSelectedAssistant(assistant);
-                _chatState.NotifyAssistantUpdated();
-                success = true;
-
-                ShowSnackbar($"Assistant {assistant.Name} was updated successfully!", Severity.Success);
-            }
-            else
+            if (!response.Succeeded)
             {
                 ShowSnackbar("Failed to update assistant {assistant.Name}. Please try again.", Severity.Error);
             }
+
+            _chatState.SetAssignedAssistant(assistant);
+            _chatState.SetSelectedAssistant(assistant);
+            _chatState.NotifyAssistantUpdated();
+            success = true;
+
+            ShowSnackbar($"Assistant {assistant.Name} was updated successfully!", Severity.Success);
         }
     }
 

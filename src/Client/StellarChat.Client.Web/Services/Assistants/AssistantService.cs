@@ -1,39 +1,22 @@
 ﻿using StellarChat.Client.Web.Shared;
+using StellarChat.Client.Web.Shared.Http;
 using StellarChat.Shared.Contracts.Assistants;
-using System.Net.Http.Json;
 
 namespace StellarChat.Client.Web.Services.Assistants;
 
-public class AssistantService : IAssistantService
+public class AssistantService(IRestHttpClient httpClient) : IAssistantService
 {
-    private readonly IHttpClientFactory _httpClientFactory;
 
-    public AssistantService(IHttpClientFactory httpClientFactory) 
-        => _httpClientFactory = httpClientFactory;
+    private readonly IRestHttpClient _httpClient = httpClient;
 
+    public async ValueTask<ApiResponse<AssistantResponse>> GetAssistant(Guid id) 
+        => await _httpClient.GetAsync<AssistantResponse>($"/assistants/{id}");
 
-    public async ValueTask<AssistantResponse> GetAssistant(Guid id)
+    public async ValueTask<ApiResponse<Paged<AssistantResponse>>> BrowseAssistants(int page = 1, int pageSize = 0)
+        => await _httpClient.GetAsync<Paged<AssistantResponse>>($"/assistants?Page={page}&PageSize={pageSize}");
+
+    public async ValueTask<ApiResponse> CreateAssistant(AssistantResponse assistant)
     {
-        var httpClient = _httpClientFactory.CreateClient("WebAPI");
-
-        var result = await httpClient.GetFromJsonAsync<AssistantResponse>($"/assistants/{id}");
-
-        return result!;
-    }
-
-    public async ValueTask<Paged<AssistantResponse>> BrowseAssistants(int page = 0, int pageSize = 10000)
-    {
-        var httpClient = _httpClientFactory.CreateClient("WebAPI");
-
-        var result = await httpClient.GetFromJsonAsync<Paged<AssistantResponse>>($"/assistants?Page={page}&PageSize={pageSize}");
-
-        return result!;
-    }
-
-    public async ValueTask<HttpResponseMessage> CreateAssistant(AssistantResponse assistant)
-    {
-        var httpClient = _httpClientFactory.CreateClient("WebAPI");
-
         var payload = new CreateAssistantRequest(
             assistant.Id, 
             assistant.Name, 
@@ -44,13 +27,13 @@ public class AssistantService : IAssistantService
             assistant.DefaultVoice, 
             assistant.IsDefault);
 
-        return await httpClient.PostAsJsonAsync($"/assistants", payload);
+        var response = await _httpClient.PostAsync($"/assistants", payload);
+
+        return response;
     }
 
-    public async ValueTask<HttpResponseMessage> UpdateAssistant(AssistantResponse assistant)
+    public async ValueTask<ApiResponse> UpdateAssistant(AssistantResponse assistant)
     {
-        var httpClient = _httpClientFactory.CreateClient("WebAPI");
-        
         var assistantId = assistant.Id;
 
         var payload = new UpdateAssistantRequest(
@@ -63,22 +46,20 @@ public class AssistantService : IAssistantService
             assistant.DefaultVoice,
             assistant.IsDefault);
 
-        return await httpClient.PutAsJsonAsync($"/assistants/{assistantId}", payload);
+        var response = await _httpClient.PutAsync($"/assistants/{assistantId}", payload);
+
+        return response;
     }
 
-    public async ValueTask<HttpResponseMessage> SetDefaultAssistant(Guid id, bool isDefault)
+    public async ValueTask<ApiResponse> SetDefaultAssistant(Guid id, bool isDefault)
     {
-        var httpClient = _httpClientFactory.CreateClient("WebAPI");
-
         var payload = new SetDefaultAssistantRequest(id, isDefault);
 
-        return await httpClient.PutAsJsonAsync($"/assistants/{id}/default", payload);
+        var response = await _httpClient.PutAsync($"/assistants/{id}/default", payload);
+
+        return response;
     }
 
-    public async ValueTask<HttpResponseMessage> DeleteAssistant(Guid id)
-    {
-        var httpClient = _httpClientFactory.CreateClient("WebAPI");
-
-        return await httpClient.DeleteAsync($"/assistants/{id}");
-    }
+    public async ValueTask<ApiResponse> DeleteAssistant(Guid id)
+        => await _httpClient.DeleteAsync($"/assistants/{id}");
 }
