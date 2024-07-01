@@ -107,7 +107,9 @@
         if (chatId != Guid.Empty)
         {
             var response = await _chatService.GetChatMessagesByChatId(_chatState.ChatId);
-            ChatMessages = response.Items.ToList();
+            var chatMessages = response.Value;
+
+            ChatMessages = chatMessages.Items.ToList();
 
             await InvokeAsync(StateHasChanged);
             await ScrollToBottomAsync();
@@ -141,7 +143,8 @@
 
     private async Task<Guid> CreateNewChatAsync(Guid assistantId, string message)
     {
-        var newChatId = await _chatService.CreateChatSession(assistantId, "New Chat", message);
+        var response = await _chatService.CreateChatSession(assistantId, "New Chat", message);
+        var newChatId = response.Value;
 
         _chatState.SetIsNewChatPending(true);
         _chatState.SetChatId(newChatId);

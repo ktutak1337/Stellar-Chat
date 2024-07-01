@@ -153,7 +153,7 @@
     {
         var response = await _chatService.DeleteChatSession(chatSession.Id);
 
-        if (response.IsSuccessStatusCode)
+        if (response.Succeeded)
         {
             if (IsCurrentlySelectedChat(chatSession.Id))
             {
@@ -170,7 +170,9 @@
     private async Task LoadChatSessions()
     {
         var response = await _chatService.BrowseChatSessions();
-        ChatSessions = response.Items.ToList();
+        var chatSessions = response.Value;
+
+        ChatSessions = chatSessions.Items.ToList();
     }
 
     private async Task HandleSearchTextChanged(string searchText)
@@ -183,7 +185,9 @@
             await Task.Delay(500, _cts.Token);
 
             var response = await _chatService.SearchChatSessions(searchText);
-            ChatSessions = response.Items.ToList();
+            var chatSessions = response.Value;
+
+            ChatSessions = chatSessions.Items.ToList();
         }
         catch (TaskCanceledException)
         {
