@@ -1,5 +1,6 @@
 ﻿@inject IAvailableModelsService _availableModelsService
 @inject ChatState _chatState
+@inject ISnackbar Snackbar
 
 @implements IDisposable
 
@@ -41,6 +42,11 @@
     {
         var response = await _availableModelsService.BrowseAvailableModels();
         var models = response.Value;
+
+        if(!response.Succeeded)
+        {
+            ShowSnackbar("Failed to load available models. Please try again.", Severity.Error);
+        }
 
         if(models is not null)
         {
@@ -90,6 +96,16 @@
 
     private bool IsValidModel(string value) 
         => value.IsNotEmpty() && Models.Any(model => model.Name == value);
+
+    private void ShowSnackbar(string message, Severity severity)
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+
+        Snackbar.Add(message, severity, options =>
+        {
+            options.HideTransitionDuration = 100;
+        });
+    }
 
     public void Dispose()
     {

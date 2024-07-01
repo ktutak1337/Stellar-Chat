@@ -188,6 +188,11 @@ Some actions require just the latest message, while others need the full convers
         var response = await _availableModelsService.BrowseAvailableModels();
         var models = response.Value;
 
+        if (!response.Succeeded)
+        {
+            ShowSnackbar("Failed to load available models. Please try again.", Severity.Error);
+        }
+
         if (models is not null)
         {
             // TODO: Temporary solution - Filter models on the backend to include only 'gpt' family in the future
