@@ -39,7 +39,8 @@
 
     private async Task LoadModels()
     {
-        var models = await _availableModelsService.BrowseAvailableModels();
+        var response = await _availableModelsService.BrowseAvailableModels();
+        var models = response.Value;
 
         if(models is not null)
         {

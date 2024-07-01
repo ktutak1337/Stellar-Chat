@@ -1,23 +1,12 @@
-﻿using StellarChat.Shared.Contracts.Models;
-using System.Net.Http.Json;
+﻿using StellarChat.Client.Web.Shared.Http;
+using StellarChat.Shared.Contracts.Models;
 
 namespace StellarChat.Client.Web.Services.Models;
 
-public class AvailableModelsService : IAvailableModelsService
+public class AvailableModelsService(IRestHttpClient httpClient) : IAvailableModelsService
 {
-    private const string HttpClientName = "WebAPI";
+    private readonly IRestHttpClient _httpClient = httpClient;
 
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public AvailableModelsService(IHttpClientFactory httpClientFactory) 
-        => _httpClientFactory = httpClientFactory;
-
-    public async ValueTask<IEnumerable<AvailableModelsResponse>> BrowseAvailableModels()
-    {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
-        var response = await httpClient.GetFromJsonAsync<IEnumerable<AvailableModelsResponse>>($"/models");
-
-        return response!;
-    }
+    public async ValueTask<ApiResponse<IEnumerable<AvailableModelsResponse>>> BrowseAvailableModels() 
+        => await _httpClient.GetAsync<IEnumerable<AvailableModelsResponse>>($"/models");
 }

@@ -185,7 +185,8 @@ Some actions require just the latest message, while others need the full convers
 
     private async Task LoadModels()
     {
-        var models = await _availableModelsService.BrowseAvailableModels();
+        var response = await _availableModelsService.BrowseAvailableModels();
+        var models = response.Value;
 
         if (models is not null)
         {
