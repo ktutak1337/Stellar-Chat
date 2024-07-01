@@ -1,30 +1,22 @@
-﻿using StellarChat.Shared.Contracts.Settings;
-using System.Net.Http.Json;
+﻿using StellarChat.Client.Web.Shared.Http;
+using StellarChat.Shared.Contracts.Settings;
 
 namespace StellarChat.Client.Web.Services.Settings;
 
-public class SettingsService(IHttpClientFactory httpClientFactory) : ISettingsService
+public class SettingsService(IRestHttpClient httpClient) : ISettingsService
 {
     private const string SettingsKey = "app-settings";
-    private const string HttpClientName = "WebAPI";
+    private readonly IRestHttpClient _httpClient = httpClient;
 
-    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
+    public async ValueTask<ApiResponse<AppSettingsResponse>> GetSettingsAsync(string key = SettingsKey) 
+        => await _httpClient.GetAsync<AppSettingsResponse>($"/settings/{key}");
 
-    public async ValueTask<AppSettingsResponse> GetSettingsAsync(string key = SettingsKey)
+    public async ValueTask<ApiResponse> UpdateProfileAsync(string name, string avatarUrl, string description, string key = SettingsKey)
     {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
-        var result = await httpClient.GetFromJsonAsync<AppSettingsResponse>($"/settings/{key}");
-
-        return result!;
-    }
-
-    public async ValueTask<HttpResponseMessage> UpdateProfileAsync(string name, string avatarUrl, string description, string key = SettingsKey)
-    {
-        var httpClient = _httpClientFactory.CreateClient(HttpClientName);
-
         var payload = new UpdateProfileRequest(key, name, avatarUrl, description);
 
-        return await httpClient.PutAsJsonAsync($"/settings/{key}/profile", payload);
+        var response = await _httpClient.PutAsync($"/settings/{key}/profile", payload);
+
+        return response;
     }
 }

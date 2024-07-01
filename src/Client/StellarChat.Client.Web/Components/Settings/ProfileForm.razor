@@ -62,7 +62,8 @@
 
     private async Task PopulateForm()
     {
-        var settings = await _settingsService.GetSettingsAsync();
+        var response = await _settingsService.GetSettingsAsync();
+        var settings = response.Value;
 
         if(settings is not null)
         {
@@ -88,18 +89,16 @@
                 appSettings.Profile.AvatarUrl, 
                 appSettings.Profile.Description);
 
-            if (response.IsSuccessStatusCode)
-            {
-                _chatState.SetUserName(appSettings.Profile.Name);
-                _chatState.SetUserAvatar(appSettings.Profile.AvatarUrl);
-
-                ShowErrorSnackbar("Profile updated successfully!", Severity.Success);
-                success = true;
-            }
-            else
+            if (!response.Succeeded)
             {
                 ShowErrorSnackbar("Failed to update profile. Please try again.", Severity.Error);
             }
+
+            _chatState.SetUserName(appSettings.Profile.Name);
+            _chatState.SetUserAvatar(appSettings.Profile.AvatarUrl);
+
+            ShowErrorSnackbar("Profile updated successfully!", Severity.Success);
+            success = true;
         }
     }
 
