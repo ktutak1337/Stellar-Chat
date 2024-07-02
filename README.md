@@ -16,7 +16,7 @@ A powerful multi-modal chat application that empowers users to create custom age
 
 [![Build & Tests](https://github.com/ktutak1337/Stellar-Chat/actions/workflows/github-actions.yaml/badge.svg?branch=main)](https://github.com/ktutak1337/Stellar-Chat/actions/workflows/github-actions.yaml)
 [![NuGet Package](https://img.shields.io/badge/.NET%20-8.0-blue.svg)](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-[![GitHub license](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ktutak1337/Stellar-Chat/blob/main/LICENSE.md)
+[![GitHub license](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://github.com/ktutak1337/Stellar-Chat/blob/main/LICENSE)
 [![100 - commitow](https://img.shields.io/badge/100%20-commitow-lightgreen.svg)](https://100commitow.pl)
 
 <h3>⭐️ Your star motivates me greatly! ⭐️</h3>  
@@ -153,4 +153,4 @@ If you have discovered a bug or having some issues, please let me know by [repor
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/ktutak1337/Stellar-Chat/blob/main/LICENSE.md) file for details.
+This project is licensed under the AGPL-3.0 license - see the [LICENSE](https://github.com/ktutak1337/Stellar-Chat/blob/main/LICENSE) file for details.
