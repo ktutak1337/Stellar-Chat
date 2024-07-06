@@ -26,7 +26,7 @@
         <AssistantsDrawer IsOpen="_isAssistantsDrawerOpen" IsOpenChanged="HandleAssistantsDrawerStateChanged" />
         <ActionsDrawer IsOpen="_isActionsDrawerOpen" IsOpenChanged="HandleActionsDrawerStateChanged" />
         <SettingsDrawer IsOpen="_isSettingsDrawerOpen" IsOpenChanged="HandleSettingsDrawerStateChanged" />
-        <MudMainContent>
+        <MudMainContent Style="display: flex; flex-direction: column; height: 100vh;">
             <CustomErrorBoundary>
                 <ChildContent>
                     @Body
