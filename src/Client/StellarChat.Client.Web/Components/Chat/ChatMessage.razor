@@ -4,7 +4,7 @@
 
 @implements IDisposable
 
-<div class="d-flex mb-6 pa-2 rounded-lg" style="@BackgroundColorStyle" @onmouseover="HandleMouseOverChatMessage" @onmouseout="HandleMouseOutChatMessage">
+<div class="d-flex mb-6 pa-2 rounded-lg" style="@BackgroundColorStyle">
     <div id="chat-message-avatar" class="avatar mr-4 mt-1">
         <MudAvatar Rounded="true" Color="Color.Secondary">
             <MudImage Src="@(Message?.Author == "bot" ? !string.IsNullOrEmpty(@_chatState.AssignedAssistant?.AvatarUrl) ? @_chatState.AssignedAssistant?.AvatarUrl : @DefaultAvatarUrl : @_chatState.UserAvatar)" />
@@ -30,7 +30,6 @@
                 <MudIconButton OnClick="CopyToClipboard" id="chat-copy-message-button" Size="Size.Small" Class="ml-2" Icon="@Icons.Material.Filled.ContentCopy" Color="Color.Inherit" Disabled="false" />
             </div>
         </div>
-
     </div>
 </div>
 
@@ -65,8 +64,7 @@
     [CascadingParameter] private bool _IsDarkModeEnabled { get; set; }
     private const string DefaultAvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/images/_1863a13f-cfb3-454d-ada0-34595b28c2e6.jpg";
 
-    private string BackgroundColorStyle => $"{(isHovering ? $"background-color: {(_IsDarkModeEnabled ? "#27272f" : "#e7e5e4")}" : "background-color: var(--mud-palette-background)")};";
-    private bool isHovering = false;
+    private string BackgroundColorStyle => $"{(Message?.Author == "user" ? $"background-color: {(_IsDarkModeEnabled ? "#2B2B34" : "#f5f5f5")}" : "background-color: var(--mud-palette-background)")};";
 
     protected override void OnInitialized()
     {
@@ -122,15 +120,5 @@
         {
             options.HideTransitionDuration = 100;
         });
-    }
-
-    private void HandleMouseOverChatMessage()
-    {
-        isHovering = true;
-    }
-
-    private void HandleMouseOutChatMessage()
-    {
-        isHovering = false;
     }
 }
