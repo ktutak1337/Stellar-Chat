@@ -16,7 +16,7 @@
 <PageTitle>Home</PageTitle>
 
 <div class="d-flex flex-column" style="height: 100vh">
-    <div class="d-flex flex-column flex-grow-1 mt-4 mx-auto" style="max-width: 960px; width: 100%;">
+    <div class="d-flex flex-column flex-grow-1 mt-4 @(_chatState.IsFullWidthText ? "mx-5 flex-grow-1" : "mx-auto")" style="@(_chatState.IsFullWidthText ? "" : "max-width: 960px; width: 100%;")">
         <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto flex-grow-1">
             @if (_chatState.ChatId == Guid.Empty)
             {
@@ -59,6 +59,7 @@
         _chatState.SelectedModelChanged += StateHasChanged;
         _chatState.UserNameChanged += StateHasChanged;
         _chatState.ActionIdChanged += StateHasChanged;
+        _chatState.FullWidthTextChanged += StateHasChanged;
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(HubUrl)
@@ -254,6 +255,7 @@
         _chatState.SelectedModelChanged -= StateHasChanged;
         _chatState.UserNameChanged -= StateHasChanged;
         _chatState.ActionIdChanged -= StateHasChanged;
+        _chatState.FullWidthTextChanged -= StateHasChanged;
 
         if (_hubConnection is not null)
         {

@@ -4,6 +4,15 @@ namespace StellarChat.Client.Web.State;
 
 public class ChatState
 {
+    public bool IsFullWidthText { get; private set; }
+    public event Action? FullWidthTextChanged;
+
+    public void SetFullWidthText(bool isFullWidth)
+    {
+        IsFullWidthText = isFullWidth;
+        FullWidthTextChanged?.Invoke();
+    }
+
     public Guid ChatId { get; set; }
     public event Action? ChatIdChanged;
 
