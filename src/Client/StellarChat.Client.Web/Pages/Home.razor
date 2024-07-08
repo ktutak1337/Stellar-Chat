@@ -15,12 +15,12 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="h-100">
-    <div class="w-100 mt-4 mx-auto" style="max-width: 960px;">
-        <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto" style="height: calc(100vh - 295px);">
+<div class="d-flex flex-column" style="height: 100vh">
+    <div class="d-flex flex-column flex-grow-1 mt-4 @(_chatState.IsFullWidthText ? "mx-5 flex-grow-1" : "mx-auto")" style="@(_chatState.IsFullWidthText ? "" : "max-width: 960px; width: 100%;")">
+        <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto flex-grow-1">
             @if (_chatState.ChatId == Guid.Empty)
             {
-                <div style="height: 100%; width: 100%; display: flex; justify-content: center;">
+                <div class="d-flex justify-center align-center h-100">
                     <NewChatPreview AssistantName="@_chatState.SelectedAssistant?.Name" UserName="@_chatState.UserName" AssistantAvatar="@_chatState.SelectedAssistant?.AvatarUrl" />
                 </div>
             }
@@ -33,7 +33,7 @@
             }
         </div>
     </div>
-    <div class="mt-2 fixed-bottom w-auto">
+    <div style="position: sticky; bottom: 0;">
         <PromptInput OnSend="@SendMessageAsync" />
     </div>
 </div>
@@ -59,6 +59,7 @@
         _chatState.SelectedModelChanged += StateHasChanged;
         _chatState.UserNameChanged += StateHasChanged;
         _chatState.ActionIdChanged += StateHasChanged;
+        _chatState.FullWidthTextChanged += StateHasChanged;
 
         _hubConnection = new HubConnectionBuilder()
             .WithUrl(HubUrl)
@@ -254,6 +255,7 @@
         _chatState.SelectedModelChanged -= StateHasChanged;
         _chatState.UserNameChanged -= StateHasChanged;
         _chatState.ActionIdChanged -= StateHasChanged;
+        _chatState.FullWidthTextChanged -= StateHasChanged;
 
         if (_hubConnection is not null)
         {

@@ -52,8 +52,13 @@
                       Lines="7"
                       MaxLines="10"
                       Margin="Margin.Dense"
-                      HelperText="@metapromptGuidelines"
                       For="@(() => Action!.Metaprompt)" />
+        
+        <div class="px-2">
+            <MudText Typo="Typo.caption" Class="mt-0" Style="color: var(--mud-palette-text-secondary); font-size: .75rem; text-align: start; font-weight: 400; line-height: 1.66; letter-spacing: .03333em;">
+                @((MarkupString)metapromptGuidelines)
+            </MudText>
+        </div>
 
         <MudText>Single Message Mode</MudText>
         <div class="d-flex flex-grow-1">
@@ -70,15 +75,20 @@
         @if (Action.IsRemoteAction)
         {
             <MudText>Webhook URL</MudText>
-            <div class="d-flex ">
-                <MudTextField   @bind-Value="Action.Webhook!.Url" 
-                                InputType="@(showWebhookUrl ? InputType.Text : InputType.Password)" 
-                                Variant="Variant.Outlined" 
-                                Margin="Margin.Dense" 
-                                For="@(() => Action.Webhook!.Url)"
-                              HelperText="@webhookUrlGuidelines" />
-                <MudIconButton Icon="@(showWebhookUrl ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)" OnClick="ToggleWebhookUrlVisibility" Edge="Edge.End" Class="ml-1 mb-16" />
+            <div class="d-flex">
+                <MudTextField @bind-Value="Action.Webhook!.Url"
+                                InputType="@(showWebhookUrl ? InputType.Text : InputType.Password)"
+                                Variant="Variant.Outlined"
+                                Margin="Margin.Dense"
+                                For="@(() => Action.Webhook!.Url)" />
+                <MudIconButton Icon="@(showWebhookUrl ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)" OnClick="ToggleWebhookUrlVisibility" Edge="Edge.End" Class="ml-1" />
             </div>
+            <div class="px-2">
+                <MudText Typo="Typo.caption" Class="mt-0" Style="color: var(--mud-palette-text-secondary); font-size: .75rem; text-align: start; font-weight: 400; line-height: 1.66; letter-spacing: .03333em;">
+                    @((MarkupString)webhookUrlGuidelines)
+                </MudText>
+            </div>
+            
             <MudText>Authorization Token (Optional)</MudText>
             <div class="d-flex align-items-center">
                 <MudTextField   @bind-Value="Action.Webhook!.Headers" 
@@ -155,12 +165,14 @@
 
     private const string webhookUrlGuidelines = @"
 Provide the URL for the webhook endpoint. Ensure the response returns a JSON object.
-Example: { ""status"": ""success"", ""data"": { ""key"": ""value"" } }.";
+Example: <span style='color: var(--mud-palette-primary);'><strong>{ ""status"": ""success"", ""data"": { ""key"": ""value"" } }</strong></span>.";
 
     private const string metapromptGuidelines = @"
 A set of instructions defining what this action should perform. 
 If 'Remote Action' is selected, ensure to specify 'return JSON object' in the instructions.
-Example: { ""status"": ""success"", ""data"": { ""key"": ""value"" } }.";
+Example: <span style='color: var(--mud-palette-primary);'><strong>{ ""status"": ""success"", ""data"": { ""key"": ""value"" } }</strong></span>.<br /><br />
+<strong>Available placeholders:</strong><br />
+- <span style='color: var(--mud-palette-primary);'><strong>{DATE}</strong></span> will be replaced with local current date";
 
     private const string remoteActionGuidelines = @"
 Enabling this option allows connection to external services, enabling you to trigger automation scenarios 

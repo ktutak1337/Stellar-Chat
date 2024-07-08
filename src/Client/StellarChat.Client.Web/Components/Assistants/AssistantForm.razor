@@ -34,8 +34,13 @@
                       Lines="7" 
                       MaxLines="10" 
                       Margin="Margin.Dense" 
-                      HelperText="@assistantBehaviorGuidelines" 
                       For="@(() => Assistant!.Metaprompt)" />
+
+        <div class="px-2">
+            <MudText Typo="Typo.caption" Class="mt-0" Style="color: var(--mud-palette-text-secondary); font-size: .75rem; text-align: start; font-weight: 400; line-height: 1.66; letter-spacing: .03333em;">
+                @((MarkupString)assistantBehaviorGuidelines)
+            </MudText>
+        </div>
     </div>
     <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
@@ -52,7 +57,9 @@
     private const string assistantBehaviorGuidelines = @"
 Enter the Metaprompt here. This set of instructions will define your assistant's behavior
 in every conversation, guiding how it interacts and responds. Keep it concise, clear, and
-reflective of the assistant's intended personality and capabilities.";
+reflective of the assistant's intended personality and capabilities.<br /><br />
+<strong>Available placeholders:</strong><br />
+- <span style='color: var(--mud-palette-primary);'><strong>{DATE}</strong></span> will be replaced with local current date";
 
     private const string DefaultAvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/images/_ed19c10c-bbad-4514-8df4-eef37400e218.jpg";
 
