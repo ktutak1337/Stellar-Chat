@@ -2,5 +2,7 @@
 
 internal interface IModelsProvider
 {
-    ValueTask<IEnumerable<AvailableModelsResponse>> FetchModelsAsync(CancellationToken cancellationToken = default);
+    string ProviderName { get; }
+    ValueTask<IEnumerable<AvailableModelsResponse>> FetchModelsAsync(BrowseAvailableModels.BrowseAvailableModels query, CancellationToken cancellationToken = default);
+    IEnumerable<AvailableModelsResponse> FilterModels(string filter, IEnumerable<AvailableModelsResponse> models);
 }

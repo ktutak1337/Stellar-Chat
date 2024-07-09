@@ -13,7 +13,10 @@ internal sealed class BrowseAvailableModelsEndpoint : IEndpoint
             {
                 Summary = "Retrieves all available models from various providers based on the API keys provided by the user.",
                 Description = $"This endpoint fetches a list of available models from various providers based on the API keys provided by the user.\n" +
-                      $"\nIt retrieves a combined list of models from all providers, such as OpenAI, Ollama, etc., for which the user has provided API keys."
+                    $"\nIt retrieves a combined list of models from all providers, such as OpenAI, Ollama, etc., for which the user has provided API keys." +
+                    $"\n### Query Parameters:\n" +
+                    $"- **provider** (required with filter): The name of the provider to filter models. Example values: `openai`, `google`, etc.\n" +
+                    $"- **filter** (required with provider): The type of models to filter. Example values: `audio`, `completions`, `embeddings`, `images`.\n"
             });
     }
 

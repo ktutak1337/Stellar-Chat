@@ -6,9 +6,10 @@ namespace StellarChat.Server.Api.Features.Models.Providers;
 
 internal sealed class OpenAiModelsProvider : IModelsProvider
 {
+    public string ProviderName => OpenAIVendor.ToLowerInvariant();
+
     private const string OpenAIApiEndpoint = "https://api.openai.com/v1/models";
     private const string OpenAIVendor = "OpenAI";
-
     private readonly IHttpClientService _httpClientService;
     private readonly OpenAiOptions _openAiOptions;
 
@@ -18,7 +19,7 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
         _openAiOptions = openAiOptions;
     }
 
-    public async ValueTask<IEnumerable<AvailableModelsResponse>> FetchModelsAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IEnumerable<AvailableModelsResponse>> FetchModelsAsync(BrowseAvailableModels.BrowseAvailableModels query, CancellationToken cancellationToken = default)
     {
         var headers = new Dictionary<string, string>
         {
@@ -41,6 +42,18 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
             Provider = OpenAIVendor,
             CreatedAt = DateTimeOffset.FromUnixTimeSeconds(model.Created)
         }).ToList();
+    }
+
+    public IEnumerable<AvailableModelsResponse> FilterModels(string filter, IEnumerable<AvailableModelsResponse> models)
+    {
+        return filter switch
+        {
+            "audio" => models.Where(model => model.Name.Contains("tts") || model.Name.Contains("whisper")),
+            "completions" => models.Where(model => model.Name.Contains("gpt")),
+            "embeddings" => models.Where(model => model.Name.Contains("embedding")),
+            "images" => models.Where(model => model.Name.Contains("dall-e") || model.Name.Contains("vision")),
+            _ => models
+        };
     }
 
     record OpenAiModelResponse(string Object, List<OpenAiModel> Data);
