@@ -8,5 +8,5 @@ public class AvailableModelsService(IRestHttpClient httpClient) : IAvailableMode
     private readonly IRestHttpClient _httpClient = httpClient;
 
     public async ValueTask<ApiResponse<IEnumerable<AvailableModelsResponse>>> BrowseAvailableModels() 
-        => await _httpClient.GetAsync<IEnumerable<AvailableModelsResponse>>($"/models");
+        => await _httpClient.GetAsync<IEnumerable<AvailableModelsResponse>>($"/models?Provider=openai&Filter=completions");
 }
