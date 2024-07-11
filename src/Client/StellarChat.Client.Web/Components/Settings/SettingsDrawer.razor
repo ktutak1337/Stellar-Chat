@@ -1,4 +1,6 @@
-﻿<MudDrawerContainer Class="mud-height-full">
+﻿@inject IConfiguration _configuration
+
+<MudDrawerContainer Class="mud-height-full">
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
         <DrawerHeader Title="Settings" OnClose="CloseDrawer" DisplayDivider="true" />
         
@@ -10,7 +12,15 @@
                 <MudText>Work in Progress</MudText>
             </MudTabPanel>
         </MudTabs>
-
+        <MudPaper class="d-flex flex-row justify-center gap-2 pa-4" Style="@BackgroundColorStyle">
+            <MudAvatar Size="Size.Medium">
+                <MudImage Src="https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/logo-small.jpg" Alt="Stellar Chat logo"></MudImage>
+            </MudAvatar>
+            <MudText Class="my-auto" Color="Color.Primary">@AppName</MudText>
+            <MudText Class="my-auto" Color="Color.Primary">
+                <MudLink Class="my-auto" Color="Color.Primary" Href="https://github.com/ktutak1337/Stellar-Chat/releases" Target="_blank">@AppVersion</MudLink>
+            </MudText>
+        </MudPaper>
     </MudDrawer>
 </MudDrawerContainer>
 
@@ -21,6 +31,14 @@
 
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [CascadingParameter]
+    private bool _IsDarkModeEnabled { get; set; }
+
+    private string AppName => _configuration["app:name"] ?? string.Empty;
+    private string AppVersion => _configuration["app:version"] ?? string.Empty;
+
+    private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
 
     protected override async Task OnInitializedAsync()
     {
