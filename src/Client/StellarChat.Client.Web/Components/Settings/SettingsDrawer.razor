@@ -14,11 +14,11 @@
         </MudTabs>
         <MudPaper class="d-flex flex-row justify-center gap-2 pa-4" Style="@BackgroundColorStyle">
             <MudAvatar Size="Size.Medium">
-                <MudImage Src="https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/logo-small.jpg" Alt="Stellar Chat logo"></MudImage>
+                <MudImage Src="@AppLogoSmall" Alt="Stellar Chat logo"></MudImage>
             </MudAvatar>
             <MudText Class="my-auto" Color="Color.Primary">@AppName</MudText>
             <MudText Class="my-auto" Color="Color.Primary">
-                <MudLink Class="my-auto" Color="Color.Primary" Href="https://github.com/ktutak1337/Stellar-Chat/releases" Target="_blank">@AppVersion</MudLink>
+                <MudLink Class="my-auto" Color="Color.Primary" Href="@AppReleases" Target="_blank">@AppVersion</MudLink>
             </MudText>
         </MudPaper>
     </MudDrawer>
@@ -37,6 +37,8 @@
 
     private string AppName => _configuration["app:name"] ?? string.Empty;
     private string AppVersion => _configuration["app:version"] ?? string.Empty;
+    private string AppLogoSmall => _configuration["app:logoSmall"] ?? string.Empty;
+    private string AppReleases => _configuration["app:releases"] ?? string.Empty;
 
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
 
