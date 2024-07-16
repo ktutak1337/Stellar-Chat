@@ -207,10 +207,7 @@ Some actions require just the latest message, while others need the full convers
 
         if (models is not null)
         {
-            // TODO: Temporary solution - Filter models on the backend to include only 'gpt' family in the future
-            // This is a temporary workaround. Implement backend filtering to include only models belonging to the 'gpt' family in the future.
-
-            AvailableModels = models.Where(model => model.Name.StartsWith("gpt", StringComparison.InvariantCultureIgnoreCase)).ToList();
+            AvailableModels = models.ToList();
         }
     }
 
