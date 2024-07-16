@@ -18,7 +18,7 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
 
         var now = _clock.GetLocalNow();
 
-        var appSettingsDocument = new AppSettingsDocument 
+        var appSettingsDocument = new AppSettingsDocument
         {
             Id = Guid.NewGuid(),
             Profile = new ProfileDocument
@@ -27,8 +27,23 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
                 AvatarUrl = "https://raw.githubusercontent.com/ktutak1337/Stellar-Chat/main/docs/assets/logo-small.jpg",
                 Description = string.Empty,
             },
+            Integrations =
+            [
+                new() {
+                    Name = "OpenAI",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "Ollama",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+            ],
             CreatedAt = now,
-            UpdatedAt = now 
+            UpdatedAt = now
         };
 
         _logger.LogInformation("Started seeding 'settings' collection.");

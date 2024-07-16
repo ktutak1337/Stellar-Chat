@@ -213,8 +213,10 @@ internal static class Extensions
         var kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
                 modelId: options.TEXT_MODEL,
-                apiKey: options.API_KEY)
+                apiKey: options.API_KEY,
+                serviceId: "openai")
             .Build();
+
 
         services.AddSingleton(kernel);
 
