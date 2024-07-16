@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
@@ -66,7 +65,6 @@ internal static class Extensions
             .AddScoped<IDefaultAssistantService, DefaultAssistantService>()
             .AddScoped<IChatContext, ChatContext>()
             .AddScoped<IModelsProvider, OpenAiModelsProvider>()
-            .AddScoped<IModelsProvider, OllamaModelsProvider>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
             .AddMongoRepository<AssistantDocument, Guid>("assistants")
@@ -212,21 +210,13 @@ internal static class Extensions
         services.Configure<OpenAiOptions>(section);
         services.AddSingleton(options);
 
-        //var httpClient = new HttpClient() { BaseAddress = new Uri("http://192.168.100.103:11434/api/generate") };
-
-#pragma warning disable SKEXP0010
         var kernel = Kernel.CreateBuilder()
             .AddOpenAIChatCompletion(
                 modelId: options.TEXT_MODEL,
                 apiKey: options.API_KEY,
                 serviceId: "openai")
-            .AddOpenAIChatCompletion(
-                modelId: "phi3",
-                apiKey: null,
-                endpoint: new Uri("http://192.168.100.103:11434"),
-                serviceId: "ollama")
             .Build();
-#pragma warning restore SKEXP0010
+
 
         services.AddSingleton(kernel);
 
