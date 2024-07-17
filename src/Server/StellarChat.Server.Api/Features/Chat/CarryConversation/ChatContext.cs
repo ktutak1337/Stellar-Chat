@@ -1,4 +1,5 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Newtonsoft.Json.Linq;
 using StellarChat.Server.Api.Features.Chat.CarryConversation.Exceptions;
@@ -42,7 +43,7 @@ internal class ChatContext : IChatContext
         var assistants = await _assistantRepository.BrowseAsync();
         var defaultAssistant = assistants.SingleOrDefault(assistant => assistant.IsDefault);
         var isDefaultAssistant = chatSession.AssistantId != Guid.Empty && chatSession.AssistantId == defaultAssistant?.Id;
-        
+
         var assistant = isDefaultAssistant
             ? defaultAssistant
             : assistants.SingleOrDefault(assistant => assistant.Id == chatSession.AssistantId) ?? defaultAssistant;
@@ -78,19 +79,14 @@ internal class ChatContext : IChatContext
     }
 
     public async Task<ChatMessage> StreamResponseToClientAsync(
-        Guid chatId, string model, ChatMessage botMessage, bool isRemoteAction, IHubContext<ChatHub, IChatHub> hubContext, CancellationToken cancellationToken = default)
+        Guid chatId, string model, string serviceId, ChatMessage botMessage, bool isRemoteAction, IHubContext<ChatHub, IChatHub> hubContext, Kernel kernel, CancellationToken cancellationToken = default)
     {
         var reply = new StringBuilder();
         var chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
 
-        var executionSettings = new PromptExecutionSettings
-        {
-            ModelId = model
-        };
-
         try
         {
-            await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(_chatHistory, executionSettings, _kernel))
+            await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(_chatHistory))
             {
                 if (contentPiece.Content is { Length: > 0 })
                 {

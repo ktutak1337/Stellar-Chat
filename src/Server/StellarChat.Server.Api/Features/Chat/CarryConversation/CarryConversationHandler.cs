@@ -30,11 +30,20 @@ internal sealed class CarryConversationHandler : ICommandHandler<Ask, string>
 
     private KernelArguments GetContextArguments(Ask command)
     {
-        var contextArguments = new KernelArguments();
+        #pragma warning disable SKEXP0001
+            var executionSettings = new PromptExecutionSettings
+            {
+                ModelId = command.Model,
+                ServiceId = command.ServiceId
+            };
+        #pragma warning restore SKEXP0001
+
+        var contextArguments = new KernelArguments(executionSettings);
 
         contextArguments.TryAdd("message", command.Message);
         contextArguments.TryAdd("messageType", command.MessageType);
         contextArguments.TryAdd("model", command.Model);
+        contextArguments.TryAdd("serviceId", command.ServiceId);
         contextArguments.TryAdd("chatId", command.ChatId);
         contextArguments.TryAdd("hubContext", _hubContext);
 
