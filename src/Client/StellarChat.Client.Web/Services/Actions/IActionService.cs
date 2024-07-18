@@ -8,7 +8,7 @@ public interface IActionService
     ValueTask<ApiResponse<NativeActionResponse>> GetAction(Guid actionId);
     ValueTask<ApiResponse<IEnumerable<NativeActionResponse>>> BrowseActions();
     ValueTask<ApiResponse<Guid>> CreateAction(NativeActionResponse action);
-    ValueTask<ApiResponse<string>> ExecuteAction(Guid actionId, Guid chatId, string message);
+    ValueTask<ApiResponse<string>> ExecuteAction(Guid actionId, Guid chatId, string serviceId, string message);
     ValueTask<ApiResponse> UpdateAction(NativeActionResponse action);
     ValueTask<ApiResponse> DeleteAction(Guid actionId);
 }

@@ -25,6 +25,7 @@
 {
     public List<AvailableModelsResponse> Models { get; set; } = new();
     private string CurrentValue { get; set; } = string.Empty;
+    private string ServiceId { get; set; } = string.Empty;
 
     private bool coerceText;
     private bool coerceValue;
@@ -32,6 +33,7 @@
     protected override async Task OnInitializedAsync()
     {
         _chatState.SelectedModelChanged += StateHasChanged;
+        _chatState.ServiceIdChanged += StateHasChanged;
         _chatState.SelectedAssistantChanged += SetDefaultModel;
 
         await LoadModels();
@@ -62,6 +64,9 @@
         {
             CurrentValue = selectedModel!;
             _chatState.SetSelectedModel(selectedModel!);
+
+            var serviceId = Models.SingleOrDefault(x => x.Name == CurrentValue)?.Provider ?? string.Empty;
+            _chatState.SetServiceId(serviceId);
         }
     }
 
@@ -82,6 +87,9 @@
     private void OnValueChanged(string value)
     {
         CurrentValue = value.IsEmpty() ? string.Empty : value;
+        var serviceId = Models.SingleOrDefault(x => x.Name == value)?.Provider ?? string.Empty;
+        
+        _chatState.SetServiceId(serviceId);
         _chatState.SetSelectedModel(CurrentValue);
     }
 
@@ -107,6 +115,7 @@
     public void Dispose()
     {
         _chatState.SelectedModelChanged -= StateHasChanged;
+        _chatState.ServiceIdChanged -= StateHasChanged;
         _chatState.SelectedAssistantChanged -= SetDefaultModel;
     }
 }

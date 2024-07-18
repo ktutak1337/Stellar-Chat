@@ -41,9 +41,9 @@ public class ChatService(IRestHttpClient httpClient) : IChatService
     public async ValueTask<ApiResponse> DeleteChatSession(Guid id) 
         => await _httpClient.DeleteAsync($"/chat-history/sessions/{id}");
 
-    public async ValueTask<ApiResponse> SendMessage(Guid chatId, string message, string messageType, string model)
+    public async ValueTask<ApiResponse> SendMessage(Guid chatId, string message, string messageType, string model, string serviceId)
     {
-        var payload = new AskRequest(chatId, message, messageType, model);
+        var payload = new AskRequest(chatId, message, messageType, model, serviceId);
 
         var response = await _httpClient.PostAsync($"/chats/{chatId}/messages", payload);
 
