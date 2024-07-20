@@ -6,10 +6,10 @@ namespace StellarChat.Server.Api.Features.Models.Providers;
 
 internal sealed class OpenAiModelsProvider : IModelsProvider
 {
-    public string ProviderName => OpenAIVendor.ToLowerInvariant();
+    public string ProviderName => OpenAIVendor;
 
     private const string OpenAIApiEndpoint = "https://api.openai.com/v1/models";
-    private const string OpenAIVendor = "OpenAI";
+    private const string OpenAIVendor = "Openai";
     private readonly IHttpClientService _httpClientService;
     private readonly OpenAiOptions _openAiOptions;
 
@@ -38,8 +38,8 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
         return responseData.Data.Select(model => new AvailableModelsResponse
         {
             Name = model.Id,
-            Vendor = OpenAIVendor,
-            Provider = OpenAIVendor,
+            Vendor = ProviderName,
+            Provider = ProviderName,
             CreatedAt = DateTimeOffset.FromUnixTimeSeconds(model.Created)
         }).ToList();
     }
