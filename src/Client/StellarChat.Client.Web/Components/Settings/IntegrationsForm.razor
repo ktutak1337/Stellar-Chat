@@ -1,0 +1,90 @@
+﻿@inject ISettingsService _settingsService
+
+<EditForm Model="@AppSettings" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="d-flex flex-column flex-grow-1 gap-3">
+        <MudExpansionPanels Outlined="false" Elevation="0" Class="d-flex flex-column flex-grow-1 gap-3">
+            <MudExpansionPanel>
+                <TitleContent>
+                    <div class="d-flex gap-4">
+                        <MudImage Width="32" Height="32" Src="https://avatars.githubusercontent.com/u/151674099?s=48&v=4" Class="rounded-lg"></MudImage>
+                        <MudText Class="my-auto">Ollama</MudText>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    <div class="d-flex flex-column flex-grow-1 gap-3">
+                        <MudText>Endpoint</MudText>
+                        <div class="d-flex">
+                            <MudTextField @bind-Value="@OllamaEndpoint"
+                                          InputType="@(showOllamaEndpoint ? InputType.Text : InputType.Password)"
+                                          Variant="Variant.Outlined"
+                                          Margin="Margin.Dense"
+                                          HelperText="Enter the Ollama server endpoint URL.">
+                            </MudTextField>
+                            <MudIconButton Icon="@(showOllamaEndpoint ? Icons.Material.Filled.VisibilityOff : Icons.Material.Filled.Visibility)" OnClick="ToggleShowOllamaEndpointVisibility" Edge="Edge.End" Class="ml-1 mb-auto" />
+                        </div>
+                        <MudText>Pull model</MudText>
+                        <div class="d-flex flex-row gap-4">
+                            <MudSelect @bind-Value="AppSettings.Profile.Name"
+                                       Margin="Margin.Dense"
+                                       T="string"
+                                       Variant="Variant.Outlined"
+                                       For="@(() => AppSettings.Key)"
+                                       HelperText="Select the model to be pulled from the Ollama server to your local disk.">
+
+                                @foreach (var model in AvailableModels)
+                                {
+                                    <MudSelectItem Value="@model.Name" />
+                                }
+                            </MudSelect>
+                            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="mt-1" Style="height: 40px">Pull</MudButton>
+                        </div>
+                    </div>
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+
+    </div>
+    <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+    </div>
+</EditForm>
+
+@code
+{
+    private AppSettingsResponse AppSettings { get; set; } = new();
+
+    private List<AvailableModelsResponse> AvailableModels { get; set; } = new();
+
+    private const string OllamaProvider = "ollama";
+    private const string OpenAiProvider = "openai";
+    private bool showOpenAiApiKey = false;
+    private bool showOllamaEndpoint = false;
+
+    public string OllamaEndpoint { get; set; } = string.Empty;
+
+    private void ToggleShowOpenAiApiKeyVisibility() => showOpenAiApiKey = !showOpenAiApiKey;
+    private void ToggleShowOllamaEndpointVisibility() => showOllamaEndpoint = !showOllamaEndpoint;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await PopulateForm();
+    }
+
+    private async Task PopulateForm()
+    {
+        var response = await _settingsService.GetSettingsAsync();
+        var settings = response.Value;
+
+        if (settings is not null)
+        {
+            AppSettings = settings;
+            OllamaEndpoint = settings.Integrations.First(x => x.Name.Equals(OllamaProvider, StringComparison.InvariantCultureIgnoreCase))!.Endpoint ?? string.Empty;
+        }
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+
+    }
+}
