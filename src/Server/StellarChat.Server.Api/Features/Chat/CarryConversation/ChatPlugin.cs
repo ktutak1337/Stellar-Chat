@@ -21,7 +21,8 @@ internal class ChatPlugin
         [Description("Model used for text generation (e.g., gpt-4, gpt-3.5-turbo)")] string model,
         [Description("Identifier for the chat completion to be used (e.g., openai, ollama, gemini")] string serviceId,
         IHubContext<ChatHub, IChatHub> hubContext,
-        KernelArguments context)
+        KernelArguments context,
+        Kernel kernel)
     {
         await _chatContext.SetChatInstructions(chatId);
         await _chatContext.ExtractChatHistoryAsync(chatId);
@@ -30,7 +31,7 @@ internal class ChatPlugin
         await _chatContext.SaveChatMessageAsync(chatId, userMessage);
 
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, model, serviceId, botMessage, isRemoteAction: false, hubContext, null);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, model, serviceId, botMessage, isRemoteAction: false, hubContext, kernel);
         await _chatContext.SaveChatMessageAsync(chatId, botResponseMessage);
 
         context["input"] = botResponseMessage.Content;

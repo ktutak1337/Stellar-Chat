@@ -3,6 +3,7 @@ using StellarChat.Server.Api.Features.Actions.CreateNativeAction;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Exceptions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
+using StellarChat.Server.Api.Features.Models.Connectors;
 
 namespace StellarChat.Server.Api.Features.Actions.ExecuteNativeAction;
 
@@ -11,27 +12,27 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
     private readonly INativeActionRepository _nativeActionRepository;
     private readonly IHttpClientService _httpClientService;
     private readonly IChatContext _chatContext;
-    //private readonly Kernel _kernel;
     private readonly IHubContext<ChatHub, IChatHub> _hubContext;
     private readonly TimeProvider _clock;
+    private readonly IConnectorStrategy _connectorFactory;
     private readonly ILogger<CreateNativeActionHandler> _logger;
 
     public ExecuteNativeActionHandler(
         INativeActionRepository nativeActionRepository,
         IHttpClientService httpClientService,
         IChatContext chatContext,
-        //Kernel kernel,
         IHubContext<ChatHub, IChatHub> hubContext,
         TimeProvider clock,
-        ILogger<CreateNativeActionHandler> logger)
+        ILogger<CreateNativeActionHandler> logger,
+        IConnectorStrategy connectorFactory)
     {
         _nativeActionRepository = nativeActionRepository;
         _httpClientService = httpClientService;
         _chatContext = chatContext;
-        //_kernel = kernel;
         _hubContext = hubContext;
         _clock = clock;
         _logger = logger;
+        _connectorFactory = connectorFactory;
     }
 
     public async ValueTask<string> Handle(ExecuteNativeAction command, CancellationToken cancellationToken)
@@ -104,8 +105,11 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
 
     private async Task<ChatMessage> GetBotResponseAsync(Guid chatId, string serviceId, NativeAction action)
     {
+        var connector = _connectorFactory.SelectConnector(serviceId);
+        var kernel = connector.Kernel ?? connector.CreateKernel(serviceId);
+
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, serviceId, botMessage, action.IsRemoteAction, _hubContext, null);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, serviceId, botMessage, action.IsRemoteAction, _hubContext, kernel);
         
         return botResponseMessage;
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using StellarChat.Server.Api.Features.Models.Connectors;
 using System.Text;
 using ChatHistory = Microsoft.SemanticKernel.ChatCompletion.ChatHistory;
 
@@ -8,23 +9,23 @@ namespace StellarChat.Server.Api.Features.Chat.CreateChatSession;
 internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
 {
     private readonly IChatSessionRepository _chatSessionRepository;
-    private readonly Kernel _kernel;
+    private readonly IConnectorStrategy _connectorFactory;
     private readonly TimeProvider _clock;
     private readonly IHubContext<ChatHub, IChatHub> _hubContext;
     private readonly ILogger<CreateChatSessionHandler> _logger;
 
     public CreateChatSessionHandler(
         IChatSessionRepository chatSessionRepository,
-        Kernel kernel,
         TimeProvider clock,
         IHubContext<ChatHub, IChatHub> hubContext,
-        ILogger<CreateChatSessionHandler> logger)
+        ILogger<CreateChatSessionHandler> logger,
+        IConnectorStrategy connectorFactory)
     {
         _chatSessionRepository = chatSessionRepository;
-        _kernel = kernel;
         _clock = clock;
         _hubContext = hubContext;
         _logger = logger;
+        _connectorFactory = connectorFactory;
     }
 
     public async ValueTask<Unit> Handle(CreateChatSession command, CancellationToken cancellationToken)
@@ -57,7 +58,10 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
     {
         await Task.Delay(1000);
 
-        var chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
+        var connector = _connectorFactory.SelectConnector("openai");
+        var kernel = connector.CreateKernel("gpt-4o-mini");
+
+        var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
         var reply = new StringBuilder();
 
         string prompt = "Generate a concise chat title based on the user’s first message. The title should be a short, one-sentence summary in English.";
@@ -65,7 +69,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
         var chatHistory = new ChatHistory(prompt);
         chatHistory.AddUserMessage(message);
 
-        await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory, new PromptExecutionSettings() { ModelId = "gpt-3.5-trubo" }))
+        await foreach (var contentPiece in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory, new PromptExecutionSettings() { ModelId = "gpt-4o-mini" }))
         {
             if (contentPiece.Content is { Length: > 0 })
             {

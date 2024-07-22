@@ -11,7 +11,6 @@ internal class ChatContext : IChatContext
     private readonly IChatSessionRepository _chatSessionRepository;
     private readonly IChatMessageRepository _chatMessageRepository;
     private readonly IAssistantRepository _assistantRepository;
-    private readonly Kernel _kernel;
     private readonly ChatHistory _chatHistory = new();
     private readonly TimeProvider _clock;
 
@@ -19,13 +18,11 @@ internal class ChatContext : IChatContext
         IChatSessionRepository chatSessionRepository,
         IChatMessageRepository chatMessageRepository,
         IAssistantRepository assistantRepository,
-        Kernel kernel,
         TimeProvider clock)
     {
         _chatSessionRepository = chatSessionRepository;
         _chatMessageRepository = chatMessageRepository;
         _assistantRepository = assistantRepository;
-        _kernel = kernel;
         _clock = clock;
     }
 
@@ -80,7 +77,7 @@ internal class ChatContext : IChatContext
         Guid chatId, string model, string serviceId, ChatMessage botMessage, bool isRemoteAction, IHubContext<ChatHub, IChatHub> hubContext, Kernel kernel, CancellationToken cancellationToken = default)
     {
         var reply = new StringBuilder();
-        var chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
+        var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         try
         {
