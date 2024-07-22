@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 
-namespace StellarChat.Server.Api.Features.Models.Providers;
+namespace StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs.Providers;
 
-internal sealed class OllamaModelsProvider(IHttpClientService httpClientService, ISettingsRepository settingsRepository) : IModelsProvider
+internal class OllamaModelCatalog(IHttpClientService httpClientService, ISettingsRepository settingsRepository) : IModelCatalog
 {
     public string ProviderName => OllamaVendor;
     private const string OllamaVendor = "Ollama";
@@ -11,18 +11,18 @@ internal sealed class OllamaModelsProvider(IHttpClientService httpClientService,
     private readonly IHttpClientService _httpClientService = httpClientService;
     private readonly ISettingsRepository _settingsRepository = settingsRepository;
 
-    public IEnumerable<AvailableModelsResponse> FilterModels(string filter, IEnumerable<AvailableModelsResponse> models)
+    public IEnumerable<ModelCatalogResponse> FilterModels(string filter, IEnumerable<ModelCatalogResponse> models)
     {
         return [];
     }
 
-    public async ValueTask<IEnumerable<AvailableModelsResponse>> FetchModelsAsync(BrowseAvailableModels.BrowseAvailableModels query, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<ModelCatalogResponse>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken)
     {
         var settings = await _settingsRepository.GetSettingsByKeyAsync("app-settings");
 
         var ollamaSettings = settings.Integrations.SingleOrDefault(x => x.Name.Equals(ProviderName, StringComparison.InvariantCultureIgnoreCase));
 
-        if(ollamaSettings!.Endpoint.IsEmpty() && ollamaSettings.IsEnabled)
+        if (ollamaSettings!.Endpoint.IsEmpty() && ollamaSettings.IsEnabled)
         {
             return [];
         }
@@ -38,7 +38,7 @@ internal sealed class OllamaModelsProvider(IHttpClientService httpClientService,
             return [];
         }
 
-        return responseData.Models.Select(model => new AvailableModelsResponse
+        return responseData.Models.Select(model => new ModelCatalogResponse
         {
             Name = model.Name,
             Vendor = ProviderName,

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Newtonsoft.Json.Linq;
 using StellarChat.Server.Api.Features.Chat.CarryConversation.Exceptions;
 using System.Text;
 using System.Text.RegularExpressions;

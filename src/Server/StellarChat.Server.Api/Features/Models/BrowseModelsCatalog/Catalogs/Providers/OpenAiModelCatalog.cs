@@ -2,24 +2,18 @@
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Options;
 
-namespace StellarChat.Server.Api.Features.Models.Providers;
+namespace StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs.Providers;
 
-internal sealed class OpenAiModelsProvider : IModelsProvider
+internal class OpenAiModelCatalog(IHttpClientService httpClientService, OpenAiOptions openAiOptions) : IModelCatalog
 {
     public string ProviderName => OpenAIVendor;
-
     private const string OpenAIApiEndpoint = "https://api.openai.com/v1/models";
     private const string OpenAIVendor = "Openai";
-    private readonly IHttpClientService _httpClientService;
-    private readonly OpenAiOptions _openAiOptions;
+    
+    private readonly IHttpClientService _httpClientService = httpClientService;
+    private readonly OpenAiOptions _openAiOptions = openAiOptions;
 
-    public OpenAiModelsProvider(IHttpClientService httpClientService, OpenAiOptions openAiOptions)
-    {
-        _httpClientService = httpClientService;
-        _openAiOptions = openAiOptions;
-    }
-
-    public async ValueTask<IEnumerable<AvailableModelsResponse>> FetchModelsAsync(BrowseAvailableModels.BrowseAvailableModels query, CancellationToken cancellationToken = default)
+    public async ValueTask<IEnumerable<ModelCatalogResponse>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken = default)
     {
         var headers = new Dictionary<string, string>
         {
@@ -35,7 +29,7 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
             return [];
         }
 
-        return responseData.Data.Select(model => new AvailableModelsResponse
+        return responseData.Data.Select(model => new ModelCatalogResponse
         {
             Name = model.Id,
             Vendor = ProviderName,
@@ -44,7 +38,7 @@ internal sealed class OpenAiModelsProvider : IModelsProvider
         }).ToList();
     }
 
-    public IEnumerable<AvailableModelsResponse> FilterModels(string filter, IEnumerable<AvailableModelsResponse> models)
+    public IEnumerable<ModelCatalogResponse> FilterModels(string filter, IEnumerable<ModelCatalogResponse> models)
     {
         return filter switch
         {

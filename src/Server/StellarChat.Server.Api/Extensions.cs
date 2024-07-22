@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.FileProviders;
 using Microsoft.KernelMemory;
 using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
@@ -8,7 +6,8 @@ using StellarChat.Server.Api.DAL.Mongo.Repositories.Settings;
 using StellarChat.Server.Api.DAL.Mongo.Seeders;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
-using StellarChat.Server.Api.Features.Models.Providers;
+using StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs;
+using StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs.Providers;
 using StellarChat.Server.Api.Options;
 
 namespace StellarChat.Server.Api;
@@ -66,8 +65,8 @@ internal static class Extensions
             .AddScoped<ISettingsRepository, SettingsRepository>()
             .AddScoped<IDefaultAssistantService, DefaultAssistantService>()
             .AddScoped<IChatContext, ChatContext>()
-            .AddScoped<IModelsProvider, OpenAiModelsProvider>()
-            .AddScoped<IModelsProvider, OllamaModelsProvider>()
+            .AddScoped<IModelCatalog, OpenAiModelCatalog>()
+            .AddScoped<IModelCatalog, OllamaModelCatalog>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
             .AddMongoRepository<AssistantDocument, Guid>("assistants")
