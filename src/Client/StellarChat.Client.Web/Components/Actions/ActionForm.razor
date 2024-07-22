@@ -1,5 +1,5 @@
 ﻿@inject IActionService _actionService
-@inject IAvailableModelsService _availableModelsService
+@inject IModelCatalogService _modelCatalogService
 @inject ChatState _chatState
 @inject ISnackbar Snackbar
 
@@ -39,7 +39,7 @@
                     For="@(() => Action!.Model)" 
                     HelperText="The model that will be used when executing actions.">
             
-            @foreach (var model in AvailableModels)
+            @foreach (var model in ModelCatalog)
             {
                 <MudSelectItem Value="@model.Name" />
             }
@@ -112,7 +112,7 @@
     [Parameter] public Guid ActiontId { get; set; }
     [Parameter] public EventCallback OnActionSubmit { get; set; }
     private NativeActionResponse Action { get; set; } = new();
-    private List<AvailableModelsResponse> AvailableModels { get; set; } = new();
+    private List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
 
     public List<string> Categories { get; set; } = new()
     {
@@ -187,7 +187,7 @@ Some actions require just the latest message, while others need the full convers
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadModels();
+        await LoadModelCatalog();
     }
 
     protected override async Task OnParametersSetAsync()
@@ -195,19 +195,19 @@ Some actions require just the latest message, while others need the full convers
         await PopulateForm();
     }
 
-    private async Task LoadModels()
+    private async Task LoadModelCatalog()
     {
-        var response = await _availableModelsService.BrowseAvailableModels();
-        var models = response.Value;
+        var response = await _modelCatalogService.BrowseModelsCatalog();
+        var modelCatalog = response.Value;
 
         if (!response.Succeeded)
         {
-            ShowSnackbar("Failed to load available models. Please try again.", Severity.Error);
+            ShowSnackbar("Failed to load model catalog. Please try again.", Severity.Error);
         }
 
-        if (models is not null)
+        if (modelCatalog is not null)
         {
-            AvailableModels = models.ToList();
+            ModelCatalog = modelCatalog.ToList();
         }
     }
 

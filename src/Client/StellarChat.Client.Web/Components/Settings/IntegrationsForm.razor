@@ -32,7 +32,7 @@
                                        For="@(() => AppSettings.Key)"
                                        HelperText="Select the model to be pulled from the Ollama server to your local disk.">
 
-                                @foreach (var model in AvailableModels)
+                                @foreach (var model in ModelCatalog)
                                 {
                                     <MudSelectItem Value="@model.Name" />
                                 }
@@ -54,7 +54,7 @@
 {
     private AppSettingsResponse AppSettings { get; set; } = new();
 
-    private List<AvailableModelsResponse> AvailableModels { get; set; } = new();
+    private List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
 
     private const string OllamaProvider = "ollama";
     private const string OpenAiProvider = "openai";

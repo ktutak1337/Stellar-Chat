@@ -25,7 +25,7 @@ internal static class Extensions
         builder.Services.AddScoped<IAssistantService, AssistantService>();
         builder.Services.AddScoped<ISettingsService, SettingsService>();
         builder.Services.AddScoped<IStorageService, StorageService>();
-        builder.Services.AddScoped<IAvailableModelsService, AvailableModelsService>();
+        builder.Services.AddScoped<IModelCatalogService, ModelCatalogService>();
 
         builder.Services.AddMudServices();
 
