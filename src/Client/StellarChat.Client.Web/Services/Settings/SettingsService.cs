@@ -20,7 +20,7 @@ public class SettingsService(IRestHttpClient httpClient) : ISettingsService
         return response;
     }
 
-    public async ValueTask<ApiResponse> UpdateIntegrationsAsync(List<Integration> Integrations, string key = "app-settings")
+    public async ValueTask<ApiResponse> UpdateIntegrationsAsync(List<Integration> Integrations, string key = SettingsKey)
     {
         var payload = new UpdateIntegrationsRequest(key, Integrations);
 

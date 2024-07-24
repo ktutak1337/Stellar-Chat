@@ -9,6 +9,7 @@ using StellarChat.Client.Web.Services.Settings;
 using StellarChat.Client.Web.Services.Storage;
 using StellarChat.Client.Web.Shared.Http;
 using StellarChat.Client.Web.State;
+using StellarChat.Shared.Contracts.Settings;
 
 namespace StellarChat.Client.Web;
 
@@ -31,4 +32,7 @@ internal static class Extensions
 
         return builder;
     }
+
+    public static Integration FetchIntegrationSettings(this AppSettingsResponse settings, string providerName) 
+        => settings.Integrations.First(x => x.Name.Equals(providerName, StringComparison.InvariantCultureIgnoreCase));
 }
