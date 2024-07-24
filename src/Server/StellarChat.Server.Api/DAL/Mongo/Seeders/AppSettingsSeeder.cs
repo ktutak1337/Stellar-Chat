@@ -67,8 +67,8 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
 
     private async Task UpdateSettingsWithIntegrationsAsync(IMongoCollection<AppSettingsDocument> settingsCollection, AppSettingsDocument appSettingsDocument)
     {
-        appSettingsDocument.Integrations = new List<IntegrationDocument>
-        {
+        appSettingsDocument.Integrations =
+        [
             new() 
             {
                 Name = "OpenAI",
@@ -80,10 +80,11 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
             {
                 Name = "Ollama",
                 ApiKey = string.Empty,
-                Endpoint = string.Empty,
-                IsEnabled = true,
+                Endpoint = "http://localhost:11434",
+                IsEnabled = false,
             },
-        };
+        ];
+
         appSettingsDocument.UpdatedAt = _clock.GetLocalNow();
         _logger.LogInformation("Started updating 'settings' collection with integrations.");
         await settingsCollection.ReplaceOneAsync(doc => doc.Id == appSettingsDocument.Id, appSettingsDocument);
