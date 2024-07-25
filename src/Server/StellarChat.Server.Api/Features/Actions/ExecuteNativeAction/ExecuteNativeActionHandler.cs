@@ -106,7 +106,7 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
     private async Task<ChatMessage> GetBotResponseAsync(Guid chatId, string serviceId, NativeAction action)
     {
         var connector = _connectorFactory.SelectConnector(serviceId);
-        var kernel = connector.Kernel ?? connector.CreateKernel(serviceId);
+        var kernel = connector.Kernel ?? connector.CreateKernel(action.Model);
 
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
         var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, serviceId, botMessage, action.IsRemoteAction, _hubContext, kernel);
