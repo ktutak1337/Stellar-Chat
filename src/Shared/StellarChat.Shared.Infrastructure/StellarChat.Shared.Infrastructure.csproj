@@ -11,15 +11,15 @@
   </ItemGroup>  
 	
   <ItemGroup>
-	  <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.67.240712.1" />
-	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.15.1" />
-	  <PackageReference Include="MongoDB.Driver" Version="2.27.0" />
-	  <PackageReference Include="Serilog" Version="4.0.1-dev-02205" />
+	  <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.68.240722.1" />
+	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.16.1" />
+	  <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
+	  <PackageReference Include="Serilog" Version="4.0.2-dev-02220" />
 	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00341" />
-	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10391" />
+	  <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10398" />
 	  <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
 	  <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-	  <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
+	  <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0-dev-00310" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>  
 
