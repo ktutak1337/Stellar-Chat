@@ -58,6 +58,7 @@
         _chatState.SelectedAssistantChanged += StateHasChanged;
         _chatState.SelectedModelChanged += StateHasChanged;
         _chatState.ServiceIdChanged += StateHasChanged;
+        _chatState.NativeActionServiceChanged += StateHasChanged;
         _chatState.UserNameChanged += StateHasChanged;
         _chatState.ActionIdChanged += StateHasChanged;
         _chatState.FullWidthTextChanged += StateHasChanged;
@@ -179,7 +180,7 @@
 
     private async Task ExecuteActionAsync(Guid actionId, Guid chatId, string message)
     {
-        await _actionService.ExecuteAction(actionId, chatId, _chatState.ServiceId, message);
+        await _actionService.ExecuteAction(actionId, chatId, _chatState.NativeActionServiceId, message);
         _textStreaming.Clear();
     }
 
@@ -255,6 +256,7 @@
         _chatState.SelectedAssistantChanged -= StateHasChanged;
         _chatState.SelectedModelChanged -= StateHasChanged;
         _chatState.ServiceIdChanged -= StateHasChanged;
+        _chatState.NativeActionServiceChanged -= StateHasChanged;
         _chatState.UserNameChanged -= StateHasChanged;
         _chatState.ActionIdChanged -= StateHasChanged;
         _chatState.FullWidthTextChanged -= StateHasChanged;

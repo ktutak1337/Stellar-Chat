@@ -49,6 +49,15 @@ public class ChatState
         ServiceIdChanged?.Invoke();
     }
 
+    public string NativeActionServiceId { get; set; } = string.Empty;
+    public event Action? NativeActionServiceChanged;
+
+    public void SetNativeActionServiceId(string nativeActionServiceId)
+    {
+        NativeActionServiceId = nativeActionServiceId;
+        NativeActionServiceChanged?.Invoke();
+    }
+
     public Guid ActionId { get; set; }
     public event Action? ActionIdChanged;
 
