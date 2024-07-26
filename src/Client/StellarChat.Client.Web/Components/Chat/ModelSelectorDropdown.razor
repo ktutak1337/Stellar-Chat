@@ -1,4 +1,4 @@
-﻿@inject IAvailableModelsService _availableModelsService
+﻿@inject IModelCatalogService _modelCatalogService
 @inject ChatState _chatState
 @inject ISnackbar Snackbar
 
@@ -23,8 +23,9 @@
 
 @code
 {
-    public List<AvailableModelsResponse> Models { get; set; } = new();
+    public List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
     private string CurrentValue { get; set; } = string.Empty;
+    private string ServiceId { get; set; } = string.Empty;
 
     private bool coerceText;
     private bool coerceValue;
@@ -32,25 +33,26 @@
     protected override async Task OnInitializedAsync()
     {
         _chatState.SelectedModelChanged += StateHasChanged;
+        _chatState.ServiceIdChanged += StateHasChanged;
         _chatState.SelectedAssistantChanged += SetDefaultModel;
 
-        await LoadModels();
+        await LoadModelCatalog();
         SetDefaultModel();
     }
 
-    private async Task LoadModels()
+    private async Task LoadModelCatalog()
     {
-        var response = await _availableModelsService.BrowseAvailableModels();
-        var models = response.Value;
+        var response = await _modelCatalogService.BrowseModelsCatalog();
+        var modelCatalog = response.Value;
 
         if(!response.Succeeded)
         {
-            ShowSnackbar("Failed to load available models. Please try again.", Severity.Error);
+            ShowSnackbar("Failed to load model catalog. Please try again.", Severity.Error);
         }
 
-        if(models is not null)
+        if(modelCatalog is not null)
         {
-            Models = models.ToList();
+            ModelCatalog = modelCatalog.ToList();
         }
     }
 
@@ -62,6 +64,9 @@
         {
             CurrentValue = selectedModel!;
             _chatState.SetSelectedModel(selectedModel!);
+
+            var serviceId = ModelCatalog.SingleOrDefault(x => x.Name == CurrentValue)?.Provider ?? string.Empty;
+            _chatState.SetServiceId(serviceId);
         }
     }
 
@@ -69,10 +74,10 @@
     {
         if (string.IsNullOrEmpty(value))
         {
-            return Models.Select(model => model.Name);
+            return ModelCatalog.Select(model => model.Name);
         }
 
-        var result = Models
+        var result = ModelCatalog
             .Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase))
             .Select(model => model.Name);
 
@@ -82,6 +87,9 @@
     private void OnValueChanged(string value)
     {
         CurrentValue = value.IsEmpty() ? string.Empty : value;
+        var serviceId = ModelCatalog.SingleOrDefault(x => x.Name == value)?.Provider ?? string.Empty;
+        
+        _chatState.SetServiceId(serviceId);
         _chatState.SetSelectedModel(CurrentValue);
     }
 
@@ -92,7 +100,7 @@
         => SetDefaultModel();
 
     private bool IsValidModel(string value) 
-        => value.IsNotEmpty() && Models.Any(model => model.Name == value);
+        => value.IsNotEmpty() && ModelCatalog.Any(model => model.Name == value);
 
     private void ShowSnackbar(string message, Severity severity)
     {
@@ -107,6 +115,7 @@
     public void Dispose()
     {
         _chatState.SelectedModelChanged -= StateHasChanged;
+        _chatState.ServiceIdChanged -= StateHasChanged;
         _chatState.SelectedAssistantChanged -= SetDefaultModel;
     }
 }

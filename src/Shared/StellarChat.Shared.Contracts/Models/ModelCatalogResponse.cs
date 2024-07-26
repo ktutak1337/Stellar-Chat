@@ -1,6 +1,6 @@
 ﻿namespace StellarChat.Shared.Contracts.Models;
 
-public class AvailableModelsResponse
+public class ModelCatalogResponse
 {
     public string Name { get; set; } = string.Empty;
     public int ContextSize { get; set; }

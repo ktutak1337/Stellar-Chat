@@ -1,4 +1,5 @@
 ﻿@inject IActionService _actionService
+@inject IModelCatalogService _modelCatalogService
 @inject ChatState _chatState
 @implements IDisposable
 
@@ -54,6 +55,7 @@
     [Parameter] public List<NativeActionResponse> Actions { get; set; } = new();
 
     private MudAutocomplete<NativeActionResponse>? _autocomplete;
+    private List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
 
     private bool coerceText;
     private bool coerceValue;
@@ -63,8 +65,10 @@
     protected override async Task OnInitializedAsync()
     {
         _chatState.ActionsRefreshed += async () => await LoadActions();
+        _chatState.NativeActionServiceChanged += StateHasChanged;
 
         await LoadActions();
+        await LoadModelCatalog();
     }
 
     private async Task LoadActions()
@@ -75,6 +79,17 @@
         if (actions is not null)
         {
             Actions = actions.ToList();
+        }
+    }
+
+    private async Task LoadModelCatalog()
+    {
+        var response = await _modelCatalogService.BrowseModelsCatalog();
+        var modelCatalog = response.Value;
+
+        if (modelCatalog is not null)
+        {
+            ModelCatalog = modelCatalog.ToList();
         }
     }
 
@@ -138,6 +153,9 @@
     {
         if (action is not null)
         {
+            var serviceId = ModelCatalog.SingleOrDefault(x => x.Name == action.Model)?.Provider ?? string.Empty;
+            _chatState.SetNativeActionServiceId(serviceId);
+
             ActionChanged.InvokeAsync(action);
             _isOpen = false;
         }
@@ -146,5 +164,6 @@
     public void Dispose()
     {
         _chatState.ActionsRefreshed -= async () => await LoadActions();
+        _chatState.NativeActionServiceChanged -= StateHasChanged;
     }
 }

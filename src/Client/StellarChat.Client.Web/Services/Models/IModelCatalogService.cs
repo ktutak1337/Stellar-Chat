@@ -3,7 +3,7 @@ using StellarChat.Shared.Contracts.Models;
 
 namespace StellarChat.Client.Web.Services.Models;
 
-public interface IAvailableModelsService
+public interface IModelCatalogService
 {
-    ValueTask<ApiResponse<IEnumerable<AvailableModelsResponse>>> BrowseAvailableModels();
+    ValueTask<ApiResponse<IEnumerable<ModelCatalogResponse>>> BrowseModelsCatalog();
 }

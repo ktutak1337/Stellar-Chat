@@ -19,4 +19,13 @@ public class SettingsService(IRestHttpClient httpClient) : ISettingsService
 
         return response;
     }
+
+    public async ValueTask<ApiResponse> UpdateIntegrationsAsync(List<Integration> Integrations, string key = SettingsKey)
+    {
+        var payload = new UpdateIntegrationsRequest(key, Integrations);
+
+        var response = await _httpClient.PutAsync($"/settings/{key}/integrations", payload);
+
+        return response;
+    }
 }

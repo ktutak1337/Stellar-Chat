@@ -41,9 +41,9 @@ public class ActionService(IRestHttpClient httpClient) : IActionService
         return response;
     }
 
-    public async ValueTask<ApiResponse<string>> ExecuteAction(Guid actionId, Guid chatId, string message)
+    public async ValueTask<ApiResponse<string>> ExecuteAction(Guid actionId, Guid chatId, string serviceId, string message)
     {
-        var payload = new ExecuteNativeActionRequest(actionId, chatId, message);
+        var payload = new ExecuteNativeActionRequest(actionId, chatId, serviceId, message);
         
         var response = await _httpClient.PostAsync<string>($"/actions/{actionId}/execute", payload);
 

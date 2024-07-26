@@ -4,12 +4,12 @@
     <MudDrawer @bind-Open="IsOpen" Anchor="Anchor.Left" DisableOverlay="true" Elevation="8">
         <DrawerHeader Title="Settings" OnClose="CloseDrawer" DisplayDivider="true" />
         
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4" Style="height: 100%;">
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4" Style="height: 100%;" Class="custom-tabs">
             <MudTabPanel Icon="@Icons.Material.Filled.Person" Text="Profile">
                 <ProfileForm/>
             </MudTabPanel>
             <MudTabPanel Icon="@CustomIcons.Puzzle" Text="Integrations">
-                <MudText>Work in Progress</MudText>
+                <IntegrationsForm />
             </MudTabPanel>
         </MudTabs>
         <MudPaper class="d-flex flex-row justify-center gap-2 pa-4" Style="@BackgroundColorStyle">
@@ -23,6 +23,12 @@
         </MudPaper>
     </MudDrawer>
 </MudDrawerContainer>
+
+<style>
+    .custom-tabs .mud-tabs-toolbar {
+        background-color: @(_IsDarkModeEnabled ? "var(--mud-palette-surface)" : "#d6d3d1");
+    }
+</style>
 
 @code 
 {
@@ -40,6 +46,7 @@
     private string AppLogoSmall => _configuration["app:logoSmall"] ?? string.Empty;
     private string AppReleases => _configuration["app:releases"] ?? string.Empty;
 
+    private string TabsBackgroundColorStyle => $"color: {(_IsDarkModeEnabled ? "var(--mud-palette-surface)" : "#d6d3d1")}; height: 100%;";
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#1e1f22" : "#d6d3d1")};";
 
     protected override async Task OnInitializedAsync()

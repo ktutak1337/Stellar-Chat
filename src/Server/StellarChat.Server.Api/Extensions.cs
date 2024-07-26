@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.FileProviders;
 using Microsoft.KernelMemory;
-using Microsoft.SemanticKernel;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Actions;
 using StellarChat.Server.Api.DAL.Mongo.Repositories.Settings;
 using StellarChat.Server.Api.DAL.Mongo.Seeders;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
-using StellarChat.Server.Api.Features.Models.Providers;
+using StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs;
+using StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs.Providers;
+using StellarChat.Server.Api.Features.Models.Connectors.Providers;
+using StellarChat.Server.Api.Features.Models.Connectors;
 using StellarChat.Server.Api.Options;
 
 namespace StellarChat.Server.Api;
@@ -46,7 +48,11 @@ internal static class Extensions
         builder.Services.AddScoped<IAppSettingsSeeder, AppSettingsSeeder>();
         builder.Services.AddScoped<IAssistantsSeeder, AssistantsSeeder>();
         builder.Services.AddScoped<IActionsSeeder, ActionsSeeder>();
+        builder.Services.AddScoped<IConnectorStrategy, ConnectorStrategy>();
+        builder.Services.AddScoped<IConnector, OpenAiProvider>();
+        builder.Services.AddScoped<IConnector, OllamaProvider>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        builder.Services.AddOptions(builder.Configuration);
 
         builder.AddSharedInfrastructure();
 
@@ -64,7 +70,8 @@ internal static class Extensions
             .AddScoped<ISettingsRepository, SettingsRepository>()
             .AddScoped<IDefaultAssistantService, DefaultAssistantService>()
             .AddScoped<IChatContext, ChatContext>()
-            .AddScoped<IModelsProvider, OpenAiModelsProvider>()
+            .AddScoped<IModelCatalog, OpenAiModelCatalog>()
+            .AddScoped<IModelCatalog, OllamaModelCatalog>()
             .AddMongoRepository<ChatMessageDocument, Guid>("messages")
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
             .AddMongoRepository<AssistantDocument, Guid>("assistants")
@@ -76,7 +83,6 @@ internal static class Extensions
             options.ServiceLifetime = ServiceLifetime.Scoped;
         });
 
-        builder.Services.AddSemanticKernel(builder.Configuration);
         builder.Services.AddKernelMemory(builder.Configuration);
     }
 
@@ -130,7 +136,6 @@ internal static class Extensions
 
         return app;
     }
-
 
     public static WebApplication ConfigureChatSessionIndexes(this WebApplication app)
     {
@@ -203,29 +208,19 @@ internal static class Extensions
         return services;
     }
 
-    public static IServiceCollection AddSemanticKernel(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
     {
-        var section = configuration.GetSection(OpenAiOptions.Key);
-        var options = section.BindOptions<OpenAiOptions>();
-        services.Configure<OpenAiOptions>(section);
-        services.AddSingleton(options);
+        var ollamaSection = configuration.GetSection(OllamaOptions.Key);
+        var ollamaOptions = ollamaSection.BindOptions<OllamaOptions>();
 
-        var kernel = Kernel.CreateBuilder()
-            .AddOpenAIChatCompletion(
-                modelId: options.TEXT_MODEL,
-                apiKey: options.API_KEY,
-                serviceId: "openai")
-            .Build();
+        var openAiSection = configuration.GetSection(OpenAiOptions.Key);
+        var openAiOptions = openAiSection.BindOptions<OpenAiOptions>();
 
-
-        services.AddSingleton(kernel);
-
-        using var serviceProvider = services.BuildServiceProvider();
+        services.Configure<OllamaOptions>(ollamaSection);
+        services.AddSingleton(ollamaOptions);
         
-        var chatContext = serviceProvider.GetRequiredService<IChatContext>();
-        var clock = serviceProvider.GetRequiredService<TimeProvider>();
-
-        kernel.ImportPluginFromObject(new ChatPlugin(chatContext, clock), nameof(ChatPlugin));
+        services.Configure<OpenAiOptions>(openAiSection);
+        services.AddSingleton(openAiOptions);
 
         return services;
     }

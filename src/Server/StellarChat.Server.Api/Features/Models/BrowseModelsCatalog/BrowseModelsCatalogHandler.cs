@@ -1,24 +1,24 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using StellarChat.Server.Api.Features.Models.Providers;
+using StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs;
 using System.Collections.Concurrent;
 using System.Text;
 
-namespace StellarChat.Server.Api.Features.Models.BrowseAvailableModels;
+namespace StellarChat.Server.Api.Features.Models.BrowseModelsCatalog;
 
-internal sealed class BrowseAvailableModelsHandler : IQueryHandler<BrowseAvailableModels, IEnumerable<AvailableModelsResponse>?>
+internal sealed class BrowseModelsCatalogHandler : IQueryHandler<BrowseModelsCatalog, IEnumerable<ModelCatalogResponse>?>
 {
-    private readonly IEnumerable<IModelsProvider> _modelProviders;
+    private readonly IEnumerable<IModelCatalog> _modelCatalogs;
     private readonly IMemoryCache _memoryCache;
 
     private readonly ConcurrentBag<string> _activeCacheKeys = new();
 
-    public BrowseAvailableModelsHandler(IEnumerable<IModelsProvider> modelProviders, IMemoryCache memoryCache)
+    public BrowseModelsCatalogHandler(IEnumerable<IModelCatalog> modelCatalogs, IMemoryCache memoryCache)
     {
-        _modelProviders = modelProviders;
+        _modelCatalogs = modelCatalogs;
         _memoryCache = memoryCache;
     }
 
-    public async ValueTask<IEnumerable<AvailableModelsResponse>?> Handle(BrowseAvailableModels query, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<ModelCatalogResponse>?> Handle(BrowseModelsCatalog query, CancellationToken cancellationToken)
     {
         var cacheKey = GenerateCacheKey(query);
         _activeCacheKeys.Add(cacheKey);
@@ -31,17 +31,17 @@ internal sealed class BrowseAvailableModelsHandler : IQueryHandler<BrowseAvailab
         });
     }
 
-    private async Task<IEnumerable<AvailableModelsResponse>> FetchModelsFromProvider(BrowseAvailableModels query, CancellationToken cancellationToken)
+    private async Task<IEnumerable<ModelCatalogResponse>> FetchModelsFromProvider(BrowseModelsCatalog query, CancellationToken cancellationToken)
     {
-        var availableModels = new List<AvailableModelsResponse>();
+        var availableModels = new List<ModelCatalogResponse>();
 
-        foreach (var provider in _modelProviders)
+        foreach (var provider in _modelCatalogs)
         {
             var providerName = provider.ProviderName;
             var models = await provider.FetchModelsAsync(query, cancellationToken);
 
-            if (query.Provider is not null 
-                && query.Provider.Equals(providerName, StringComparison.OrdinalIgnoreCase) 
+            if (query.Provider is not null
+                && query.Provider.Equals(providerName, StringComparison.OrdinalIgnoreCase)
                 && query.Filter is not null)
             {
                 models = provider.FilterModels(query.Filter, models);
@@ -52,15 +52,15 @@ internal sealed class BrowseAvailableModelsHandler : IQueryHandler<BrowseAvailab
         return availableModels;
     }
 
-    private string GenerateCacheKey(BrowseAvailableModels query)
+    private string GenerateCacheKey(BrowseModelsCatalog query)
     {
-        var keyBuilder = new StringBuilder("AvailableModels");
-        
+        var keyBuilder = new StringBuilder("ModelCatalog");
+
         if (query.Provider != null) keyBuilder.Append($"_{query.Provider}");
         if (query.Filter != null) keyBuilder.Append($"_{query.Filter}");
 
         var cacheKey = keyBuilder.ToString();
-        
+
         return cacheKey;
     }
 }

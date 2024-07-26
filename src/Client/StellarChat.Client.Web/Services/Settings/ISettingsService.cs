@@ -9,4 +9,5 @@ internal interface ISettingsService
 
     ValueTask<ApiResponse<AppSettingsResponse>> GetSettingsAsync(string key = SettingsKey);
     ValueTask<ApiResponse> UpdateProfileAsync(string name, string avatarUrl, string description, string key = SettingsKey);
+    ValueTask<ApiResponse> UpdateIntegrationsAsync(List<Integration> Integrations, string key = SettingsKey);
 }

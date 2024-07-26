@@ -3,6 +3,7 @@ using StellarChat.Server.Api.Features.Actions.CreateNativeAction;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Exceptions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;
+using StellarChat.Server.Api.Features.Models.Connectors;
 
 namespace StellarChat.Server.Api.Features.Actions.ExecuteNativeAction;
 
@@ -11,32 +12,32 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
     private readonly INativeActionRepository _nativeActionRepository;
     private readonly IHttpClientService _httpClientService;
     private readonly IChatContext _chatContext;
-    private readonly Kernel _kernel;
     private readonly IHubContext<ChatHub, IChatHub> _hubContext;
     private readonly TimeProvider _clock;
+    private readonly IConnectorStrategy _connectorFactory;
     private readonly ILogger<CreateNativeActionHandler> _logger;
 
     public ExecuteNativeActionHandler(
         INativeActionRepository nativeActionRepository,
         IHttpClientService httpClientService,
         IChatContext chatContext,
-        Kernel kernel,
         IHubContext<ChatHub, IChatHub> hubContext,
         TimeProvider clock,
-        ILogger<CreateNativeActionHandler> logger)
+        ILogger<CreateNativeActionHandler> logger,
+        IConnectorStrategy connectorFactory)
     {
         _nativeActionRepository = nativeActionRepository;
         _httpClientService = httpClientService;
         _chatContext = chatContext;
-        _kernel = kernel;
         _hubContext = hubContext;
         _clock = clock;
         _logger = logger;
+        _connectorFactory = connectorFactory;
     }
 
     public async ValueTask<string> Handle(ExecuteNativeAction command, CancellationToken cancellationToken)
     {
-        var (id, chatId, message) = command;
+        var (id, chatId, serviceId, message) = command;
         string semanticResponse = string.Empty;
 
         var action = await _nativeActionRepository.GetAsync(id) ?? throw new NativeActionNotFoundException(id);
@@ -47,7 +48,7 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
 
         await SaveUserMessageAsync(chatId, message);
 
-        var botResponseMessage = await GetBotResponseAsync(chatId, action);
+        var botResponseMessage = await GetBotResponseAsync(chatId, serviceId, action);
         semanticResponse = botResponseMessage.Content;
 
         if (isRemoteAction)
@@ -102,10 +103,13 @@ internal sealed class ExecuteNativeActionHandler : ICommandHandler<ExecuteNative
         await _chatContext.ExtractChatHistoryAsync(chatId);
     }
 
-    private async Task<ChatMessage> GetBotResponseAsync(Guid chatId, NativeAction action)
+    private async Task<ChatMessage> GetBotResponseAsync(Guid chatId, string serviceId, NativeAction action)
     {
+        var connector = _connectorFactory.SelectConnector(serviceId);
+        var kernel = connector.Kernel ?? connector.CreateKernel(action.Model);
+
         var botMessage = CreateBotMessage(chatId, content: string.Empty);
-        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, botMessage, action.IsRemoteAction, _hubContext);
+        var botResponseMessage = await _chatContext.StreamResponseToClientAsync(chatId, action.Model, serviceId, botMessage, action.IsRemoteAction, _hubContext, kernel);
         
         return botResponseMessage;
     }
