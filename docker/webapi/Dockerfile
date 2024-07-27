@@ -1,11 +1,14 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+ARG PLATFORM=$BUILDPLATFORM
+
+FROM --platform=$PLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8443
 
 RUN adduser --disabled-password --gecos "" stellar
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG PLATFORM
+FROM --platform=$PLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ../../src/Server src/Server
@@ -13,7 +16,7 @@ COPY ../../src/Shared src/Shared
 
 RUN dotnet restore "./src/Server/StellarChat.Server.Api/StellarChat.Server.Api.csproj"
 COPY . .
-WORKDIR "/src/Server/StellarChat.Server.Api"
+WORKDIR "/src/src/Server/StellarChat.Server.Api"
 RUN dotnet build "./StellarChat.Server.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
