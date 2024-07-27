@@ -13,7 +13,7 @@ COPY ../../src/Shared src/Shared
 
 RUN dotnet restore "./src/Server/StellarChat.Server.Api/StellarChat.Server.Api.csproj"
 COPY . .
-WORKDIR "/src/src/Server/StellarChat.Server.Api"
+WORKDIR "/src/Server/StellarChat.Server.Api"
 RUN dotnet build "./StellarChat.Server.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
