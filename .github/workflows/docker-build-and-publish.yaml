@@ -28,7 +28,7 @@ jobs:
           
       - name: Extract version from tag  
         id: extract_version  
-        run: echo "::set-output name=version::${GITHUB_REF#refs/tags/v}"
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
       - name: Build and push Docker images for web api
         uses: docker/build-push-action@v6.5.0
@@ -37,9 +37,9 @@ jobs:
           file: docker/webapi/Dockerfile  
           platforms: linux/amd64,linux/arm64  
           push: true  
-          tags: |  
-            stellarchat-api:${{ steps.extract_version.outputs.version }}  
-            stellarchat-api:latest
+          tags: |
+            ${{ vars.DOCKER_IMAGE_NAME }}/stellarchat-api:${{ env.version }}  
+            ${{ vars.DOCKER_IMAGE_NAME }}/stellarchat-api:latest
 
       - name: Build and push Docker images for web app
         uses: docker/build-push-action@v6.5.0
@@ -48,6 +48,6 @@ jobs:
           file: docker/webapp/Dockerfile  
           platforms: linux/amd64,linux/arm64  
           push: true  
-          tags: |  
-            stellarchat-web:${{ steps.extract_version.outputs.version }}  
-            stellarchat-web:latest
+          tags: |
+            ${{ vars.DOCKER_IMAGE_NAME }}/stellarchat-web:${{ env.version }}  
+            ${{ vars.DOCKER_IMAGE_NAME }}/stellarchat-web:latest
