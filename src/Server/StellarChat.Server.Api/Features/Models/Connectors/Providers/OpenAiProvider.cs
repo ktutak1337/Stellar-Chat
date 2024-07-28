@@ -10,7 +10,7 @@ internal sealed class OpenAiProvider : IConnector
     private readonly IChatContext _chatContext;
     private readonly TimeProvider _clock;
     public Kernel Kernel { get; private set; } = null!;
-    public string ProviderName => "openai";
+    public string ProviderName => "OpenAI";
 
     public OpenAiProvider(OpenAiOptions options, IChatContext chatContext, TimeProvider clock)
     {

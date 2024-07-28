@@ -41,7 +41,55 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
             Integrations =
             [
                 new() {
-                    Name = "OpenAI",
+                    Name = "Anthropic",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "AWSAmazonBedrock",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "Cloudflare",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "GoogleGemini",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "Groq",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "HuggingFace",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "LMStudio",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "MicrosoftAzureOpenAI",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "MistralAI",
                     ApiKey = string.Empty,
                     Endpoint = string.Empty,
                     IsEnabled = true,
@@ -52,6 +100,30 @@ public class AppSettingsSeeder(ILogger<AppSettingsSeeder> logger, TimeProvider c
                     Endpoint = string.Empty,
                     IsEnabled = true,
                 },
+                new() {
+                    Name = "OpenAI",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "OpenRouter",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "Perplexity",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                },
+                new() {
+                    Name = "TogetherAI",
+                    ApiKey = string.Empty,
+                    Endpoint = string.Empty,
+                    IsEnabled = true,
+                }
             ],
             CreatedAt = now,
             UpdatedAt = now

@@ -13,7 +13,7 @@ internal sealed class OllamaProvider : IConnector
     private readonly string _endpoint;
 
     public Kernel Kernel { get; private set; } = null!;
-    public string ProviderName => "ollama";
+    public string ProviderName => "Ollama";
 
     public OllamaProvider(OllamaOptions options, ISettingsRepository settingsRepository, IChatContext chatContext, TimeProvider clock)
     {
