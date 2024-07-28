@@ -15,9 +15,9 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="d-flex flex-column" style="height: 100vh">
+<div @ref="ChatMessagesDiv" class="d-flex flex-column overflow-auto flex-grow-1" style="height: 100vh">
     <div class="d-flex flex-column flex-grow-1 mt-4 @(_chatState.IsFullWidthText ? "mx-5 flex-grow-1" : "mx-auto")" style="@(_chatState.IsFullWidthText ? "" : "max-width: 960px; width: 100%;")">
-        <div @ref="ChatMessagesDiv" id="chat-messages" class="overflow-auto flex-grow-1">
+        <div id="chat-messages" class="overflow-auto flex-grow-1">
             @if (_chatState.ChatId == Guid.Empty)
             {
                 <div class="d-flex justify-center align-center h-100">
