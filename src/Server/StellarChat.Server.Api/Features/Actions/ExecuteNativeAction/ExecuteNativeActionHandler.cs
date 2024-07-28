@@ -1,5 +1,4 @@
-﻿using Microsoft.SemanticKernel;
-using StellarChat.Server.Api.Features.Actions.CreateNativeAction;
+﻿using StellarChat.Server.Api.Features.Actions.CreateNativeAction;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Exceptions;
 using StellarChat.Server.Api.Features.Actions.Webhooks.Services;
 using StellarChat.Server.Api.Features.Chat.CarryConversation;

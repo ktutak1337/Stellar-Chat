@@ -2,6 +2,12 @@
 
 public class ModelCatalogResponse
 {
+    public IEnumerable<ModelCatalog> Models { get; set; } = [];
+    public DateTimeOffset LastFetched { get; set; }
+}
+
+public class ModelCatalog
+{
     public string Name { get; set; } = string.Empty;
     public int ContextSize { get; set; }
     public string Vendor { get; set; } = string.Empty;

@@ -21,7 +21,7 @@
         
         <MudText>Model</MudText>
         <MudSelect @bind-Value="Assistant.DefaultModel" Margin="Margin.Dense" T="string" Variant="Variant.Outlined" For="@(() => Assistant!.DefaultModel)">
-            @foreach (var model in AvailableModels)
+            @foreach (var model in ModelCatalog.Models)
             {
                 <MudSelectItem Value="@model.Name" />
             }
@@ -52,7 +52,7 @@
     [Parameter] public Guid AssistantId { get; set; }
     [Parameter] public EventCallback OnAssistantSubmit { get; set; }
     private AssistantResponse Assistant { get; set; } = new();
-    private List<ModelCatalogResponse> AvailableModels { get; set; } = new();
+    private ModelCatalogResponse ModelCatalog { get; set; } = new();
 
     private const string assistantBehaviorGuidelines = @"
 Enter the Metaprompt here. This set of instructions will define your assistant's behavior
@@ -108,16 +108,16 @@ reflective of the assistant's intended personality and capabilities.<br /><br />
     private async Task LoadModels()
     {
         var response = await _modelCatalogService.BrowseModelsCatalog();
-        var models = response.Value;
+        var modelCatalog = response.Value;
 
         if (!response.Succeeded)
         {
-            ShowSnackbar("Failed to load available models. Please try again.", Severity.Error);
+            ShowSnackbar("Failed to load model catalog. Please try again.", Severity.Error);
         }
 
-        if (models is not null)
+        if (modelCatalog is not null)
         {
-            AvailableModels = models.ToList();
+            ModelCatalog = modelCatalog;
         }
     }
 

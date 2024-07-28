@@ -11,12 +11,12 @@ internal class OllamaModelCatalog(IHttpClientService httpClientService, ISetting
     private readonly IHttpClientService _httpClientService = httpClientService;
     private readonly ISettingsRepository _settingsRepository = settingsRepository;
 
-    public IEnumerable<ModelCatalogResponse> FilterModels(string filter, IEnumerable<ModelCatalogResponse> models)
+    public IEnumerable<ModelCatalog> FilterModels(string filter, IEnumerable<ModelCatalog> models)
     {
         return [];
     }
 
-    public async ValueTask<IEnumerable<ModelCatalogResponse>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<ModelCatalog>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken)
     {
         var settings = await _settingsRepository.GetSettingsByKeyAsync("app-settings");
 
@@ -38,7 +38,7 @@ internal class OllamaModelCatalog(IHttpClientService httpClientService, ISetting
             return [];
         }
 
-        return responseData.Models.Select(model => new ModelCatalogResponse
+        return responseData.Models.Select(model => new ModelCatalog
         {
             Name = model.Name,
             Vendor = ProviderName,

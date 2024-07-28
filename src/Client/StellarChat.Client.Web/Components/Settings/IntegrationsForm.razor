@@ -1,4 +1,6 @@
 ﻿@inject ISettingsService _settingsService
+@inject IModelCatalogService _modelCatalogService
+@inject ChatState _chatState
 @inject ISnackbar Snackbar
 
 <EditForm Model="@AppSettings" OnValidSubmit="OnValidSubmit">
@@ -59,8 +61,26 @@
             </MudExpansionPanel>
         </MudExpansionPanels>
     </div>
-    <div class="d-flex flex-row flex-grow-1 justify-end gap-4 pa-4">
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Save</MudButton>
+    <div class="d-flex flex-row flex-grow-1 gap-4 pa-4">
+        <MudTooltip Text="@($"Last updated: {_chatState.LastFetchedModelsCatalog:yyyy-MM-dd HH:mm:ss}")" Arrow="true" Placement="Placement.Top">
+            <MudButton OnClick="ForceRefreshModelCatalogAsync" Variant="Variant.Text" Color="isFetching ? Color.Default : Color.Primary" Class="justify-start">
+                @if (isFetching)
+                {
+                    <div class="d-flex gap-2 my-auto">
+                        <MudProgressCircular Color="Color.Default" Size="Size.Small" Indeterminate="true" />
+                        <MudText Typo="Typo.button">Fetching models catalog</MudText>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex gap-2 my-auto">
+                        <MudIcon Icon="@Icons.Material.Filled.Refresh" />
+                        <MudText Typo="Typo.button">Sync models catalog</MudText>
+                    </div>
+                }
+            </MudButton>
+        </MudTooltip>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="justify-end ml-auto">Save</MudButton>
     </div>
 </EditForm>
 
@@ -96,6 +116,7 @@
     private const string OpenAiProvider = "OpenAI";
     private bool showOpenAiApiKey = false;
     private bool showOllamaEndpoint = false;
+    private bool isFetching = false;
 
     public string OllamaEndpoint { get; set; } = string.Empty;
     public bool IsEnabledOllama { get; set; } = false;
@@ -109,6 +130,8 @@
 
     protected async override Task OnInitializedAsync()
     {
+        _chatState.LastFetchedModelsCatalogChanged += StateHasChanged;
+
         SetupInitialSettings();
         await PopulateForm();
     }
@@ -186,6 +209,21 @@
         }
     }
 
+    private async Task ForceRefreshModelCatalogAsync()
+    {
+        isFetching = true;
+        var response = await _modelCatalogService.BrowseModelsCatalog(forceRefresh: true);
+
+        if (!response.Succeeded)
+        {
+            ShowSnackbar("Failed to load model catalog. Please try again.", Severity.Error);
+        }
+
+        _chatState.SetLastFetchedModelsCatalog(response.Value.LastFetched);
+        _chatState.NotifyModelsCatalogRefreshed();
+        isFetching = false;
+    }
+
     private void ShowSnackbar(string message, Severity severity)
     {
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -194,5 +232,10 @@
         {
             options.HideTransitionDuration = 100;
         });
+    }
+
+    public void Dispose()
+    {
+        _chatState.LastFetchedModelsCatalogChanged -= StateHasChanged;
     }
 }
