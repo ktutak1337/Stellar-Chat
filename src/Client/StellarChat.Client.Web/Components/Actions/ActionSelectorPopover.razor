@@ -55,7 +55,7 @@
     [Parameter] public List<NativeActionResponse> Actions { get; set; } = new();
 
     private MudAutocomplete<NativeActionResponse>? _autocomplete;
-    private List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
+    private ModelCatalogResponse ModelCatalog { get; set; } = new();
 
     private bool coerceText;
     private bool coerceValue;
@@ -89,7 +89,7 @@
 
         if (modelCatalog is not null)
         {
-            ModelCatalog = modelCatalog.ToList();
+            ModelCatalog = modelCatalog;
         }
     }
 
@@ -153,7 +153,7 @@
     {
         if (action is not null)
         {
-            var serviceId = ModelCatalog.SingleOrDefault(x => x.Name == action.Model)?.Provider ?? string.Empty;
+            var serviceId = ModelCatalog.Models.SingleOrDefault(x => x.Name == action.Model)?.Provider ?? string.Empty;
             _chatState.SetNativeActionServiceId(serviceId);
 
             ActionChanged.InvokeAsync(action);

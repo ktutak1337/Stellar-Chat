@@ -23,7 +23,7 @@
 
 @code
 {
-    public List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
+    public ModelCatalogResponse ModelCatalog { get; set; } = new();
     private string CurrentValue { get; set; } = string.Empty;
     private string ServiceId { get; set; } = string.Empty;
 
@@ -52,7 +52,7 @@
 
         if(modelCatalog is not null)
         {
-            ModelCatalog = modelCatalog.ToList();
+            ModelCatalog = modelCatalog;
         }
     }
 
@@ -65,7 +65,7 @@
             CurrentValue = selectedModel!;
             _chatState.SetSelectedModel(selectedModel!);
 
-            var serviceId = ModelCatalog.SingleOrDefault(x => x.Name == CurrentValue)?.Provider ?? string.Empty;
+            var serviceId = ModelCatalog.Models.SingleOrDefault(x => x.Name == CurrentValue)?.Provider ?? string.Empty;
             _chatState.SetServiceId(serviceId);
         }
     }
@@ -74,10 +74,10 @@
     {
         if (string.IsNullOrEmpty(value))
         {
-            return ModelCatalog.Select(model => model.Name);
+            return ModelCatalog.Models.Select(model => model.Name);
         }
 
-        var result = ModelCatalog
+        var result = ModelCatalog.Models
             .Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase))
             .Select(model => model.Name);
 
@@ -87,7 +87,7 @@
     private void OnValueChanged(string value)
     {
         CurrentValue = value.IsEmpty() ? string.Empty : value;
-        var serviceId = ModelCatalog.SingleOrDefault(x => x.Name == value)?.Provider ?? string.Empty;
+        var serviceId = ModelCatalog.Models.SingleOrDefault(x => x.Name == value)?.Provider ?? string.Empty;
         
         _chatState.SetServiceId(serviceId);
         _chatState.SetSelectedModel(CurrentValue);
@@ -100,7 +100,7 @@
         => SetDefaultModel();
 
     private bool IsValidModel(string value) 
-        => value.IsNotEmpty() && ModelCatalog.Any(model => model.Name == value);
+        => value.IsNotEmpty() && ModelCatalog.Models.Any(model => model.Name == value);
 
     private void ShowSnackbar(string message, Severity severity)
     {

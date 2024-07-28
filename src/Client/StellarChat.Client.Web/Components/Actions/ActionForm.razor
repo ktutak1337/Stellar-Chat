@@ -39,7 +39,7 @@
                     For="@(() => Action!.Model)" 
                     HelperText="The model that will be used when executing actions.">
             
-            @foreach (var model in ModelCatalog)
+            @foreach (var model in ModelCatalog.Models)
             {
                 <MudSelectItem Value="@model.Name" />
             }
@@ -112,7 +112,7 @@
     [Parameter] public Guid ActiontId { get; set; }
     [Parameter] public EventCallback OnActionSubmit { get; set; }
     private NativeActionResponse Action { get; set; } = new();
-    private List<ModelCatalogResponse> ModelCatalog { get; set; } = new();
+    private ModelCatalogResponse ModelCatalog { get; set; } = new();
 
     public List<string> Categories { get; set; } = new()
     {
@@ -207,7 +207,7 @@ Some actions require just the latest message, while others need the full convers
 
         if (modelCatalog is not null)
         {
-            ModelCatalog = modelCatalog.ToList();
+            ModelCatalog = modelCatalog;
         }
     }
 
