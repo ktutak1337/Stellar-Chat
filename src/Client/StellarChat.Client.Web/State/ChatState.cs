@@ -40,6 +40,15 @@ public class ChatState
         SelectedModelChanged?.Invoke();
     }
 
+    public DateTimeOffset LastFetchedModelsCatalog { get; set; }
+    public event Action? LastFetchedModelsCatalogChanged;
+
+    public void SetLastFetchedModelsCatalog(DateTimeOffset lastFetchedModelsCatalog)
+    {
+        LastFetchedModelsCatalog = lastFetchedModelsCatalog;
+        LastFetchedModelsCatalogChanged?.Invoke();
+    }
+
     public string ServiceId { get; set; } = string.Empty;
     public event Action? ServiceIdChanged;
 
@@ -115,5 +124,12 @@ public class ChatState
     public void NotifyActionsRefreshed()
     {
         ActionsRefreshed?.Invoke();
+    }
+
+    public event Action? ModelsCatalogRefreshed;
+
+    public void NotifyModelsCatalogRefreshed()
+    {
+        ModelsCatalogRefreshed?.Invoke();
     }
 }

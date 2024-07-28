@@ -35,6 +35,8 @@
         _chatState.SelectedModelChanged += StateHasChanged;
         _chatState.ServiceIdChanged += StateHasChanged;
         _chatState.SelectedAssistantChanged += SetDefaultModel;
+        _chatState.LastFetchedModelsCatalogChanged += StateHasChanged;
+        _chatState.ModelsCatalogRefreshed += async () => await LoadModelCatalog();
 
         await LoadModelCatalog();
         SetDefaultModel();
@@ -53,6 +55,7 @@
         if(modelCatalog is not null)
         {
             ModelCatalog = modelCatalog;
+            _chatState.SetLastFetchedModelsCatalog(modelCatalog.LastFetched);
         }
     }
 
@@ -117,5 +120,7 @@
         _chatState.SelectedModelChanged -= StateHasChanged;
         _chatState.ServiceIdChanged -= StateHasChanged;
         _chatState.SelectedAssistantChanged -= SetDefaultModel;
+        _chatState.LastFetchedModelsCatalogChanged -= StateHasChanged;
+        _chatState.ModelsCatalogRefreshed -= async () => await LoadModelCatalog();
     }
 }
