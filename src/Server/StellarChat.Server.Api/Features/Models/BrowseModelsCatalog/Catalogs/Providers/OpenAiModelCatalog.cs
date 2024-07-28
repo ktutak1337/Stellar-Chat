@@ -13,7 +13,7 @@ internal class OpenAiModelCatalog(IHttpClientService httpClientService, OpenAiOp
     private readonly IHttpClientService _httpClientService = httpClientService;
     private readonly OpenAiOptions _openAiOptions = openAiOptions;
 
-    public async ValueTask<IEnumerable<ModelCatalogResponse>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken = default)
+    public async ValueTask<IEnumerable<ModelCatalog>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken = default)
     {
         var headers = new Dictionary<string, string>
         {
@@ -29,7 +29,7 @@ internal class OpenAiModelCatalog(IHttpClientService httpClientService, OpenAiOp
             return [];
         }
 
-        return responseData.Data.Select(model => new ModelCatalogResponse
+        return responseData.Data.Select(model => new ModelCatalog
         {
             Name = model.Id,
             Vendor = ProviderName,
@@ -38,7 +38,7 @@ internal class OpenAiModelCatalog(IHttpClientService httpClientService, OpenAiOp
         }).ToList();
     }
 
-    public IEnumerable<ModelCatalogResponse> FilterModels(string filter, IEnumerable<ModelCatalogResponse> models)
+    public IEnumerable<ModelCatalog> FilterModels(string filter, IEnumerable<ModelCatalog> models)
     {
         return filter switch
         {

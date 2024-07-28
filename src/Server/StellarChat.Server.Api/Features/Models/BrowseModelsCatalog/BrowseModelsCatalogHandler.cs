@@ -5,20 +5,23 @@ using System.Text;
 
 namespace StellarChat.Server.Api.Features.Models.BrowseModelsCatalog;
 
-internal sealed class BrowseModelsCatalogHandler : IQueryHandler<BrowseModelsCatalog, IEnumerable<ModelCatalogResponse>?>
+internal sealed class BrowseModelsCatalogHandler : IQueryHandler<BrowseModelsCatalog, ModelCatalogResponse?>
 {
     private readonly IEnumerable<IModelCatalog> _modelCatalogs;
     private readonly IMemoryCache _memoryCache;
+    private readonly TimeProvider _clock;
 
-    private readonly ConcurrentBag<string> _activeCacheKeys = new();
 
-    public BrowseModelsCatalogHandler(IEnumerable<IModelCatalog> modelCatalogs, IMemoryCache memoryCache)
+    private readonly ConcurrentBag<string> _activeCacheKeys = [];
+
+    public BrowseModelsCatalogHandler(IEnumerable<IModelCatalog> modelCatalogs, IMemoryCache memoryCache, TimeProvider clock)
     {
         _modelCatalogs = modelCatalogs;
         _memoryCache = memoryCache;
+        _clock = clock;
     }
 
-    public async ValueTask<IEnumerable<ModelCatalogResponse>?> Handle(BrowseModelsCatalog query, CancellationToken cancellationToken)
+    public async ValueTask<ModelCatalogResponse?> Handle(BrowseModelsCatalog query, CancellationToken cancellationToken)
     {
         var cacheKey = GenerateCacheKey(query);
         _activeCacheKeys.Add(cacheKey);
@@ -27,13 +30,20 @@ internal sealed class BrowseModelsCatalogHandler : IQueryHandler<BrowseModelsCat
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(6);
 
-            return await FetchModelsFromProvider(query, cancellationToken) ?? [];
+            var models = await FetchModelsFromProvider(query, cancellationToken) ?? [];
+            var now = _clock.GetLocalNow();
+
+            return new ModelCatalogResponse
+            {
+                Models = models,
+                LastFetched = now
+            };
         });
     }
 
-    private async Task<IEnumerable<ModelCatalogResponse>> FetchModelsFromProvider(BrowseModelsCatalog query, CancellationToken cancellationToken)
+    private async Task<IEnumerable<ModelCatalog>> FetchModelsFromProvider(BrowseModelsCatalog query, CancellationToken cancellationToken)
     {
-        var availableModels = new List<ModelCatalogResponse>();
+        var availableModels = new List<ModelCatalog>();
 
         foreach (var provider in _modelCatalogs)
         {

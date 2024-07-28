@@ -3,6 +3,6 @@
 internal interface IModelCatalog
 {
     string ProviderName { get; }
-    ValueTask<IEnumerable<ModelCatalogResponse>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken = default);
-    IEnumerable<ModelCatalogResponse> FilterModels(string filter, IEnumerable<ModelCatalogResponse> models);
+    ValueTask<IEnumerable<ModelCatalog>> FetchModelsAsync(BrowseModelsCatalog query, CancellationToken cancellationToken = default);
+    IEnumerable<ModelCatalog> FilterModels(string filter, IEnumerable<ModelCatalog> models);
 }
