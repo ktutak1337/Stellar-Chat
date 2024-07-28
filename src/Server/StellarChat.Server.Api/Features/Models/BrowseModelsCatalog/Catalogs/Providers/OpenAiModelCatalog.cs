@@ -8,7 +8,7 @@ internal class OpenAiModelCatalog(IHttpClientService httpClientService, OpenAiOp
 {
     public string ProviderName => OpenAIVendor;
     private const string OpenAIApiEndpoint = "https://api.openai.com/v1/models";
-    private const string OpenAIVendor = "Openai";
+    private const string OpenAIVendor = "OpenAI";
     
     private readonly IHttpClientService _httpClientService = httpClientService;
     private readonly OpenAiOptions _openAiOptions = openAiOptions;
