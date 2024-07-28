@@ -26,6 +26,11 @@ internal sealed class BrowseModelsCatalogHandler : IQueryHandler<BrowseModelsCat
         var cacheKey = GenerateCacheKey(query);
         _activeCacheKeys.Add(cacheKey);
 
+        if (query.ForceRefresh)
+        {
+            _memoryCache.Remove(cacheKey);
+        }
+
         return await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
         {
             entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(6);

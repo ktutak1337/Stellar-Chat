@@ -4,4 +4,5 @@ internal sealed record BrowseModelsCatalog : IQuery<ModelCatalogResponse>
 {
     public string? Provider { get; set; }
     public string? Filter { get; set; }
+    public bool ForceRefresh { get; set; }
 }
