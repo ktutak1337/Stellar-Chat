@@ -59,7 +59,7 @@ internal class CreateChatSessionHandler : ICommandHandler<CreateChatSession>
         await Task.Delay(1000);
 
         var connector = _connectorFactory.SelectConnector("openai");
-        var kernel = connector.CreateKernel("gpt-4o-mini");
+        var kernel = connector.CreateKernel("gpt-4o-mini").Clone();
 
         var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
         var reply = new StringBuilder();
