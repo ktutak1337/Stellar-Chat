@@ -12,7 +12,7 @@
 	
   <ItemGroup>
 	  <PackageReference Include="Microsoft.KernelMemory.Core" Version="0.68.240722.1" />
-	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.16.1" />
+	  <PackageReference Include="Microsoft.SemanticKernel" Version="1.16.2" />
 	  <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
 	  <PackageReference Include="Serilog" Version="4.0.2-dev-02220" />
 	  <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00341" />
