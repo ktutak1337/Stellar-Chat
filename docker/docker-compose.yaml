@@ -26,6 +26,7 @@ services:
       - SEQ__URL=${SEQ_URL}
       - SEQ__API_KEY=${SEQ_API_KEY}
       - CORS__ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
+      #- OLLAMA__ENDPOINT=${OLLAMA_ENDPOINT} #OPTIONAL
     ports:
       - 8080:8080
     networks:
