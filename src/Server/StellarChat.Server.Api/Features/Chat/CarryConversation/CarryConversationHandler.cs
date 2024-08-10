@@ -20,7 +20,7 @@ internal sealed class CarryConversationHandler : ICommandHandler<Ask, string>
     public async ValueTask<string> Handle(Ask command, CancellationToken cancellationToken)
     {
         var connector = _connectorFactory.SelectConnector(command.ServiceId.ToLowerInvariant());
-        var kernel = connector.CreateKernel(command.Model);
+        var kernel = connector.CreateKernel(command.Model).Clone();
 
         var contextVariables = GetContextArguments(command);
 
