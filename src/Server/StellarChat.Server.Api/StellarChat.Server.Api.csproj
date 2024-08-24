@@ -25,4 +25,14 @@
     <ProjectReference Include="..\..\Shared\StellarChat.Shared.Infrastructure\StellarChat.Shared.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Idenitity\Role\" />
+    <Folder Include="Features\Idenitity\User\ForgotPassword\" />
+    <Folder Include="Features\Idenitity\User\ChangePassword\" />
+    <Folder Include="Features\Idenitity\User\UpdateProfile\" />
+    <Folder Include="Features\Idenitity\User\UnlockUser\" />
+    <Folder Include="Features\Idenitity\User\SendUnlockEmail\" />
+    <Folder Include="Features\Idenitity\User\ResetPassword\" />
+  </ItemGroup>
+
 </Project>

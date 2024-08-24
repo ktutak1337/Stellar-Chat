@@ -10,6 +10,8 @@ using StellarChat.Server.Api.Features.Models.BrowseModelsCatalog.Catalogs.Provid
 using StellarChat.Server.Api.Features.Models.Connectors.Providers;
 using StellarChat.Server.Api.Features.Models.Connectors;
 using StellarChat.Server.Api.Options;
+using StellarChat.Shared.Infrastructure.Common.Mailing;
+using StellarChat.Shared.Infrastructure.Identity.Seeders;
 
 namespace StellarChat.Server.Api;
 
@@ -47,7 +49,7 @@ internal static class Extensions
         builder.Services.TryAddSingleton(TimeProvider.System);
         builder.Services.AddScoped<IAppSettingsSeeder, AppSettingsSeeder>();
         builder.Services.AddScoped<IAssistantsSeeder, AssistantsSeeder>();
-        builder.Services.AddScoped<IActionsSeeder, ActionsSeeder>();
+        builder.Services.AddScoped<IActionsSeeder, ActionsSeeder>(); 
         builder.Services.AddScoped<IConnectorStrategy, ConnectorStrategy>();
         builder.Services.AddScoped<IConnector, OpenAiProvider>();
         builder.Services.AddScoped<IConnector, OllamaProvider>();
@@ -76,7 +78,11 @@ internal static class Extensions
             .AddMongoRepository<ChatSessionDocument, Guid>("chat-sessions")
             .AddMongoRepository<AssistantDocument, Guid>("assistants")
             .AddMongoRepository<NativeActionDocument, Guid>("actions")
-            .AddMongoRepository<AppSettingsDocument, Guid>("settings");
+            .AddMongoRepository<AppSettingsDocument, Guid>("settings")
+            .AddScoped<IRolesSeeder, RolesSeeder>()
+            .AddScoped<IUsersSeeder, UsersSeeder>()
+            .AddTransient<IMongoIdentitySeeder, MongoIdentitySeeder>()
+            .AddTransient<IEmailService, EmailService>();
 
         builder.Services.AddMediator(options =>
         {
