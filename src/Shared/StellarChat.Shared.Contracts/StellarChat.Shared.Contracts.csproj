@@ -10,4 +10,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Identity\Role\" />
+    <Folder Include="Identity\User\ChangePassword\" />
+    <Folder Include="Identity\User\ForgotPassword\" />
+    <Folder Include="Identity\User\ResetPassword\" />
+    <Folder Include="Identity\User\SendUnlockEmail\" />
+    <Folder Include="Identity\User\UnlockUser\" />
+    <Folder Include="Identity\User\UpdateProfile\" />
+  </ItemGroup>
+
 </Project>

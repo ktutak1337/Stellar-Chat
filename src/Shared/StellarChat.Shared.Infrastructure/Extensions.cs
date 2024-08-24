@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using StellarChat.Shared.Infrastructure.API.Auth;
 using StellarChat.Shared.Infrastructure.API.CORS;
 using StellarChat.Shared.Infrastructure.API.Endpoints;
 using StellarChat.Shared.Infrastructure.Contexts;
 using StellarChat.Shared.Infrastructure.DAL.Mongo;
 using StellarChat.Shared.Infrastructure.Exceptions;
+using StellarChat.Shared.Infrastructure.Identity;
 using StellarChat.Shared.Infrastructure.Observability.Logging;
 using System.Text.RegularExpressions;
 
@@ -27,8 +29,10 @@ public static class Extensions
                 .AddSwaggerGen()
                 .AddErrorHandling()
                 .AddContext()
-                .AddCorsPolicy(builder.Configuration)
+                .AddCorsPolicy(builder.Configuration) 
                 .AddMongo(builder.Configuration)
+                .AddMongoIdentity(builder.Configuration)
+                .AddJwtAuthentication(builder.Configuration)
                 .RegisterEndpoints(builder.Configuration);
 
         return builder;
@@ -46,6 +50,8 @@ public static class Extensions
            .UseCorsPolicy()
            .UseErrorHandling()
            .UseContext()
+           .UseAuthentication()
+           .UseAuthorization()
            .UseLogging()
            .UseEndpoints();
 
