@@ -1,8 +1,46 @@
 ﻿@inject ChatState _chatState
+@inject IStorageService _storageService
 @implements IDisposable
 
 <MudPaper Class="overflow-hidden text-field-custom pb-8 pt-4 w-100" Elevation="0" Style="background-color: var(--mud-palette-background)">
     <MudPaper Class="inner-paper mud-theme-lighten w-100 mt-0 mx-auto" Style="@BackgroundColorStyle" Elevation="3">
+
+        @if (Attachments.Any())
+        {
+            <MudGrid>
+                <MudItem xs="12" Class="d-flex flex-wrap">
+                    @foreach (var attachment in Attachments)
+                    {
+                        <div class="relative" style="width: 64px; height: 64px; margin-left: 12px;"
+                             @onmouseover="() => HandleMouseOverAttachment(attachment)"
+                             @onmouseout="() => HandleMouseOutAttachment(attachment)">
+
+                            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="absolute close-button" Style="color: white; top: -2px; right: -2px; z-index: 2;" OnClick="() => RemoveAttachment(attachment)" />
+
+                            <div class="relative" style="width: 64px; height: 64px;">
+                                @if (attachment.IsLoading)
+                                {
+                                    <MudProgressCircular Color="Color.Default" Indeterminate="true" Class="absolute" Style="top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                                }
+                                else if (attachment.Url != null)
+                                {
+                                    <MudImage Src="@attachment.Url" Alt="Image preview" Width="64" Height="64" Elevation="25" Class="rounded-lg" />
+                                    @if (attachment.IsHovering)
+                                    {
+                                        <div class="rounded-lg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1; pointer-events: none;"></div>
+                                    }
+                                }
+                                else
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Image" Class="absolute" Style="top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+                                }
+                            </div>
+                        </div>
+                    }
+                </MudItem>
+            </MudGrid>
+        }
+
         <MudGrid>
             <MudItem xs="12">
                 <MudTextField id="prompt-input"
@@ -24,8 +62,14 @@
                 <div class="d-flex gap-0.25 ml-4">
 
                     <ActionSelectorPopover CurrentValue="CurrentValueAction" ActionChanged="OnActionChanged" />
-
-                    <MudIconButton id="prompt-input-attach-file-button" Icon="@Icons.Material.Filled.AttachFile" Color="Color.Inherit" Disabled="true" />
+                    
+                    <MudFileUpload T="IBrowserFile" Accept=".png, .jpg, .gif" OnFilesChanged="AttachFiles" Class="my-auto">
+                        <ButtonTemplate Context="fileContext">
+                            <MudIconButton id="prompt-input-attach-file-button" HtmlTag="label" Icon="@Icons.Material.Filled.AttachFile" Color="Color.Inherit" Disabled="false" for="@fileContext.Id" />
+                        </ButtonTemplate>
+                        <SelectedTemplate Context="fileContext" />
+                    </MudFileUpload>
+                    
                     <MudIconButton id="prompt-input-mic-button" Icon="@Icons.Material.Filled.Mic" Color="Color.Inherit" Disabled="true" />
                     @if (selectedChipText.IsNotEmpty())
                     {
@@ -52,6 +96,18 @@
     .text-field-custom .mud-input-filled {
         background-color: var(--mud-textfield-background) !important;
     }
+
+    .close-button {
+        background-color: transparent;
+    }
+
+    .close-button:hover {
+        background-color: var(--mud-palette-dark);
+    }
+
+    .image-preview:hover {
+        opacity: 0.5;
+    }
 </style>
 
 @code
@@ -60,9 +116,13 @@
     [CascadingParameter] private bool _IsDarkModeEnabled { get; set; }
     private string BackgroundColorStyle => $"background-color: {(_IsDarkModeEnabled ? "#2B2B34" : "#f5f5f5")}; max-width: 960px;";
 
+    private List<Attachment> Attachments { get; set; } = new();
+    private string BackgroundColorImagePreviewStyle => $"background-color: {(isHovering ? "rgba(0, 0, 0, 0.5);" : "")};";
+
     private string Message { get; set; } = string.Empty;
     private bool IsSendButtonDisabled => string.IsNullOrWhiteSpace(Message);
     private bool IsProcessing { get; set; }
+    private bool isHovering = false;
 
     private NativeActionResponse? CurrentValueAction { get; set; }
     private Guid SelectedActionId { get; set; }
@@ -88,6 +148,63 @@
 
             IsProcessing = false;
         }
+    }
+
+    // private async Task AttachFiles(InputFileChangeEventArgs e)
+    // {
+    //     var file = e.File;
+
+    //     if (file is not null)
+    //     {
+    //         var response = await _storageService.UploadFileAsync(file, "avatar");
+    //         Attachments.Add(response.Url);
+    //     }
+    // }
+
+    private async Task AttachFiles(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file is not null)
+        {
+            var attachment = new Attachment { IsLoading = true };
+            Attachments.Add(attachment);
+            var response = await _storageService.UploadFileAsync(file, "avatar");
+            attachment.Url = response.Url;
+            attachment.IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RemoveAttachment(Attachment attachment)
+    {
+        // call to api to remove an attachment
+        Attachments.Remove(attachment);
+        // isHovering = false;
+        attachment.IsHovering = false;
+        await Task.CompletedTask;
+    }
+
+    // private void HandleMouseOverAttachment()
+    // {
+    //     isHovering = true;
+    // }
+    // private void HandleMouseOutAttachment()
+    // {
+    //     isHovering = false;
+    // }
+
+    private void HandleMouseOverAttachment(Attachment attachment)
+    {
+        attachment.IsHovering = true;
+    }
+    private void HandleMouseOutAttachment(Attachment attachment)
+    {
+        attachment.IsHovering = false;
+    }
+
+    private string GetImageStyle(Attachment attachment)
+    {
+        return attachment.IsHovering ? "background-color: rgba(0, 0, 0, 0.5);" : string.Empty;
     }
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
@@ -128,5 +245,12 @@
     public void Dispose()
     {
         _chatState.ActionIdChanged -= StateHasChanged;
+    }
+
+    private class Attachment
+    {
+        public bool IsLoading { get; set; }
+        public string? Url { get; set; }
+        public bool IsHovering { get; set; }
     }
 }
