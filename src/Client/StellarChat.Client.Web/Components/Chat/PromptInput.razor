@@ -11,31 +11,7 @@
                 <MudItem xs="12" Class="d-flex flex-wrap">
                     @foreach (var attachment in Attachments)
                     {
-                        <div class="relative" style="width: 64px; height: 64px; margin-left: 12px;"
-                             @onmouseover="() => HandleMouseOverAttachment(attachment)"
-                             @onmouseout="() => HandleMouseOutAttachment(attachment)">
-
-                            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="absolute close-button" Style="color: white; top: -2px; right: -2px; z-index: 2;" OnClick="() => RemoveAttachment(attachment)" />
-
-                            <div class="relative" style="width: 64px; height: 64px;">
-                                @if (attachment.IsLoading)
-                                {
-                                    <MudProgressCircular Color="Color.Default" Indeterminate="true" Class="absolute" Style="top: 50%; left: 50%; transform: translate(-50%, -50%);" />
-                                }
-                                else if (attachment.Url != null)
-                                {
-                                    <MudImage Src="@attachment.Url" Alt="Image preview" Width="64" Height="64" Elevation="25" Class="rounded-lg" />
-                                    @if (attachment.IsHovering)
-                                    {
-                                        <div class="rounded-lg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1; pointer-events: none;"></div>
-                                    }
-                                }
-                                else
-                                {
-                                    <MudIcon Icon="@Icons.Material.Filled.Image" Class="absolute" Style="top: 50%; left: 50%; transform: translate(-50%, -50%);" />
-                                }
-                            </div>
-                        </div>
+                        <AttachmentPreview Attachment="attachment" OnRemove="RemoveAttachment" />
                     }
                 </MudItem>
             </MudGrid>
@@ -150,17 +126,6 @@
         }
     }
 
-    // private async Task AttachFiles(InputFileChangeEventArgs e)
-    // {
-    //     var file = e.File;
-
-    //     if (file is not null)
-    //     {
-    //         var response = await _storageService.UploadFileAsync(file, "avatar");
-    //         Attachments.Add(response.Url);
-    //     }
-    // }
-
     private async Task AttachFiles(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -179,27 +144,8 @@
     {
         // call to api to remove an attachment
         Attachments.Remove(attachment);
-        // isHovering = false;
         attachment.IsHovering = false;
         await Task.CompletedTask;
-    }
-
-    // private void HandleMouseOverAttachment()
-    // {
-    //     isHovering = true;
-    // }
-    // private void HandleMouseOutAttachment()
-    // {
-    //     isHovering = false;
-    // }
-
-    private void HandleMouseOverAttachment(Attachment attachment)
-    {
-        attachment.IsHovering = true;
-    }
-    private void HandleMouseOutAttachment(Attachment attachment)
-    {
-        attachment.IsHovering = false;
     }
 
     private string GetImageStyle(Attachment attachment)
@@ -245,12 +191,5 @@
     public void Dispose()
     {
         _chatState.ActionIdChanged -= StateHasChanged;
-    }
-
-    private class Attachment
-    {
-        public bool IsLoading { get; set; }
-        public string? Url { get; set; }
-        public bool IsHovering { get; set; }
     }
 }

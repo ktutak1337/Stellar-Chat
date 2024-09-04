@@ -1,0 +1,44 @@
+﻿<div class="relative" style="width: 64px; height: 64px; margin-left: 12px;"
+     @onmouseover="() => HandleMouseOverAttachment(Attachment)"
+     @onmouseout="() => HandleMouseOutAttachment(Attachment)">
+    <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" Class="absolute close-button" Style="color: white; top: -2px; right: -2px; z-index: 2;" OnClick="() => RemoveAttachment(Attachment)" />
+    <div class="relative" style="width: 64px; height: 64px;">
+        @if (Attachment.IsLoading)
+        {
+            <MudProgressCircular Color="Color.Default" Indeterminate="true" Class="absolute" Style="top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+        }
+        else if (Attachment.Url != null)
+        {
+            <MudImage Src="@Attachment.Url" Alt="Image preview" Width="64" Height="64" Elevation="25" Class="rounded-lg" />
+            @if (Attachment.IsHovering)
+            {
+                <div class="rounded-lg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1; pointer-events: none;"></div>
+            }
+        }
+        else
+        {
+            <MudIcon Icon="@Icons.Material.Filled.Image" Class="absolute" Style="top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+        }
+    </div>
+</div>
+
+@code 
+{
+    [Parameter] public Attachment? Attachment { get; set; }
+    [Parameter] public EventCallback<Attachment> OnRemove { get; set; }
+    
+    private void HandleMouseOverAttachment(Attachment attachment)
+    {
+        attachment.IsHovering = true;
+    }
+
+    private void HandleMouseOutAttachment(Attachment attachment)
+    {
+        attachment.IsHovering = false;
+    }
+
+    private async Task RemoveAttachment(Attachment attachment)
+    {
+        await OnRemove.InvokeAsync(attachment);
+    }
+}
